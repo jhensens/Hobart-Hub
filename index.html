@@ -3,127 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Venue Manager Pro | Hobart Secure OS</title>
+    <title>Hobart Venue Executive OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        :root { --primary: #2563eb; }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; transition: 0.3s; }
+        body.dark { background-color: #0f172a; color: #f8fafc; }
         
-        /* ULTRA HIGH CONTRAST INPUTS */
-        .input-group { margin-bottom: 1.25rem; display: block; width: 100%; }
-        .input-group label { display: block; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; color: #334155; margin-bottom: 4px; line-height: 1; }
-        
-        .force-visible {
-            display: block !important;
-            width: 100% !important;
-            background-color: #ffffff !important;
-            border: 2px solid #64748b !important; /* Thick grey border */
-            border-radius: 0.5rem !important;
-            padding: 0.75rem 1rem !important;
-            color: #000000 !important;
-            font-size: 0.9rem !important;
-            font-weight: 700 !important;
-            outline: none !important;
+        .heavy-input { 
+            background: white !important; border: 2px solid #0f172a !important; border-radius: 0.75rem !important; 
+            padding: 0.8rem !important; font-size: 0.9rem !important; font-weight: 700 !important; outline: none !important; width: 100%;
         }
-        .force-visible:focus { border-color: #2563eb !important; background-color: #f8fafc !important; }
-
-        .stats-card { background: white; border: 2px solid #e2e8f0; border-radius: 1rem; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .nav-active { background-color: #2563eb !important; color: white !important; }
+        .dark .heavy-input { background: #1e293b !important; border-color: #f8fafc !important; color: white !important; }
+        
+        .stats-card { background: white; border: 2px solid #e2e8f0; border-radius: 1.5rem; padding: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .dark .stats-card { background: #1e293b; border-color: #334155; }
+        
+        .nav-link.nav-active { background-color: var(--primary) !important; color: white !important; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        .hike-alert { color: #ef4444; font-weight: 900; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        
+        .view-section { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
-    <!-- LOGIN -->
+    <!-- AUTH -->
     <div id="login-screen" class="fixed inset-0 z-[500] bg-slate-900 flex items-center justify-center p-6">
-        <div class="max-w-sm w-full bg-white rounded-[2.5rem] p-10 shadow-2xl">
-            <div class="w-16 h-16 bg-blue-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white text-2xl">🔐</div>
-            <h2 id="auth-title" class="text-xl font-black mb-6 text-center uppercase tracking-tight">Hobart Hub</h2>
+        <div class="max-w-sm w-full bg-white dark:bg-slate-800 rounded-[2.5rem] p-10 shadow-2xl">
+            <div id="auth-logo" class="w-20 h-20 bg-slate-100 rounded-2xl mx-auto mb-6 flex items-center justify-center text-3xl">🏢</div>
+            <h2 id="auth-title" class="text-xl font-black mb-6 text-center uppercase tracking-tight dark:text-white">Secure Access</h2>
             <div class="space-y-4">
-                <div class="input-group"><label>Email</label><input type="email" id="auth-email" class="force-visible" placeholder="admin@hobart.com"></div>
-                <div class="input-group"><label>Password</label><input type="password" id="auth-pass" class="force-visible" placeholder="••••••••"></div>
-                <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl uppercase text-xs shadow-lg">Sign In</button>
-                <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black text-slate-400 uppercase mt-4">Create New Access</button>
-                <p id="auth-err" class="text-red-600 text-[10px] font-black text-center hidden mt-4 p-3 bg-red-50 rounded-xl border border-red-200"></p>
+                <input type="email" id="auth-email" class="heavy-input" placeholder="Work Email">
+                <input type="password" id="auth-pass" class="heavy-input" placeholder="Password">
+                <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl uppercase text-xs">Login</button>
+                <p id="auth-err" class="text-red-500 text-[10px] font-black text-center hidden mt-4 p-3 bg-red-50 rounded-xl"></p>
+                <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black text-slate-400 uppercase mt-4">Create Access</button>
             </div>
         </div>
     </div>
 
-    <!-- MAIN APP -->
+    <!-- MAIN APP CONTENT -->
     <div id="app-content" class="hidden">
-        <div class="max-w-[1500px] mx-auto px-4 pt-6">
-            <!-- Navigation -->
-            <nav class="flex gap-4 mb-8 sticky top-0 z-50 py-2">
-                <button onclick="window.setView('inventory')" class="nav-link px-6 py-3 rounded-xl font-black text-[10px] uppercase bg-white shadow-sm nav-active">Stock</button>
-                <button onclick="window.setView('compliance')" class="nav-link px-6 py-3 rounded-xl font-black text-[10px] uppercase bg-white shadow-sm">Compliance</button>
-                <button onclick="window.setView('analytics')" class="nav-link px-6 py-3 rounded-xl font-black text-[10px] uppercase bg-white shadow-sm">Analytics</button>
-                <button onclick="window.logout()" class="px-5 py-3 rounded-xl bg-slate-200 text-[10px] font-black uppercase ml-auto">Logout</button>
+        <div class="max-w-[1600px] mx-auto px-4 md:px-8 pt-8">
+            <header class="flex justify-between items-center mb-8">
+                <div class="flex items-center gap-4">
+                    <div id="header-logo" class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center overflow-hidden">🏢</div>
+                    <h1 id="venue-name-display" class="text-2xl font-black tracking-tighter italic dark:text-white uppercase">Hobart <span class="text-blue-600">Executive</span></h1>
+                </div>
+                <div id="wind-badge" class="hidden px-4 py-2 bg-amber-500 text-white rounded-full text-[10px] font-black">AWNING ALERT: HIGH WIND</div>
+            </header>
+
+            <nav id="main-nav" class="flex gap-3 mb-8 no-scrollbar overflow-x-auto pb-2 sticky top-0 z-50 py-2">
+                <button id="nav-dashboard" onclick="window.setView('dashboard')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Control</button>
+                <button id="nav-operations" onclick="window.setView('operations')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Inventory</button>
+                <button id="nav-production" onclick="window.setView('production')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Recipes</button>
+                <button id="nav-assets" onclick="window.setView('assets')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Assets</button>
+                <button onclick="window.toggleSettings()" class="px-5 py-3 rounded-2xl bg-slate-200 dark:bg-slate-700 ml-auto shadow-sm">⚙️ Settings</button>
             </nav>
 
-            <!-- Dashboard -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div class="stats-card"><div class="text-[10px] font-black text-slate-400 uppercase">Asset Value</div><div id="stat-value" class="text-2xl font-black">$0.00</div></div>
-                <div class="stats-card border-l-8 border-amber-500"><div class="text-[10px] font-black text-amber-500 uppercase">Inbox</div><div id="stat-review" class="text-2xl font-black">0</div></div>
-                <div class="stats-card border-l-8 border-red-500"><div class="text-[10px] font-black text-red-500 uppercase">Low Stock</div><div id="stat-low" class="text-2xl font-black">0</div></div>
-                <div class="stats-card"><div class="text-[10px] font-black text-emerald-500 uppercase">Total Items</div><div id="stat-total" class="text-2xl font-black">0</div></div>
+            <!-- VIEW: DASHBOARD -->
+            <div id="view-dashboard" class="view-section">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 space-y-8">
+                        <div class="stats-card">
+                            <h3 class="font-black uppercase text-xs mb-6 italic">Shift Briefing</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center border-b pb-8 dark:border-slate-700">
+                                <div><div class="text-[9px] font-black text-slate-400">HOBART WIND</div><div id="d-wind" class="text-2xl font-black">--</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400">SALES vs LY</div><div id="d-sales" class="text-2xl font-black text-emerald-500">--</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400">CRUISE PAX</div><div id="d-pax" class="text-2xl font-black text-blue-600">0</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400">PRICE HIKES</div><div id="d-hikes" class="text-2xl font-black text-red-500">0</div></div>
+                            </div>
+                            <div class="mt-6 flex justify-between items-center">
+                                <div id="price-hike-indicator" class="text-[10px] font-black uppercase text-slate-400">Price Sentinel Active</div>
+                                <button onclick="window.generateOrderList()" class="text-[10px] font-black bg-blue-50 text-blue-600 px-4 py-2 rounded-xl uppercase">📋 Copy Order List</button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="stats-card">
+                                <h3 class="font-black uppercase text-xs mb-4 italic text-red-500">Loss & Waste</h3>
+                                <div class="flex gap-2">
+                                    <select id="waste-type" class="heavy-input text-xs"><option>Spoilage</option><option>Staff Meal</option><option>Poor Pour</option><option>Breakage</option></select>
+                                    <button onclick="window.logWaste()" class="bg-red-500 text-white px-4 rounded-xl font-black text-[10px]">LOG</button>
+                                </div>
+                                <div id="waste-today" class="text-2xl font-black text-red-500 mt-4">$0.00</div>
+                            </div>
+                            <div class="stats-card">
+                                <h3 class="font-black uppercase text-xs mb-4 italic">POS Import</h3>
+                                <button onclick="document.getElementById('pos-file').click()" class="w-full bg-emerald-600 text-white font-black py-4 rounded-xl text-[10px] uppercase shadow-lg">Upload Daily Takings</button>
+                                <input type="file" id="pos-file" class="hidden" onchange="window.importSales(event)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stats-card flex flex-col h-[550px]">
+                        <h3 class="font-black uppercase text-xs mb-6 italic">Secure Feed</h3>
+                        <div id="redbook-feed" class="flex-grow overflow-y-auto space-y-4 no-scrollbar"></div>
+                    </div>
+                </div>
             </div>
 
-            <!-- INVENTORY VIEW -->
-            <div id="view-inventory" class="view-section">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    <!-- SIDEBAR FORM -->
-                    <div class="lg:col-span-4 xl:col-span-3">
-                        <div class="bg-white rounded-[2rem] shadow-xl p-8 border-2 border-slate-200 sticky top-24">
-                            <h2 class="text-xl font-black uppercase italic mb-8">Setup Item</h2>
-                            <form id="item-form">
-                                <input type="hidden" id="edit-id">
-                                <div class="input-group"><label>Product Name</label><input type="text" id="item-name" class="force-visible" required></div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="input-group"><label>SKU (POS)</label><input type="text" id="item-sku" class="force-visible" required></div>
-                                    <div class="input-group"><label>Supplier</label><input type="text" id="item-supplier" class="force-visible"></div>
+            <!-- VIEW: OPERATIONS -->
+            <div id="view-operations" class="view-section hidden">
+                <div class="flex flex-col lg:flex-row gap-10">
+                    <div class="lg:w-1/3">
+                        <div class="stats-card border-2 border-slate-900 sticky top-24">
+                            <h2 class="text-xl font-black uppercase mb-8 italic">Product Setup</h2>
+                            <form id="product-form" class="space-y-4">
+                                <div class="input-group"><label>Name</label><input type="text" id="p-name" class="heavy-input" required></div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="input-group"><label>SKU (POS)</label><input type="text" id="p-sku" class="heavy-input" required></div>
+                                    <div class="input-group"><label>Cost</label><input type="number" id="p-cost" step="0.01" class="heavy-input"></div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="input-group"><label>Cost ($)</label><input type="number" id="unit-cost" class="force-visible" step="0.01"></div>
-                                    <div class="input-group"><label>Qty</label><input type="number" id="quantity" class="force-visible" step="any"></div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="input-group"><label>Category</label><select id="p-cat" class="heavy-input"></select></div>
+                                    <div class="input-group"><label>Qty</label><input type="number" id="p-qty" step="any" class="heavy-input"></div>
                                 </div>
-                                <div class="input-group"><label>Category</label><select id="category-select" class="force-visible"></select></div>
-                                <div class="input-group"><label>Bin Location</label><select id="bin-select" class="force-visible"></select></div>
-                                <button type="submit" id="submit-btn" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl shadow-lg uppercase text-xs">Save to Cloud</button>
-                                <button type="button" id="cancel-edit" onclick="window.cancelEdit()" class="hidden w-full text-[10px] font-black text-slate-400 mt-4 uppercase">Discard</button>
+                                <button type="submit" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs">Save Update</button>
                             </form>
                         </div>
                     </div>
-                    <!-- LIST -->
-                    <div class="lg:col-span-8 xl:col-span-9">
-                        <div class="flex gap-4 mb-6">
-                            <input type="text" id="search-bar" oninput="window.renderInventory()" placeholder="Find item by name or SKU..." class="flex-grow p-5 bg-white rounded-[2rem] border-2 border-slate-300 font-bold outline-none shadow-sm">
-                            <button onclick="document.getElementById('invoice-upload').click()" class="bg-indigo-600 text-white px-8 rounded-full font-black uppercase text-[10px] shadow-lg">Scan PDF</button>
-                            <input type="file" id="invoice-upload" multiple class="hidden" onchange="window.handleInvoiceUpload(event)">
-                        </div>
+                    <div class="lg:w-2/3">
+                        <input type="text" id="search-bar" oninput="window.renderInventory()" placeholder="Quick find item..." class="w-full p-5 bg-white dark:bg-slate-800 rounded-[2rem] border-2 border-slate-300 dark:border-slate-700 font-bold outline-none mb-6">
                         <ul id="inventory-list" class="space-y-4"></ul>
                     </div>
                 </div>
             </div>
 
-            <!-- OTHER VIEWS -->
-            <div id="view-compliance" class="view-section hidden">
-                <div class="stats-card">Compliance hub is ready for logs.</div>
+            <!-- VIEW: PRODUCTION -->
+            <div id="view-production" class="view-section hidden">
+                <header class="flex justify-between items-center mb-10">
+                    <h1 class="text-4xl font-black tracking-tighter italic dark:text-white">Recipe <span class="text-purple-600">Scaling</span></h1>
+                    <div class="flex gap-3">
+                        <button onclick="document.getElementById('recipe-keeper-json').click()" class="bg-purple-600 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase">Import Recipes</button>
+                        <input type="file" id="recipe-keeper-json" class="hidden" onchange="window.importRecipes(event)">
+                    </div>
+                </header>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="recipe-grid"></div>
             </div>
-            <div id="view-analytics" class="view-section hidden">
-                <div class="stats-card">Financial analytics processing...</div>
+
+            <!-- VIEW: ASSETS -->
+            <div id="view-assets" class="view-section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                    <div class="stats-card h-fit">
+                        <h3 class="font-black uppercase text-xs mb-6 italic">Add Asset</h3>
+                        <form id="asset-form" class="space-y-4">
+                            <input type="text" id="a-name" class="heavy-input" placeholder="Equipment Name" required>
+                            <div class="grid grid-cols-2 gap-3">
+                                <input type="date" id="a-purch" class="heavy-input">
+                                <input type="number" id="a-warr" class="heavy-input" placeholder="Warranty (mths)">
+                            </div>
+                            <input type="text" id="a-agent" class="heavy-input" placeholder="Repair Agent Info">
+                            <button type="submit" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl uppercase text-xs shadow-lg">Register</button>
+                        </form>
+                    </div>
+                    <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6" id="asset-grid"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- MESSAGE BOX -->
-    <div id="message-box" class="hidden fixed top-8 right-8 z-[600] p-6 rounded-2xl shadow-2xl text-[10px] font-black uppercase text-white bg-green-600"></div>
+    <!-- SETTINGS MODAL -->
+    <div id="settings-modal" class="hidden fixed inset-0 z-[600] flex items-center justify-center modal-bg p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-[3.5rem] p-12 max-w-xl w-full shadow-2xl">
+            <h3 class="text-2xl font-black uppercase mb-10 italic dark:text-white">Admin Hub</h3>
+            <div class="space-y-6">
+                <div class="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl">
+                    <label class="text-[10px] font-black text-slate-400 uppercase block mb-3">Venue Branding (Logo URL)</label>
+                    <input type="text" id="logo-url" class="heavy-input" placeholder="https://...">
+                    <input type="text" id="venue-name-input" class="heavy-input mt-4" placeholder="Venue Name">
+                    <button onclick="window.updateBranding()" class="mt-4 bg-blue-600 text-white font-black py-2 px-6 rounded-xl text-[10px] uppercase">Sync Branding</button>
+                </div>
+                <div class="p-6 bg-indigo-50 dark:bg-indigo-900/10 rounded-2xl">
+                    <label class="text-[10px] font-black text-indigo-500 uppercase block mb-3">Gemini Master Key</label>
+                    <input type="password" id="api-key" onchange="window.saveKey()" class="heavy-input">
+                </div>
+                <button onclick="window.toggleSettings()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase">Close Hub</button>
+            </div>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyAvE67VRASfD7Y4LFsbuTq3QqjI6NfoHWk", authDomain: "venue-inventory.firebaseapp.com", projectId: "venue-inventory", storageBucket: "venue-inventory.firebasestorage.app", messagingSenderId: "34996096819", appId: "1:34996096819:web:9de51ce3b9f51e687d3846" };
         const app = initializeApp(firebaseConfig);
@@ -131,135 +199,117 @@
         const db = getFirestore(app);
         const venueId = "hobart-main";
 
-        const refs = { inv: () => doc(db, 'venues', venueId, 'data', 'inventory'), cfg: () => doc(db, 'venues', venueId, 'data', 'config') };
+        const refs = { 
+            inv: () => doc(db, 'venues', venueId, 'data', 'inventory'), 
+            cfg: () => doc(db, 'venues', venueId, 'data', 'config'),
+            rec: () => doc(db, 'venues', venueId, 'data', 'recipes'),
+            as: () => doc(db, 'venues', venueId, 'data', 'assets')
+        };
+
         window.inventory = [];
-        window.config = { categories: ["Kitchen", "Bar", "Office"], bins: ["Store", "Coolroom"] };
+        window.recipes = [];
+        window.assets = [];
+        window.categories = ["Bar - Cocktail", "Bar - Prep", "Bar - Garnish", "Kitchen - Ramen", "Kitchen - Chicken", "Kitchen - Beef", "Kitchen - Small Plates", "Kitchen - Snacks"];
 
         // --- AUTH ---
         window.handleAuth = async () => {
             const e = document.getElementById('auth-email').value;
             const p = document.getElementById('auth-pass').value;
-            const isReg = document.getElementById('auth-toggle').textContent.includes('Back');
-            const errEl = document.getElementById('auth-err');
-            errEl.classList.add('hidden');
-            try {
-                if (isReg) await createUserWithEmailAndPassword(auth, e, p);
-                else await signInWithEmailAndPassword(auth, e, p);
-            } catch (err) {
-                if(err.code === 'auth/operation-not-allowed') {
-                    errEl.textContent = "CRITICAL: Email sign-in is disabled. Open Firebase Console > Auth > Sign-in Method and enable Email/Password.";
-                } else {
-                    errEl.textContent = err.message;
-                }
-                errEl.classList.remove('hidden');
-            }
+            const isReg = document.getElementById('auth-toggle').textContent.includes('Create');
+            try { if (isReg) await createUserWithEmailAndPassword(auth, e, p); else await signInWithEmailAndPassword(auth, e, p); }
+            catch (err) { document.getElementById('auth-err').textContent = err.message; document.getElementById('auth-err').classList.remove('hidden'); }
         };
-        window.toggleAuthMode = () => { const t = document.getElementById('auth-toggle'); t.textContent = t.textContent.includes('Access') ? 'Back to Login' : 'Request Access'; };
+        window.toggleAuthMode = () => { document.getElementById('auth-toggle').textContent = document.getElementById('auth-toggle').textContent.includes('Create') ? 'Back to Login' : 'Create Access'; };
         window.logout = () => signOut(auth);
         
         onAuthStateChanged(auth, (u) => {
-            if (u) { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-content').classList.remove('hidden'); setupListeners(); }
+            if (u) { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-content').classList.remove('hidden'); setupListeners(); fetchWeather(); }
             else { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-content').classList.add('hidden'); }
         });
 
-        // --- DATA ---
-        const setupListeners = () => {
-            onSnapshot(refs.inv(), (s) => { 
-                if (s.exists()) { 
-                    window.inventory = s.data().items || []; 
-                    window.renderInventory(); 
-                    window.updateStats(); 
-                } 
-            });
-            onSnapshot(refs.cfg(), (s) => { 
-                if (s.exists()) { 
-                    window.config = s.data(); 
-                    window.updateSelects(); 
-                } 
-            });
+        // --- NAVIGATION (Robust Fix) ---
+        window.setView = (v) => { 
+            const sections = document.querySelectorAll('.view-section');
+            sections.forEach(s => s.classList.add('hidden')); 
+            const targetView = document.getElementById(`view-${v}`);
+            if (targetView) targetView.classList.remove('hidden'); 
+            
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(l => l.classList.remove('nav-active')); 
+            const targetNav = document.getElementById(`nav-${v}`);
+            if (targetNav) targetNav.classList.add('nav-active'); 
         };
 
-        window.updateStats = () => {
-            const val = window.inventory.reduce((a, i) => a + (parseFloat(i.quantity || 0) * parseFloat(i.unitCost || 0)), 0);
-            document.getElementById('stat-value').textContent = `$${val.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-            document.getElementById('stat-total').textContent = window.inventory.length;
-            document.getElementById('stat-low').textContent = window.inventory.filter(i => parseFloat(i.quantity || 0) < 5).length;
-            document.getElementById('stat-review').textContent = window.inventory.filter(i => i.needsReview).length;
+        const setupListeners = () => {
+            onSnapshot(refs.inv(), (s) => { if (s.exists()) { window.inventory = s.data().items || []; renderInventory(); updateDashboard(); } });
+            onSnapshot(refs.rec(), (s) => { if (s.exists()) { window.recipes = s.data().items || []; renderRecipes(); } });
+            onSnapshot(refs.as(), (s) => { if (s.exists()) { window.assets = s.data().items || []; renderAssets(); } });
+            onSnapshot(refs.cfg(), (s) => { if (s.exists()) { 
+                const d = s.data(); 
+                if(d.logo) { document.getElementById('header-logo').innerHTML = `<img src="${d.logo}" class="w-full h-full object-contain">`; } 
+                if(d.name) { document.getElementById('venue-name-display').textContent = d.name; document.getElementById('auth-title').textContent = d.name; } 
+            }});
         };
+
+        // --- CORE FUNCTIONS ---
+        async function fetchWeather() {
+            try {
+                const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-42.8821&longitude=147.3272&current_weather=true");
+                const d = await res.json();
+                document.getElementById('d-wind').textContent = `${d.current_weather.windspeed}km/h`;
+                if(d.current_weather.windspeed > 25) document.getElementById('wind-badge').classList.remove('hidden');
+            } catch(e) {}
+        }
+
+        function updateDashboard() {
+            const hikes = window.inventory.filter(i => i.priceHike);
+            document.getElementById('d-hikes').textContent = hikes.length;
+        }
 
         window.renderInventory = () => {
             const list = document.getElementById('inventory-list');
-            const s = document.getElementById('search-bar').value.toLowerCase();
-            const filtered = window.inventory.filter(i => i.name.toLowerCase().includes(s) || (i.sku||'').toLowerCase().includes(s));
-            list.innerHTML = filtered.map(i => `
-                <li class="p-6 bg-white rounded-[2rem] border-2 border-slate-200 shadow-sm flex justify-between items-center">
-                    <div>
-                        <div class="flex items-center gap-2 mb-1"><span class="font-black uppercase text-sm">${i.name}</span><span class="text-[8px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded font-black">${i.category}</span></div>
-                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">$${(i.unitCost||0).toFixed(2)} • SKU: ${i.sku}</div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="flex items-center bg-slate-100 rounded-2xl p-1 font-black">
-                            <button onclick="window.adjStock('${i.id}', -1)" class="w-10 h-10">-</button>
-                            <span class="w-10 text-center text-xs">${parseFloat(i.quantity||0).toFixed(1)}</span>
-                            <button onclick="window.adjStock('${i.id}', 1)" class="w-10 h-10">+</button>
-                        </div>
-                        <button onclick="window.editItem('${i.id}')" class="text-slate-300 hover:text-blue-600 transition"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                    </div>
+            if(!list) return;
+            const search = document.getElementById('search-bar').value.toLowerCase();
+            list.innerHTML = window.inventory.filter(i => i.name.toLowerCase().includes(search)).map(i => `
+                <li class="p-6 bg-white dark:bg-slate-800 rounded-[2.5rem] border-2 border-slate-200 dark:border-slate-700 flex justify-between items-center shadow-sm">
+                    <div><div class="font-black dark:text-white uppercase text-sm">${i.name}</div><div class="text-[9px] text-slate-400 font-bold uppercase">$${(i.unitCost||0).toFixed(2)} • ${i.sku}</div></div>
+                    <div class="font-black dark:text-white text-lg">${parseFloat(i.quantity||0).toFixed(1)}</div>
                 </li>`).join('');
         };
 
-        // --- OPS ---
-        window.adjStock = (id, amt) => { 
-            const i = window.inventory.find(x => x.id === id); 
-            if(i) { i.quantity = Math.max(0, (parseFloat(i.quantity)||0)+amt); setDoc(refs.inv(), { items: window.inventory }); } 
+        window.renderRecipes = () => {
+            const grid = document.getElementById('recipe-grid');
+            if(!grid) return;
+            grid.innerHTML = window.recipes.map(r => `
+                <div class="stats-card hover:border-purple-500 transition cursor-pointer">
+                    <div class="text-[7px] font-black text-purple-600 uppercase mb-2">${r.category}</div>
+                    <div class="font-black text-xs uppercase dark:text-white">${r.name}</div>
+                </div>`).join('');
         };
+
+        window.renderAssets = () => {
+            const grid = document.getElementById('asset-grid');
+            if(!grid) return;
+            grid.innerHTML = window.assets.map(a => `<div class="stats-card border-l-8 border-blue-500"><h4 class="font-black uppercase text-xs mb-3 dark:text-white">${a.name}</h4><div class="text-[9px] font-bold text-slate-400 uppercase">Agent: ${a.agent || 'N/A'}</div></div>`).join('');
+        }
+
+        window.updateBranding = async () => {
+            const url = document.getElementById('logo-url').value;
+            const name = document.getElementById('venue-name-input').value;
+            await setDoc(refs.cfg(), { logo: url, name: name }, { merge: true });
+            alert("Branding Saved");
+        };
+
+        window.toggleSettings = () => document.getElementById('settings-modal').classList.toggle('hidden');
+        window.toggleDarkMode = () => document.body.classList.toggle('dark');
+        window.saveKey = () => localStorage.setItem('venueApiKey', document.getElementById('api-key').value);
         
-        window.editItem = (id) => { 
-            const i = window.inventory.find(x => x.id === id); 
-            document.getElementById('edit-id').value = i.id; 
-            document.getElementById('item-name').value = i.name; 
-            document.getElementById('item-sku').value = i.sku; 
-            document.getElementById('unit-cost').value = i.unitCost; 
-            document.getElementById('quantity').value = i.quantity; 
-            document.getElementById('cancel-edit').classList.remove('hidden'); 
-        };
-
-        window.cancelEdit = () => { document.getElementById('item-form').reset(); document.getElementById('edit-id').value = ''; document.getElementById('cancel-edit').classList.add('hidden'); };
-
-        document.getElementById('item-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('edit-id').value;
-            const ni = { 
-                id: id || Date.now(), 
-                name: document.getElementById('item-name').value, 
-                sku: document.getElementById('item-sku').value, 
-                unitCost: parseFloat(document.getElementById('unit-cost').value)||0, 
-                quantity: parseFloat(document.getElementById('quantity').value)||0,
-                category: document.getElementById('category-select').value,
-                bin: document.getElementById('bin-select').value
-            };
-            if(id) window.inventory[window.inventory.findIndex(i => i.id == id)] = ni; else window.inventory.push(ni);
-            await setDoc(refs.inv(), { items: window.inventory });
-            window.cancelEdit();
-        };
-
-        window.setView = (v) => { 
-            document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden')); 
-            document.getElementById(`view-${v}`).classList.remove('hidden'); 
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('nav-active')); 
-            event.target.classList.add('nav-active'); 
-        };
-
-        window.updateSelects = () => {
-            document.getElementById('category-select').innerHTML = window.config.categories.map(c => `<option value="${c}">${c}</option>`).join('');
-            document.getElementById('bin-select').innerHTML = window.config.bins.map(b => `<option value="${b}">${b}</option>`).join('');
-        };
-
-        window.showMsg = (t) => { 
-            const b = document.getElementById('message-box'); 
-            b.textContent = t; 
-            b.classList.remove('hidden'); 
-            setTimeout(() => b.classList.add('hidden'), 4000); 
+        window.onload = () => {
+            const k = localStorage.getItem('venueApiKey');
+            if(k) document.getElementById('api-key').value = k;
+            window.setView('dashboard');
+            const catSelect = document.getElementById('p-cat');
+            if (catSelect) catSelect.innerHTML = window.categories.map(c => `<option>${c}</option>`).join('');
         };
     </script>
 </body>
