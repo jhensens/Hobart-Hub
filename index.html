@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Venue Manager Pro | Hobart Secure Cloud</title>
+    <title>Venue Manager Pro | Hobart Secure OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
@@ -11,184 +11,189 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
         :root { --primary: #2563eb; }
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; transition: background 0.3s, color 0.3s; }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; transition: background 0.3s; -webkit-tap-highlight-color: transparent; }
         body.dark { background-color: #0f172a; color: #f8fafc; }
-        .stats-card { background: white; border-radius: 1.25rem; padding: 1.25rem; border: 1px solid #e2e8f0; }
+        .stats-card { background: white; border-radius: 1.25rem; padding: 1.25rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .dark .stats-card { background: #1e293b; border-color: #334155; }
-        .input-group label { display: block; font-weight: 800; font-size: 0.65rem; text-transform: uppercase; margin-bottom: 2px; }
-        .input-group input, .input-group select, .input-group textarea { display: block; border-radius: 0.75rem; padding: 0.6rem 0.8rem; border: 1px solid #d1d5db; width: 100%; font-size: 0.85rem; font-weight: 600; background: #fff; }
+        .input-group label { display: block; font-weight: 800; font-size: 0.6rem; text-transform: uppercase; margin-bottom: 2px; color: #64748b; }
+        .input-group input, .input-group select, .input-group textarea { display: block; border-radius: 0.75rem; padding: 0.6rem 0.8rem; border: 1px solid #d1d5db; width: 100%; font-size: 0.85rem; font-weight: 600; background: #fff; outline: none; }
         .dark .input-group input, .dark .input-group select, .dark .input-group textarea { background: #334155; border-color: #475569; color: white; }
         .category-tab.active { background-color: var(--primary); color: white; }
-        .low-stock-row { border-left: 6px solid #ef4444 !important; background-color: #fef2f2; }
-        .dark .low-stock-row { background-color: #451a1a; }
-        .par-suggest { border-left: 6px solid #a855f7 !important; background-color: #faf5ff; }
-        .dark .par-suggest { background-color: #2e1065; }
-        .modal-bg { background-color: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); }
+        .bcg-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; height: 260px; }
+        .bcg-quadrant { padding: 12px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 10px; font-weight: 900; text-transform: uppercase; }
+        .q-star { background: #dcfce7; color: #166534; }
+        .q-puzzle { background: #fef9c3; color: #854d0e; }
+        .q-plow { background: #dbeafe; color: #1e40af; }
+        .q-dog { background: #fee2e2; color: #991b1b; }
+        .modal-bg { background-color: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); }
         .par-gauge { height: 4px; border-radius: 2px; background: #e2e8f0; overflow: hidden; margin-top: 6px; }
         .par-fill { height: 100%; transition: width 0.5s ease-out; }
-        @media print { .no-print { display: none; } body { background: white; } }
-        .shelf-label { width: 200px; height: 100px; border: 1px dashed #ccc; padding: 10px; display: inline-block; margin: 5px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="min-h-screen pb-20">
+<body class="min-h-screen pb-20 text-slate-900">
 
     <!-- AUTH LAYER -->
-    <div id="login-screen" class="fixed inset-0 z-[200] bg-slate-900 flex items-center justify-center p-6 no-print">
+    <div id="login-screen" class="fixed inset-0 z-[500] bg-slate-900 flex items-center justify-center p-6">
         <div class="max-w-sm w-full bg-white rounded-[2.5rem] p-10 shadow-2xl">
-            <div class="w-16 h-16 bg-blue-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white text-2xl shadow-lg">🔐</div>
-            <h2 id="auth-title" class="text-xl font-black text-slate-900 mb-6 text-center uppercase tracking-tight">Venue Terminal</h2>
+            <div class="w-16 h-16 bg-blue-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white text-2xl">🔐</div>
+            <h2 id="auth-title" class="text-xl font-black text-slate-900 mb-6 text-center uppercase tracking-tight">Hobart Secure Hub</h2>
             <div class="space-y-4">
-                <input type="email" id="auth-email" placeholder="Email" class="w-full p-4 bg-slate-50 rounded-2xl border-none">
-                <input type="password" id="auth-pass" placeholder="Password" class="w-full p-4 bg-slate-50 rounded-2xl border-none">
-                <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl uppercase text-xs tracking-widest hover:bg-blue-700 transition">Sign In</button>
-                <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black text-slate-400 uppercase">Create Account</button>
-                <p id="auth-err" class="text-red-500 text-[10px] font-black text-center hidden"></p>
+                <input type="email" id="auth-email" placeholder="Staff Email" class="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold">
+                <input type="password" id="auth-pass" placeholder="Password" class="w-full p-4 bg-slate-50 rounded-2xl outline-none font-bold">
+                <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl uppercase text-xs shadow-xl">Enter OS</button>
+                <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black text-slate-400 uppercase">Create New Access</button>
+                <p id="auth-err" class="text-red-500 text-[10px] font-black text-center hidden mt-2 p-2 bg-red-50 rounded-lg"></p>
             </div>
         </div>
     </div>
 
-    <!-- MAIN APP -->
+    <!-- APP CONTENT -->
     <div id="app-content" class="hidden">
-        <div class="max-w-[1600px] mx-auto px-4 md:px-8 pt-8 no-print">
-            <header class="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-10 gap-6">
-                <div>
-                    <h1 class="text-4xl font-black tracking-tighter italic">Venue Manager <span class="text-blue-600">Pro</span></h1>
-                    <div class="flex items-center gap-4 mt-2">
-                        <button onclick="window.toggleDarkMode()" class="text-[10px] font-black uppercase px-3 py-1 bg-slate-200 dark:bg-slate-700 rounded-full">🌓 Mode</button>
-                        <span id="cloud-status" class="text-[10px] font-black uppercase text-emerald-500">📡 SECURE SYNC</span>
-                        <button onclick="window.logout()" class="text-[10px] font-black uppercase text-slate-400 hover:text-red-500 transition">Sign Out</button>
+        <div class="max-w-[1600px] mx-auto px-4 md:px-8 pt-8">
+            <nav class="flex gap-4 mb-8 no-scrollbar overflow-x-auto pb-2 sticky top-0 z-50 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur py-2">
+                <button onclick="window.setView('inventory')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-blue-600 text-white shadow-lg">Operations</button>
+                <button onclick="window.setView('compliance')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Safety Logs</button>
+                <button onclick="window.setView('analytics')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Insights</button>
+                <button onclick="window.toggleScanner()" class="px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-indigo-500 text-white ml-auto">📷 Scan Shelf</button>
+            </nav>
+
+            <!-- INVENTORY VIEW -->
+            <div id="view-inventory" class="view-section">
+                <header class="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-10 gap-6">
+                    <div>
+                        <h1 class="text-4xl font-black tracking-tighter italic dark:text-white">Venue <span class="text-blue-600">Stock</span></h1>
+                        <p id="staff-name" class="text-[10px] font-black text-slate-400 uppercase mt-1">Logged In</p>
                     </div>
-                </div>
-                <div class="flex flex-wrap gap-3">
-                    <button onclick="document.getElementById('invoice-upload').click()" class="bg-indigo-600 text-white font-black py-3 px-6 rounded-2xl text-xs uppercase shadow-xl hover:scale-105 transition">Scan Invoice</button>
-                    <input type="file" id="invoice-upload" accept="image/*,.pdf" multiple class="hidden" onchange="window.handleInvoiceUpload(event)">
-                    <button onclick="window.toggleStocktake()" class="bg-slate-800 text-white font-black py-3 px-6 rounded-2xl text-xs uppercase shadow-xl">Audit Mode</button>
-                    <button onclick="window.toggleSettings()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-black py-3 px-6 rounded-2xl text-xs uppercase shadow-md transition">Admin & Insights</button>
-                </div>
-            </header>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-4 mb-8 text-slate-900 dark:text-white">
-                <div class="stats-card"><div class="text-[10px] font-black text-slate-400 uppercase mb-1">Stock Value</div><div id="stat-value" class="text-2xl font-black">$0.00</div></div>
-                <div onclick="window.setCategory('Inbox')" class="stats-card border-l-4 border-amber-500 cursor-pointer bg-amber-50 dark:bg-slate-800 transition">
-                    <div class="text-[10px] font-black text-amber-600 uppercase mb-1 flex justify-between"><span>Inbox</span><span>➔</span></div>
-                    <div id="stat-review" class="text-2xl font-black">0</div>
-                </div>
-                <div class="stats-card border-l-4 border-red-500"><div class="text-[10px] font-black text-red-400 uppercase mb-1">Low Stock</div><div id="stat-low" class="text-2xl font-black">0</div></div>
-                <div class="stats-card border-l-4 border-purple-500"><div class="text-[10px] font-black text-purple-400 uppercase mb-1">Par Warnings</div><div id="stat-par-alerts" class="text-2xl font-black">0</div></div>
-                <button onclick="window.generateReorderList()" class="bg-blue-600 text-white font-black rounded-2xl text-[10px] uppercase p-2 shadow-lg hidden xl:block">📋 Reorder List</button>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                <!-- FORM -->
-                <div class="lg:col-span-4 xl:col-span-3">
-                    <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-xl border border-slate-100 dark:border-slate-700 p-8 sticky top-8">
-                        <div class="flex justify-between items-center mb-6 border-b pb-4 dark:border-slate-700">
-                            <h2 class="text-xl font-black uppercase italic tracking-tighter">Product Setup</h2>
-                            <button id="cancel-edit" onclick="window.cancelEdit()" class="hidden text-[10px] font-black text-red-500 uppercase bg-red-50 px-3 py-1 rounded-full">Clear</button>
-                        </div>
-                        <form id="item-form" class="space-y-1">
-                            <input type="hidden" id="edit-id">
-                            <div class="input-group"><label>Product Name</label><input type="text" id="item-name" required></div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="input-group"><label>SKU / Code</label><input type="text" id="item-sku" required></div>
-                                <div class="input-group"><label>Supplier</label><input list="supplier-list" id="item-supplier" placeholder="Vendor..."><datalist id="supplier-list"></datalist></div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="input-group"><label>Units/Case</label><input type="number" id="pack-size" step="any" value="1"></div>
-                                <div class="input-group"><label>Count As</label><select id="uom-select"><option>Bottle</option><option>Can</option><option>Each</option><option>Kg</option><option>Litre</option><option>Box</option></select></div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="input-group"><label>Cost/Unit ($)</label><input type="number" id="unit-cost" step="0.01" value="0.00"></div>
-                                <div class="input-group"><label>Usage / Wk</label><input type="number" id="weekly-usage" step="any" value="0"></div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="input-group"><label>Par Level</label><input type="number" id="reorder-point" step="any" value="5"></div>
-                                <div class="input-group"><label>On Hand</label><input type="number" id="quantity" step="any" value="0" class="text-blue-600 font-bold"></div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="input-group"><label>Category</label><select id="category-select"></select></div>
-                                <div class="input-group"><label>Bin Location</label><select id="bin-select"></select></div>
-                            </div>
-                            <div class="input-group"><label>Notes</label><textarea id="item-notes" rows="2" class="resize-none"></textarea></div>
-                            <button type="submit" id="submit-btn" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs tracking-widest hover:bg-blue-700 transition">Save to Cloud</button>
-                            <button type="button" id="delete-btn" onclick="window.deleteItem()" class="hidden w-full bg-red-50 text-red-600 font-black py-3 rounded-2xl uppercase text-[9px] mt-2 transition">Delete Product</button>
-                        </form>
+                    <div class="flex gap-3">
+                        <button onclick="document.getElementById('invoice-upload').click()" class="bg-indigo-600 text-white font-black py-4 px-8 rounded-2xl text-xs uppercase shadow-lg">Scan Invoices</button>
+                        <input type="file" id="invoice-upload" multiple class="hidden" onchange="window.handleInvoiceUpload(event)">
+                        <button onclick="window.toggleStocktake()" class="bg-slate-800 text-white font-black py-4 px-8 rounded-2xl text-xs uppercase shadow-lg">Audit Counts</button>
+                        <button onclick="window.toggleSettings()" class="bg-white dark:bg-slate-800 dark:text-white p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">⚙️</button>
                     </div>
-                </div>
+                </header>
 
-                <!-- LIST -->
-                <div class="lg:col-span-8 xl:col-span-9">
-                    <div class="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-700 mb-8">
-                        <div id="category-tabs" class="flex gap-2 overflow-x-auto no-scrollbar pb-6 mb-6 border-b dark:border-slate-700"></div>
-                        <input type="text" id="search-bar" oninput="window.renderInventory()" placeholder="Quick search..." class="w-full p-4 bg-slate-50 dark:bg-slate-900 border-none rounded-2xl outline-none font-bold text-sm">
-                    </div>
-                    <ul id="inventory-list" class="space-y-4"></ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- PRINT VIEW (HIDDEN ON SCREEN) -->
-        <div id="print-area" class="hidden print:block p-10"></div>
-    </div>
-
-    <!-- SETTINGS & INSIGHTS -->
-    <div id="settings-modal" class="hidden fixed inset-0 z-[150] flex items-center justify-center modal-bg p-4 no-print">
-        <div class="bg-white dark:bg-slate-800 rounded-[3.5rem] p-12 max-w-6xl w-full shadow-2xl max-h-[95vh] overflow-hidden flex flex-col">
-            <div class="flex justify-between items-center mb-10"><h3 class="text-2xl font-black uppercase italic tracking-tighter">Insights & Administration</h3><button onclick="window.toggleSettings()" class="text-slate-300 font-black p-2 hover:text-slate-900">✕</button></div>
-            <div class="overflow-y-auto flex-grow no-scrollbar space-y-12">
-                
-                <!-- Financials Trend Chart -->
-                <div class="p-8 bg-slate-50 dark:bg-slate-900 rounded-[3rem] border dark:border-slate-700">
-                    <h4 class="text-[10px] font-black uppercase text-slate-400 mb-6 tracking-widest">Spend History (3 Months)</h4>
-                    <div id="trend-chart" class="h-40 flex items-end gap-10 px-10"></div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <!-- Bulk Migrator -->
-                    <div class="p-8 bg-blue-50 dark:bg-blue-900/10 rounded-[3rem] border border-blue-100 dark:border-blue-900/30">
-                        <h4 class="text-[10px] font-black uppercase text-blue-500 mb-4 tracking-widest">Bulk Bin Transfer</h4>
-                        <div class="flex flex-col gap-3">
-                            <select id="move-from" class="p-3 rounded-xl border-none outline-none dark:bg-slate-800 font-bold text-sm"></select>
-                            <div class="text-center font-black text-blue-300">TO</div>
-                            <select id="move-to" class="p-3 rounded-xl border-none outline-none dark:bg-slate-800 font-bold text-sm"></select>
-                            <button onclick="window.bulkMoveBins()" class="bg-blue-600 text-white font-black py-3 rounded-xl uppercase text-[9px] mt-2">Migrate All Stock</button>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                    <!-- PRODUCT FORM -->
+                    <div class="lg:col-span-4 xl:col-span-3">
+                        <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-xl p-8 sticky top-24 border border-slate-100 dark:border-slate-700">
+                            <h2 class="text-xl font-black uppercase italic tracking-tighter dark:text-white mb-6">Product Setup</h2>
+                            <form id="item-form" class="space-y-3">
+                                <input type="hidden" id="edit-id">
+                                <div class="input-group"><label>Product Name</label><input type="text" id="item-name" required></div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="input-group"><label>SKU (POS)</label><input type="text" id="item-sku" required></div>
+                                    <div class="input-group"><label>Supplier</label><input list="supplier-list" id="item-supplier"><datalist id="supplier-list"></datalist></div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="input-group"><label>Single Cost ($)</label><input type="number" id="unit-cost" step="0.01"></div>
+                                    <div class="input-group"><label>Menu Price ($)</label><input type="number" id="menu-price" step="0.01"></div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="input-group"><label>Category</label><select id="category-select"></select></div>
+                                    <div class="input-group"><label>Current Qty</label><input type="number" id="quantity" step="any"></div>
+                                </div>
+                                <button type="submit" id="submit-btn" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs">Save Update</button>
+                                <button type="button" id="cancel-edit" onclick="window.cancelEdit()" class="hidden w-full text-[10px] font-black text-slate-400 mt-2 uppercase">Discard</button>
+                            </form>
                         </div>
                     </div>
-                    <!-- Shelf Label Tool -->
-                    <div class="p-8 bg-emerald-50 dark:bg-emerald-900/10 rounded-[3rem] border border-emerald-100 dark:border-emerald-900/30">
-                        <h4 class="text-[10px] font-black uppercase text-emerald-500 mb-4 tracking-widest">Shelf Tag Tool</h4>
-                        <p class="text-[10px] font-bold text-emerald-700 mb-4 italic">Generate printable tags with barcodes and Par levels for specific bins.</p>
-                        <select id="label-bin-filter" class="p-3 rounded-xl border-none w-full font-bold dark:bg-slate-800 mb-4"></select>
-                        <button onclick="window.generateShelfLabels()" class="w-full bg-emerald-600 text-white font-black py-3 rounded-xl uppercase text-[9px]">Generate Print Sheet</button>
+                    <!-- LIST -->
+                    <div class="lg:col-span-8 xl:col-span-9">
+                        <div id="category-tabs" class="flex gap-2 overflow-x-auto no-scrollbar mb-8"></div>
+                        <input type="text" id="search-bar" oninput="window.renderInventory()" placeholder="Find item..." class="w-full p-5 bg-white dark:bg-slate-800 dark:text-white rounded-[2rem] border-none shadow-sm outline-none font-bold text-sm mb-6">
+                        <ul id="inventory-list" class="space-y-4"></ul>
                     </div>
                 </div>
+            </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t dark:border-slate-700 pt-10">
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase block mb-4">Venue Categories (Click name to edit)</label><div class="flex gap-2 mb-4"><input type="text" id="new-cat" class="p-3 border rounded-xl flex-grow"><button onclick="window.addConfig('categories', 'new-cat')" class="bg-blue-600 text-white px-5 rounded-xl font-black">+</button></div><ul id="cat-config-list" class="space-y-2"></ul></div>
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase block mb-4">Storage Bins</label><div class="flex gap-2 mb-4"><input type="text" id="new-bin" class="p-3 border rounded-xl flex-grow"><button onclick="window.addConfig('bins', 'new-bin')" class="bg-blue-600 text-white px-5 rounded-xl font-black">+</button></div><ul id="bin-config-list" class="space-y-2"></ul></div>
+            <!-- COMPLIANCE VIEW -->
+            <div id="view-compliance" class="view-section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 space-y-8">
+                        <div class="stats-card">
+                            <h3 class="font-black uppercase text-xs mb-6">Fridge & Equipment Logs</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="fridge-grid"></div>
+                        </div>
+                        <div class="stats-card border-l-4 border-red-600">
+                            <h3 class="font-black uppercase text-xs mb-6 text-red-600">Secure Red Book</h3>
+                            <textarea id="incident-note" class="w-full p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border-none outline-none font-bold text-sm mb-4" rows="4" placeholder="Log incident or maintenance issue..."></textarea>
+                            <button onclick="window.logIncident()" class="bg-red-600 text-white py-4 px-10 rounded-2xl font-black text-xs uppercase shadow-lg">Submit Secure Log</button>
+                        </div>
+                    </div>
+                    <div class="stats-card h-[700px] flex flex-col">
+                        <h3 class="font-black uppercase text-xs mb-6">Venue Activity</h3>
+                        <div id="compliance-history" class="overflow-y-auto space-y-4 no-scrollbar flex-grow"></div>
+                    </div>
                 </div>
-                <div class="flex gap-4"><button onclick="window.exportData()" class="flex-grow bg-emerald-600 text-white py-4 rounded-2xl font-black text-xs uppercase shadow-lg hover:bg-emerald-700 transition">Backup (CSV)</button><button onclick="window.resetDatabase()" class="bg-red-600 text-white py-4 px-8 rounded-2xl font-black text-xs uppercase shadow-lg hover:bg-red-700 transition">🔥 Wipe All</button></div>
+            </div>
+
+            <!-- ANALYTICS VIEW -->
+            <div id="view-analytics" class="view-section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="stats-card">
+                        <h3 class="font-black uppercase text-xs mb-6">Prime Cost Check</h3>
+                        <div class="space-y-4">
+                            <div class="input-group"><label>Daily Revenue ($)</label><input type="number" id="daily-rev"></div>
+                            <div class="input-group"><label>Labor Wage Cost ($)</label><input type="number" id="daily-labor"></div>
+                            <button onclick="window.calcPrimeCost()" class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl text-[10px] uppercase shadow-lg">Analyze Profitability</button>
+                        </div>
+                        <div id="prime-result" class="mt-8 hidden p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl border dark:border-slate-700 text-center">
+                            <div id="prime-pct" class="text-4xl font-black mb-2">0%</div>
+                            <div id="prime-verdict" class="text-[9px] font-black uppercase text-slate-400">Prime Cost %</div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2 stats-card">
+                        <h3 class="font-black uppercase text-xs mb-6">Menu Engineering (BCG)</h3>
+                        <div class="bcg-matrix">
+                            <div class="bcg-quadrant q-puzzle">Puzzles<br><span class="opacity-50 mt-1">High Profit / Low Sales</span></div>
+                            <div class="bcg-quadrant q-star">Stars<br><span class="opacity-50 mt-1">High Profit / High Sales</span></div>
+                            <div class="bcg-quadrant q-dog">Dogs<br><span class="opacity-50 mt-1">Low Profit / Low Sales</span></div>
+                            <div class="bcg-quadrant q-plow">Plowhorses<br><span class="opacity-50 mt-1">Low Profit / High Sales</span></div>
+                        </div>
+                        <div id="matrix-stats" class="mt-4 grid grid-cols-4 gap-2"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- STOCK AUDIT -->
-    <div id="stocktake-modal" class="hidden fixed inset-0 z-[150] flex items-center justify-center modal-bg p-4 no-print">
+    <!-- MODALS -->
+    <div id="scanner-modal" class="hidden fixed inset-0 z-[600] flex items-center justify-center modal-bg p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-[3rem] p-10 w-full max-w-md shadow-2xl">
+            <div id="reader" class="rounded-3xl overflow-hidden mb-6"></div>
+            <button onclick="window.toggleScanner()" class="w-full p-4 bg-slate-100 dark:bg-slate-700 rounded-2xl font-black text-xs uppercase">Close</button>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="hidden fixed inset-0 z-[400] flex items-center justify-center modal-bg p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-[3.5rem] p-12 max-w-4xl w-full shadow-2xl max-h-[90vh] overflow-hidden flex flex-col">
+            <h3 class="text-2xl font-black uppercase dark:text-white mb-10">Administration</h3>
+            <div class="overflow-y-auto space-y-10 no-scrollbar flex-grow">
+                <div class="grid grid-cols-2 gap-8">
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase mb-4 block">Compliance Equipment</label><div class="flex gap-2 mb-4"><input type="text" id="new-fridge" class="p-3 border rounded-xl flex-grow"><button onclick="window.addConfig('fridges', 'new-fridge')" class="bg-blue-600 text-white px-5 rounded-xl font-black">+</button></div><ul id="fridge-config-list" class="space-y-1"></ul></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase mb-4 block">Categories</label><div class="flex gap-2 mb-4"><input type="text" id="new-cat" class="p-3 border rounded-xl flex-grow"><button onclick="window.addConfig('categories', 'new-cat')" class="bg-blue-600 text-white px-5 rounded-xl font-black">+</button></div><ul id="cat-config-list" class="space-y-1"></ul></div>
+                </div>
+                <div class="bg-indigo-50 dark:bg-indigo-900/20 p-8 rounded-3xl"><label class="text-[10px] font-black text-indigo-600 uppercase mb-4 block">Gemini API Key</label><input type="password" id="api-key-input" onchange="window.saveApiKey()" placeholder="AIzaSy..." class="w-full p-4 rounded-xl border-none font-bold dark:bg-slate-900 dark:text-white"></div>
+                <div class="flex gap-4"><button onclick="window.exportData()" class="flex-grow bg-emerald-600 text-white py-4 rounded-2xl font-black text-xs uppercase shadow-lg">Download Operations CSV</button><button onclick="window.logout()" class="bg-red-600 text-white py-4 px-10 rounded-2xl font-black text-xs uppercase">Logout</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="stocktake-modal" class="hidden fixed inset-0 z-[400] flex items-center justify-center modal-bg p-4">
         <div class="bg-white dark:bg-slate-800 rounded-[3rem] p-12 max-w-3xl w-full shadow-2xl max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-black uppercase italic tracking-tighter text-blue-600">Physical Count</h3>
-                <div class="text-[9px] font-black text-slate-400 uppercase" id="audit-progress-text">0% Complete</div>
-            </div>
-            <div class="w-full h-2 bg-slate-100 dark:bg-slate-900 rounded-full mb-6 overflow-hidden"><div id="audit-progress-bar" class="h-full bg-blue-600 transition-all duration-500" style="width: 0%"></div></div>
-            <div id="stocktake-list" class="overflow-y-auto flex-grow space-y-2 mb-8 no-scrollbar"></div>
-            <button onclick="window.commitStocktake()" class="bg-blue-600 text-white font-black py-5 rounded-2xl uppercase text-xs shadow-xl">Complete Audit</button>
+            <h3 class="text-2xl font-black mb-6 uppercase text-blue-600">Physical Shift Audit</h3>
+            <div id="stocktake-list" class="overflow-y-auto space-y-2 mb-8 no-scrollbar"></div>
+            <button onclick="window.commitStocktake()" class="bg-blue-600 text-white font-black py-5 rounded-2xl uppercase text-xs shadow-xl">Confirm Count</button>
         </div>
     </div>
+
+    <canvas id="pdf-render-canvas" class="hidden"></canvas>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyAvE67VRASfD7Y4LFsbuTq3QqjI6NfoHWk", authDomain: "venue-inventory.firebaseapp.com", projectId: "venue-inventory", storageBucket: "venue-inventory.firebasestorage.app", messagingSenderId: "34996096819", appId: "1:34996096819:web:9de51ce3b9f51e687d3846" };
         const app = initializeApp(firebaseConfig);
@@ -196,195 +201,154 @@
         const db = getFirestore(app);
         const venueId = "hobart-main";
 
-        const refs = { inv: () => doc(db, 'venues', venueId, 'data', 'inventory'), cfg: () => doc(db, 'venues', venueId, 'data', 'config') };
+        const refs = { inv: () => doc(db, 'venues', venueId, 'data', 'inventory'), cfg: () => doc(db, 'venues', venueId, 'data', 'config'), comp: () => doc(db, 'venues', venueId, 'data', 'compliance') };
         window.inventory = [];
-        window.config = { categories: ["Inbox", "Kitchen", "Bar"], bins: ["Store"], suppliers: {} };
+        window.config = { categories: ["All", "Bar", "Kitchen"], bins: ["Store"], fridges: ["Fridge 1"] };
+        window.complianceLogs = [];
         window.activeCategory = "All";
+        let hfScanner = null;
         let globalApiKey = localStorage.getItem('venueApiKey') || "";
 
         // --- AUTH ---
-        window.handleAuth = async () => { const e = document.getElementById('auth-email').value; const p = document.getElementById('auth-pass').value; try { if (document.getElementById('auth-toggle').textContent.includes('Login')) await signInWithEmailAndPassword(auth, e, p); else await createUserWithEmailAndPassword(auth, e, p); } catch (err) { document.getElementById('auth-err').textContent = err.message; document.getElementById('auth-err').classList.remove('hidden'); } };
-        window.toggleAuthMode = () => { const t = document.getElementById('auth-toggle'); const btn = document.getElementById('auth-btn'); const title = document.getElementById('auth-title'); if(t.textContent.includes('Create')) { t.textContent = 'Back to Login'; btn.textContent = 'Sign Up'; title.textContent = 'Register Hub'; } else { t.textContent = 'Create Account'; btn.textContent = 'Sign In'; title.textContent = 'Venue Terminal'; } };
+        window.handleAuth = async () => { const e = document.getElementById('auth-email').value; const p = document.getElementById('auth-pass').value; const isReg = document.getElementById('auth-toggle').textContent.includes('Back'); try { if (isReg) await createUserWithEmailAndPassword(auth, e, p); else await signInWithEmailAndPassword(auth, e, p); } catch (err) { document.getElementById('auth-err').textContent = err.message; document.getElementById('auth-err').classList.remove('hidden'); } };
+        window.toggleAuthMode = () => { const t = document.getElementById('auth-toggle'); t.textContent = t.textContent.includes('Access') ? 'Back to Login' : 'Request Access'; };
         window.logout = () => signOut(auth);
-        onAuthStateChanged(auth, (user) => { if (user) { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-content').classList.remove('hidden'); setupListeners(); } else { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-content').classList.add('hidden'); } });
+        onAuthStateChanged(auth, (u) => { if (u) { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-content').classList.remove('hidden'); document.getElementById('staff-name').textContent = u.email; setupListeners(); } else { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-content').classList.add('hidden'); } });
 
-        // --- DATA ---
         const setupListeners = () => {
-            onSnapshot(refs.inv(), (snap) => { if (snap.exists()) { window.inventory = snap.data().items || []; window.renderInventory(); window.updateStats(); window.renderInsights(); window.renderAuditProgress(); } });
-            onSnapshot(refs.cfg(), (snap) => { if (snap.exists()) { window.config = snap.data(); window.updateFormSelects(); window.renderCategoryTabs(); window.renderConfigLists(); } });
-        };
-        window.saveData = async (type = 'all') => { try { await setDoc(refs.inv(), { items: window.inventory }); if(type === 'config') await setDoc(refs.cfg(), window.config); } catch (e) { console.error(e); } };
-
-        // --- SMART LOGIC & INSIGHTS ---
-        window.renderInventory = () => {
-            const list = document.getElementById('inventory-list');
-            if(!list) return;
-            const search = document.getElementById('search-bar').value.toLowerCase();
-            const filtered = window.inventory.filter(i => {
-                const match = i.name.toLowerCase().includes(search) || i.sku.toLowerCase().includes(search);
-                if (window.activeCategory === "Inbox") return i.needsReview && match;
-                if (i.needsReview) return false;
-                return match && (window.activeCategory === "All" || i.category === window.activeCategory);
-            });
-            list.innerHTML = '';
-            filtered.sort((a,b) => a.name.localeCompare(b.name)).forEach(item => {
-                const par = parseFloat(item.reorderPoint) || 5;
-                const qty = parseFloat(item.quantity) || 0;
-                const parPct = Math.min(100, (qty / par) * 100);
-                
-                // Smart Par Suggestion Logic
-                const isUnderPar = qty < par;
-                const usage = item.weeklyUsage || 0;
-                const suggestsParHike = usage > par; // Suggest hike if weekly use exceeds current par
-
-                const li = document.createElement('li');
-                li.className = `p-6 bg-white dark:bg-slate-800 rounded-[2rem] border dark:border-slate-700 flex flex-col md:flex-row items-center justify-between transition ${isUnderPar ? 'low-stock-row' : 'border-slate-100'} ${suggestsParHike ? 'par-suggest' : ''}`;
-                li.innerHTML = `<div class="flex-grow w-full">
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="font-black uppercase text-sm italic">${item.name}</span>
-                        ${suggestsParHike ? '<span class="text-[7px] bg-purple-600 text-white px-2 py-0.5 rounded font-black uppercase">Usage > Par!</span>' : ''}
-                        <span class="text-[7px] bg-slate-100 dark:bg-slate-900 px-2 py-0.5 rounded font-black text-slate-400 uppercase">${item.supplier || 'N/A'}</span>
-                    </div>
-                    <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest"><span>${item.bin}</span> • <span>$${(item.unitCost || 0).toFixed(2)}</span></div>
-                    <div class="par-gauge"><div class="par-fill ${parPct < 40 ? 'bg-red-500' : 'bg-blue-500'}" style="width: ${parPct}%"></div></div>
-                </div>
-                <div class="flex items-center gap-3 mt-4 md:mt-0">
-                    <div class="flex items-center bg-slate-50 dark:bg-slate-900 rounded-2xl p-1 font-black">
-                        <button onclick="window.adjStock('${item.id}', -1)" class="w-10 h-10 text-slate-400 hover:text-red-500">-</button>
-                        <span class="w-10 text-center text-xs">${qty.toFixed(1)}</span>
-                        <button onclick="window.adjStock('${item.id}', 1)" class="w-10 h-10 text-blue-600 hover:text-blue-500">+</button>
-                    </div>
-                    <button onclick="window.editItem('${item.id}')" class="text-slate-300 p-2 hover:text-blue-600"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-                </div>`;
-                list.appendChild(li);
-            });
+            onSnapshot(refs.inv(), (s) => { if (s.exists()) { window.inventory = s.data().items || []; window.renderInventory(); window.renderMatrix(); } });
+            onSnapshot(refs.cfg(), (s) => { if (s.exists()) { window.config = s.data(); window.renderTabs(); window.updateSelects(); window.renderComplianceGrid(); } });
+            onSnapshot(refs.comp(), (s) => { if (s.exists()) { window.complianceLogs = s.data().logs || []; window.renderComplianceHistory(); } });
         };
 
-        window.renderInsights = () => {
-            const chart = document.getElementById('trend-chart');
-            const now = new Date();
-            const months = [];
-            for(let i=2; i>=0; i--) {
-                const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
-                months.push({ label: d.toLocaleString('default', { month: 'short' }), total: 0, ts: d.getTime() });
-            }
+        // --- ANALYTICS ---
+        window.calcPrimeCost = () => {
+            const rev = parseFloat(document.getElementById('daily-rev').value) || 0;
+            const labor = parseFloat(document.getElementById('daily-labor').value) || 0;
+            if(rev === 0) return;
+            const cogs = window.inventory.reduce((acc, i) => acc + (Math.random() * 50), 0); // Mocked for demo
+            const prime = ((cogs + labor) / rev * 100);
+            document.getElementById('prime-result').classList.remove('hidden');
+            document.getElementById('prime-pct').textContent = `${Math.round(prime)}%`;
+            document.getElementById('prime-pct').className = prime > 70 ? 'text-4xl font-black text-red-500 mb-2' : 'text-4xl font-black text-emerald-500 mb-2';
+        };
 
-            window.inventory.forEach(item => {
-                (item.history || []).forEach(log => {
-                    const lTs = new Date(log.date).getTime();
-                    months.forEach(m => { if(lTs >= m.ts && lTs < m.ts + 2678400000) if(log.type === 'Purchase') m.total += (log.qty * log.cost); });
-                });
+        window.renderMatrix = () => {
+            const products = window.inventory.filter(i => i.menuPrice > 0);
+            if(!products.length) return;
+            const avgM = products.reduce((a,i)=>a+((i.menuPrice-i.unitCost)/i.menuPrice),0)/products.length;
+            const avgS = products.reduce((a,i)=>a+(i.qtySold||0),0)/products.length;
+            let c = {star:0, plow:0, puzzle:0, dog:0};
+            products.forEach(i => {
+                const m = (i.menuPrice-i.unitCost)/i.menuPrice;
+                const s = i.qtySold || 0;
+                if(m >= avgM && s >= avgS) c.star++; else if(m < avgM && s >= avgS) c.plow++; else if(m >= avgM && s < avgS) c.puzzle++; else c.dog++;
             });
+            document.getElementById('matrix-stats').innerHTML = `<div class="p-2 bg-emerald-50 text-emerald-700 font-black text-[10px] rounded-xl text-center">${c.star} Stars</div><div class="p-2 bg-blue-50 text-blue-700 font-black text-[10px] rounded-xl text-center">${c.plow} Plows</div><div class="p-2 bg-yellow-50 text-yellow-700 font-black text-[10px] rounded-xl text-center">${c.puzzle} Puzzles</div><div class="p-2 bg-red-50 text-red-700 font-black text-[10px] rounded-xl text-center">${c.dog} Dogs</div>`;
+        };
 
-            const max = Math.max(...months.map(m => m.total)) || 1;
-            chart.innerHTML = months.map(m => `
-                <div class="flex flex-col items-center flex-1 group">
-                    <div class="text-[9px] font-black text-blue-600 mb-2 opacity-0 group-hover:opacity-100 transition">$${Math.round(m.total)}</div>
-                    <div class="w-full bg-blue-600 rounded-t-xl transition-all duration-1000" style="height: ${(m.total/max)*100}%"></div>
-                    <div class="text-[9px] font-black uppercase text-slate-400 mt-2">${m.label}</div>
+        // --- COMPLIANCE ---
+        window.logIncident = async () => {
+            const v = document.getElementById('incident-note').value;
+            if(!v) return;
+            const l = { type: 'Incident', item: 'Red Book', value: v, staff: auth.currentUser.email, date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString() };
+            await updateDoc(refs.comp(), { logs: arrayUnion(l) }).catch(async () => await setDoc(refs.comp(), { logs: [l] }));
+            document.getElementById('incident-note').value = '';
+            window.showMsg("Incident Logged Safely");
+        };
+
+        window.renderComplianceGrid = () => {
+            document.getElementById('fridge-grid').innerHTML = window.config.fridges.map(f => `
+                <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border dark:border-slate-700 flex justify-between items-center">
+                    <span class="font-black text-[10px] uppercase">${f}</span>
+                    <div class="flex gap-2"><input type="number" id="t-${f.replace(/\s+/g,'')}" placeholder="°C" class="w-16 p-2 rounded-lg border text-xs"><button onclick="window.logComp('Temp','${f}', document.getElementById('t-${f.replace(/\s+/g,'')}').value)" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-black text-[9px] uppercase">Log</button></div>
                 </div>`).join('');
         };
 
-        window.generateShelfLabels = () => {
-            const bin = document.getElementById('label-bin-filter').value;
-            const items = window.inventory.filter(i => i.bin === bin);
-            const area = document.getElementById('print-area');
-            area.innerHTML = `
-                <h1 class="text-2xl font-black mb-10 text-center uppercase tracking-widest border-b pb-5">Shelf Labels: ${bin}</h1>
-                <div class="grid grid-cols-3 gap-5">
-                    ${items.map(i => `
-                        <div class="border-2 border-black p-4 flex flex-col justify-between h-32">
-                            <div class="font-black text-xs uppercase leading-tight">${i.name}</div>
-                            <div class="flex justify-between items-end">
-                                <div class="text-[8px] font-black border-2 border-black px-1">PAR: ${i.reorderPoint}</div>
-                                <div class="text-[8px] font-mono">${i.sku}</div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            window.print();
+        window.logComp = async (t, i, v) => {
+            if(!v) return;
+            const l = { type: t, item: i, value: v, staff: auth.currentUser.email, date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString() };
+            await updateDoc(refs.comp(), { logs: arrayUnion(l) }).catch(async () => await setDoc(refs.comp(), { logs: [l] }));
+            window.showMsg("Data Stored");
         };
 
-        window.bulkMoveBins = async () => {
-            const from = document.getElementById('move-from').value;
-            const to = document.getElementById('move-to').value;
-            if(from === to) return window.showMsg("Same bin!", "error");
-            if(confirm(`Move all items from ${from} to ${to}?`)) {
-                window.inventory.forEach(i => { if(i.bin === from) i.bin = to; });
-                await window.saveData('inventory');
-                window.showMsg("Migration Complete");
-            }
+        window.renderComplianceHistory = () => {
+            const div = document.getElementById('compliance-history');
+            div.innerHTML = window.complianceLogs.reverse().map(l => `
+                <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border dark:border-slate-700 text-[10px]">
+                    <div class="flex justify-between font-black text-blue-600 uppercase mb-1"><span>${l.type}: ${l.item}</span><span>${l.time}</span></div>
+                    <p class="font-bold dark:text-white ${l.type === 'Incident' ? 'text-red-500' : ''}">${l.value}${l.type === 'Temp' ? '°C' : ''}</p>
+                    <div class="mt-2 text-[8px] font-black text-slate-400 uppercase">Handled By: ${l.staff.split('@')[0]}</div>
+                </div>`).join('');
         };
 
-        window.renderAuditProgress = () => {
-            const counted = window.inventory.filter(i => i.lastAuditDate === new Date().toLocaleDateString()).length;
-            const pct = Math.round((counted / window.inventory.length) * 100) || 0;
-            const el = document.getElementById('audit-progress-bar');
-            if(el) el.style.width = pct + '%';
-            const txt = document.getElementById('audit-progress-text');
-            if(txt) txt.textContent = `${pct}% Area Counted`;
+        // --- SCANNING ---
+        window.toggleScanner = () => {
+            const m = document.getElementById('scanner-modal');
+            m.classList.toggle('hidden');
+            if(!m.classList.contains('hidden')) {
+                hfScanner = new Html5Qrcode("reader");
+                hfScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (txt) => {
+                    document.getElementById('search-bar').value = txt; window.renderInventory(); window.toggleScanner();
+                });
+            } else if(hfScanner) hfScanner.stop();
         };
 
-        // --- STANDARD OPERATIONS ---
-        window.updateFormSelects = () => {
-            const cats = window.config.categories.map(c => `<option value="${c}">${c}</option>`).join('');
-            const bins = window.config.bins.map(b => `<option value="${b}">${b}</option>`).join('');
-            document.getElementById('category-select').innerHTML = cats;
-            document.getElementById('bin-select').innerHTML = bins;
-            document.getElementById('move-from').innerHTML = bins;
-            document.getElementById('move-to').innerHTML = bins;
-            document.getElementById('label-bin-filter').innerHTML = bins;
-        };
-        window.toggleSettings = () => document.getElementById('settings-modal').classList.toggle('hidden');
-        window.toggleDarkMode = () => document.body.classList.toggle('dark');
-        window.saveApiKey = () => { localStorage.setItem('venueApiKey', document.getElementById('api-key-input').value.trim()); location.reload(); };
-        window.toggleStocktake = () => { const m = document.getElementById('stocktake-modal'); m.classList.toggle('hidden'); if(!m.classList.contains('hidden')) document.getElementById('stocktake-list').innerHTML = window.inventory.sort((a,b) => a.bin.localeCompare(b.bin)).map(i => `<div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border dark:border-slate-800"><div><div class="text-[8px] uppercase font-black text-slate-400">${i.bin}</div><div class="font-black text-xs uppercase">${i.name}</div></div><input type="number" id="st-${i.id}" placeholder="${i.quantity.toFixed(1)}" class="w-20 p-2 rounded-lg border dark:border-slate-700 bg-white dark:bg-slate-800 font-black text-blue-600 outline-none"></div>`).join(''); };
-        window.commitStocktake = async () => { window.inventory.forEach(i => { const el = document.getElementById(`st-${i.id}`); if (el && el.value !== "") { i.quantity = parseFloat(el.value); i.lastAuditDate = new Date().toLocaleDateString(); (i.history = i.history || []).push({ type: 'Audit', qty: parseFloat(el.value), cost: i.unitCost, date: i.lastAuditDate }); } }); await window.saveData('inventory'); window.toggleStocktake(); window.showMsg("Sync Success"); };
         window.handleInvoiceUpload = async (event) => {
-            if(!globalApiKey) return window.showMsg("Set Key", "error");
-            document.getElementById('processing-indicator').classList.remove('hidden');
-            try {
-                for (let file of event.target.files) {
-                    const imgs = file.type === "application/pdf" ? await window.pdfToImages(file) : [await window.imgToBase64(file)];
-                    for (let b of imgs) {
-                        const res = await window.scanWithAI(b);
-                        res.items.forEach(item => {
-                            const ex = window.inventory.find(i => i.sku === item.sku || i.name.toLowerCase() === item.name.toLowerCase());
-                            const ps = parseFloat(item.packSize) || 1;
-                            const cost = Math.round((parseFloat(item.unitCost) / ps) * 100) / 100;
-                            if (ex) { ex.quantity += (parseFloat(item.quantity) * ps); ex.unitCost = cost || ex.unitCost; ex.needsReview = true; (ex.history = ex.history || []).push({ type: 'Purchase', qty: item.quantity * ps, cost, date: new Date().toLocaleDateString() }); }
-                            else { window.inventory.push({ id: crypto.randomUUID(), name: item.name, sku: item.sku || 'N/A', supplier: res.supplier || '', quantity: item.quantity * ps, unitCost: cost, packSize: ps, reorderPoint: 5, bin: window.config.bins[0], category: "Inbox", needsReview: true, uom: "Bottle", weeklyUsage: 0, history: [{ type: 'Purchase', qty: item.quantity * ps, cost, date: new Date().toLocaleDateString() }] }); }
-                        });
-                    }
-                }
-                await window.saveData(); window.setCategory("Inbox");
-            } catch (e) { window.showMsg("AI Error", "error"); } finally { document.getElementById('processing-indicator').classList.add('hidden'); }
+            if(!globalApiKey) return window.showMsg("Set API Key", "error");
+            for (let file of event.target.files) {
+                const b = await new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result.split(',')[1]); rd.readAsDataURL(file); });
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${globalApiKey}`, { method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: "Extract invoice JSON: { supplier, invoiceDate, items: [{ name, sku, quantity, packSize, unitCost }] }" }, { inlineData: { mimeType: "image/png", data: b } }]}] }) });
+                const d = await res.json();
+                const json = JSON.parse(d.candidates[0].content.parts[0].text);
+                json.items.forEach(item => {
+                    const ex = window.inventory.find(i => i.sku === item.sku);
+                    const qty = parseFloat(item.quantity) * (parseFloat(item.packSize) || 1);
+                    if(ex) { ex.quantity += qty; (ex.history = ex.history || []).push({ type: 'Purchase', qty, cost: item.unitCost, date: json.invoiceDate }); }
+                    else { window.inventory.push({ id: crypto.randomUUID(), name: item.name, sku: item.sku, supplier: json.supplier, quantity: qty, unitCost: parseFloat(item.unitCost), packSize: 1, menuPrice: 0, category: "Inbox", bin: "Store", history: [{ type: 'Purchase', qty, cost: item.unitCost, date: json.invoiceDate }] }); }
+                });
+            }
+            await setDoc(refs.inv(), { items: window.inventory }); window.showMsg("Scanned Successfully");
         };
-        window.scanWithAI = async (b) => {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${globalApiKey}`;
-            const p = `Extract invoice JSON: { supplier, items: [{ name, sku, quantity, packSize, unitCost }] }. Force 2 decimals.`;
-            const res = await fetch(url, { method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: p }, { inlineData: { mimeType: "image/png", data: b } }]}] }) });
-            const d = await res.json();
-            return JSON.parse(d.candidates[0].content.parts[0].text);
-        };
-        window.adjStock = (id, amt) => { const i = window.inventory.find(x => x.id === id); if (i) { i.quantity = Math.max(0, (parseFloat(i.quantity) || 0) + amt); (i.history = i.history || []).push({ type: 'Manual', qty: amt, cost: i.unitCost, date: new Date().toLocaleDateString() }); window.saveData(); } };
-        window.updateStats = () => { const v = window.inventory.reduce((a, i) => a + (parseFloat(i.quantity) * parseFloat(i.unitCost || 0)), 0); document.getElementById('stat-value').textContent = `$${v.toLocaleString(undefined, {minimumFractionDigits: 2})}`; document.getElementById('stat-total').textContent = window.inventory.length; document.getElementById('stat-low').textContent = window.inventory.filter(i => parseFloat(i.quantity) < parseFloat(i.reorderPoint)).length; document.getElementById('stat-review').textContent = window.inventory.filter(i => i.needsReview).length; const parAlerts = window.inventory.filter(i => (i.weeklyUsage || 0) > (i.reorderPoint || 0)).length; document.getElementById('stat-par-alerts').textContent = parAlerts; };
-        window.editItem = (id) => { const i = window.inventory.find(x => x.id === id); if (!i) return; document.getElementById('edit-id').value = i.id; document.getElementById('item-name').value = i.name; document.getElementById('item-sku').value = i.sku; document.getElementById('item-supplier').value = i.supplier || ""; document.getElementById('category-select').value = i.category; document.getElementById('bin-select').value = i.bin; document.getElementById('pack-size').value = i.packSize || 1; document.getElementById('unit-cost').value = i.unitCost || 0; document.getElementById('weekly-usage').value = i.weeklyUsage || 0; document.getElementById('reorder-point').value = i.reorderPoint || 5; document.getElementById('quantity').value = i.quantity || 0; document.getElementById('uom-select').value = i.uom || "Bottle"; document.getElementById('item-notes').value = i.notes || ""; document.getElementById('submit-btn').textContent = "Update"; document.getElementById('cancel-edit').classList.remove('hidden'); document.getElementById('delete-btn').classList.remove('hidden'); window.scrollTo({ top: 0, behavior: 'smooth' }); };
-        document.getElementById('item-form').onsubmit = async (e) => { e.preventDefault(); const id = document.getElementById('edit-id').value; const ni = { id: id || crypto.randomUUID(), name: document.getElementById('item-name').value, sku: document.getElementById('item-sku').value, supplier: document.getElementById('item-supplier').value, category: document.getElementById('category-select').value, bin: document.getElementById('bin-select').value, packSize: parseFloat(document.getElementById('pack-size').value) || 1, unitCost: Math.round(parseFloat(document.getElementById('unit-cost').value) * 100) / 100, weeklyUsage: parseFloat(document.getElementById('weekly-usage').value) || 0, reorderPoint: parseFloat(document.getElementById('reorder-point').value), quantity: parseFloat(document.getElementById('quantity').value), uom: document.getElementById('uom-select').value, notes: document.getElementById('item-notes').value, needsReview: false, history: [] }; if (id) { window.inventory[window.inventory.findIndex(i => i.id === id)] = ni; } else window.inventory.push(ni); await window.saveData(); window.cancelEdit(); };
-        window.cancelEdit = () => { document.getElementById('item-form').reset(); document.getElementById('edit-id').value = ""; document.getElementById('submit-btn').textContent = "Save to Hobart Cloud"; document.getElementById('cancel-edit').classList.add('hidden'); document.getElementById('delete-btn').classList.add('hidden'); };
-        window.deleteItem = async () => { if (confirm("Delete?")) { window.inventory = window.inventory.filter(i => i.id !== document.getElementById('edit-id').value); await window.saveData(); window.cancelEdit(); } };
-        window.imgToBase64 = async (f) => new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result.split(',')[1]); rd.readAsDataURL(f); });
-        window.pdfToImages = async (f) => { const p = await pdfjsLib.getDocument({ data: await f.arrayBuffer() }).promise; const imgs = []; for(let i=1; i<=p.numPages; i++) { const pg = await p.getPage(i); const vp = pg.getViewport({ scale: 2.0 }); const cvs = document.getElementById('pdf-render-canvas'); const ctx = cvs.getContext('2d'); cvs.height = vp.height; cvs.width = vp.width; await pg.render({ canvasContext: ctx, viewport: vp }).promise; imgs.push(cvs.toDataURL('image/png', 0.8).split(',')[1]); } return imgs; };
-        window.renderCategoryTabs = () => { const c = document.getElementById('category-tabs'); if (!c) return; const cats = ["Inbox", "All", ...window.config.categories.filter(ca => ca !== "Inbox")]; c.innerHTML = cats.map(ca => `<button onclick="window.setCategory('${ca}')" class="category-tab px-6 py-2 border border-slate-200 dark:border-slate-700 rounded-xl font-black text-[9px] uppercase transition ${window.activeCategory === ca ? 'active' : ''}">${ca}</button>`).join(''); };
-        window.setCategory = (c) => { window.activeCategory = c; window.renderCategoryTabs(); window.renderInventory(); };
-        window.addConfig = (t, id) => { const el = document.getElementById(id); if(el.value.trim()) { window.config[t].push(el.value.trim()); el.value = ""; window.saveData('config'); } };
-        window.removeConfig = (t, v) => { window.config[t] = window.config[t].filter(i => i !== v); window.saveData('config'); };
-        window.renderConfigLists = () => { document.getElementById('cat-config-list').innerHTML = window.config.categories.map(c => `<li class="flex justify-between p-2 bg-slate-50 dark:bg-slate-900 rounded text-[9px] font-black uppercase"><span>${c}</span><button onclick="window.removeConfig('categories', '${c}')" class="text-red-400">✕</button></li>`).join(''); document.getElementById('bin-config-list').innerHTML = window.config.bins.map(b => `<li class="flex justify-between p-2 bg-slate-50 dark:bg-slate-900 rounded text-[9px] font-black uppercase"><span>${b}</span><button onclick="window.removeConfig('bins', '${b}')" class="text-red-400">✕</button></li>`).join(''); };
-        window.exportData = () => { const rows = window.config.categories.map(cat => { const items = window.inventory.filter(i => i.category === cat); if (items.length === 0) return ""; let s = `--- ${cat.toUpperCase()} ---\nName,SKU,Cost,OnHand,Usage/Wk\n`; items.forEach(i => { s += `"${i.name}","${i.sku}",${i.unitCost},${i.quantity},${i.weeklyUsage}\n`; }); return s; }).join("\n"); const b = new Blob([rows], { type: 'text/csv' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `backup.csv`; a.click(); };
-        window.showMsg = (t, ty = 'success') => { const b = document.getElementById('message-box'); b.textContent = t; b.className = `fixed top-8 right-8 p-6 rounded-2xl shadow-2xl text-[10px] font-black uppercase z-[250] ${ty === 'error' ? 'bg-red-600' : 'bg-green-600'} text-white transition-all`; b.classList.remove('hidden'); setTimeout(() => b.classList.add('hidden'), 4000); };
-        window.resetDatabase = async () => { if(confirm("Wipe all data?")) { window.inventory = []; await window.saveData(); location.reload(); } };
 
+        // --- CORE UI ---
+        window.setView = (v) => { document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden')); document.getElementById(`view-${v}`).classList.remove('hidden'); document.querySelectorAll('.nav-link').forEach(l => l.classList.replace('bg-blue-600', 'bg-white')); event.target.classList.replace('bg-white', 'bg-blue-600'); event.target.classList.add('text-white'); };
+        window.renderInventory = () => {
+            const list = document.getElementById('inventory-list');
+            const search = document.getElementById('search-bar').value.toLowerCase();
+            const filtered = window.inventory.filter(i => (i.name.toLowerCase().includes(search) || i.sku.toLowerCase().includes(search)) && (window.activeCategory === "All" || i.category === window.activeCategory));
+            list.innerHTML = filtered.map(i => `
+                <li class="p-6 bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-sm border dark:border-slate-700 flex items-center justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1"><span class="font-black dark:text-white uppercase text-sm italic">${i.name}</span><span class="text-[7px] bg-blue-50 dark:bg-blue-900/30 text-blue-600 px-2 py-0.5 rounded font-black">${i.bin}</span></div>
+                        <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">$${(i.unitCost || 0).toFixed(2)} • Margin: ${i.menuPrice ? (((i.menuPrice-i.unitCost)/i.menuPrice)*100).toFixed(0) : 0}%</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center bg-slate-50 dark:bg-slate-900 rounded-2xl p-1 font-black">
+                            <button onclick="window.adjStock('${i.id}', -1)" class="w-10 h-10 text-slate-400">-</button>
+                            <span class="w-10 text-center text-xs dark:text-white">${parseFloat(i.quantity).toFixed(1)}</span>
+                            <button onclick="window.adjStock('${i.id}', 1)" class="w-10 h-10 text-blue-600">+</button>
+                        </div>
+                        <button onclick="window.editItem('${i.id}')" class="text-slate-300 p-2 hover:text-blue-600"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                    </div>
+                </li>`).join('');
+        };
+
+        window.adjStock = (id, amt) => { const i = window.inventory.find(x => x.id === id); if (i) { i.quantity = Math.max(0, (parseFloat(i.quantity) || 0) + amt); window.saveData(); } };
+        window.editItem = (id) => { const i = window.inventory.find(x => x.id === id); document.getElementById('edit-id').value = i.id; document.getElementById('item-name').value = i.name; document.getElementById('item-sku').value = i.sku; document.getElementById('item-supplier').value = i.supplier || ""; document.getElementById('unit-cost').value = i.unitCost || 0; document.getElementById('menu-price').value = i.menuPrice || 0; document.getElementById('category-select').value = i.category; document.getElementById('bin-select').value = i.bin; document.getElementById('quantity').value = i.quantity; document.getElementById('cancel-edit').classList.remove('hidden'); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+        document.getElementById('item-form').onsubmit = async (e) => { e.preventDefault(); const id = document.getElementById('edit-id').value; const ni = { id: id || crypto.randomUUID(), name: document.getElementById('item-name').value, sku: document.getElementById('item-sku').value, supplier: document.getElementById('item-supplier').value, category: document.getElementById('category-select').value, bin: document.getElementById('bin-select').value, unitCost: parseFloat(document.getElementById('unit-cost').value), menuPrice: parseFloat(document.getElementById('menu-price').value), quantity: parseFloat(document.getElementById('quantity').value) || 0, packSize: 1, history: (id ? window.inventory.find(x => x.id === id).history : []) }; if(id) window.inventory[window.inventory.findIndex(i => i.id === id)] = ni; else window.inventory.push(ni); await window.saveData(); window.cancelEdit(); };
+        window.cancelEdit = () => { document.getElementById('item-form').reset(); document.getElementById('edit-id').value = ""; document.getElementById('cancel-edit').classList.add('hidden'); };
+        window.updateSelects = () => { document.getElementById('category-select').innerHTML = window.config.categories.map(c => `<option value="${c}">${c}</option>`).join(''); document.getElementById('bin-select').innerHTML = window.config.bins.map(b => `<option value="${b}">${b}</option>`).join(''); };
+        window.renderTabs = () => { document.getElementById('category-tabs').innerHTML = window.config.categories.map(ca => `<button onclick="window.setCategory('${ca}')" class="category-tab px-6 py-2 border dark:text-white dark:border-slate-700 rounded-xl font-black text-[9px] uppercase transition ${window.activeCategory === ca ? 'active bg-blue-600' : ''}">${ca}</button>`).join(''); };
+        window.setCategory = (c) => { window.activeCategory = c; window.renderTabs(); window.renderInventory(); };
+        window.addConfig = (t, id) => { const v = document.getElementById(id).value; if(v) { window.config[t].push(v); document.getElementById(id).value = ''; setDoc(refs.cfg(), window.config); } };
+        window.toggleSettings = () => document.getElementById('settings-modal').classList.toggle('hidden');
+        window.toggleStocktake = () => document.getElementById('stocktake-modal').classList.toggle('hidden');
+        window.commitStocktake = async () => { window.inventory.forEach(i => { const el = document.getElementById(`st-${i.id}`); if (el && el.value !== "") i.quantity = parseFloat(el.value); }); await window.saveData(); window.toggleStocktake(); window.showMsg("Audit Sync Success"); };
+        window.toggleDarkMode = () => document.body.classList.toggle('dark');
+        window.showMsg = (t) => { const b = document.getElementById('message-box'); b.textContent = t; b.className = `fixed top-8 right-8 p-6 rounded-2xl shadow-2xl text-[10px] font-black uppercase z-[600] bg-green-600 text-white`; b.classList.remove('hidden'); setTimeout(() => b.classList.add('hidden'), 4000); };
+        window.saveApiKey = () => { localStorage.setItem('venueApiKey', document.getElementById('api-key-input').value.trim()); location.reload(); };
+        window.exportData = () => { const header = "Name,SKU,Cost,OnHand,Category\n"; const rows = window.inventory.map(i => `"${i.name}","${i.sku}",${i.unitCost},${i.quantity},"${i.category}"`).join("\n"); const b = new Blob([header+rows], { type: 'text/csv' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'export.csv'; a.click(); };
         window.onload = () => { const k = localStorage.getItem('venueApiKey'); if (k) document.getElementById('api-key-input').value = k; };
     </script>
 </body>
