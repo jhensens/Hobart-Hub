@@ -14,7 +14,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; transition: 0.3s; }
         body.dark { background-color: #0f172a; color: #f8fafc; }
         
-        /* MANDATORY VISIBILITY STYLING */
+        /* THE "HIGH-CONTRAST" FORCE STYLE */
         .form-label { font-weight: 900; font-size: 0.75rem; text-transform: uppercase; color: #000; margin-bottom: 6px; display: block; }
         .dark .form-label { color: #fff; }
         
@@ -55,17 +55,17 @@
 </head>
 <body class="min-h-screen pb-20">
 
-    <!-- AUTH LAYER -->
+    <!-- AUTH SCREEN -->
     <div id="login-screen" class="fixed inset-0 z-[500] bg-slate-900 flex items-center justify-center p-6">
         <div class="max-w-sm w-full bg-white dark:bg-slate-800 rounded-[2.5rem] p-10 shadow-2xl">
             <div id="auth-logo" class="w-24 h-24 bg-slate-100 rounded-3xl mx-auto mb-6 flex items-center justify-center text-4xl">🏢</div>
-            <h2 id="auth-title" class="text-xl font-black mb-6 text-center uppercase tracking-tight dark:text-white">Venue Access</h2>
+            <h2 id="auth-title" class="text-xl font-black mb-6 text-center uppercase tracking-tight dark:text-white">Venue OS Terminal</h2>
             <div class="space-y-4">
                 <div><label class="form-label">Email</label><input type="email" id="auth-email" class="heavy-input" placeholder="admin@hobart.com"></div>
                 <div><label class="form-label">Password</label><input type="password" id="auth-pass" class="heavy-input" placeholder="••••••••"></div>
                 <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl uppercase text-xs shadow-xl">Sign In</button>
                 <p id="auth-err" class="text-red-500 text-[10px] font-black text-center hidden mt-4 p-3 bg-red-50 rounded-xl"></p>
-                <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black text-slate-400 uppercase mt-4 text-center">Create New Access</button>
+                <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black text-slate-400 uppercase mt-4 text-center">Create New Profile</button>
             </div>
         </div>
     </div>
@@ -115,8 +115,8 @@
                                 <div id="stock-alerts" class="space-y-2 overflow-y-auto max-h-[180px]"></div>
                             </div>
                             <div class="stats-card">
-                                <h3 class="font-black uppercase text-xs mb-4">POS Export Sync</h3>
-                                <button onclick="document.getElementById('pos-csv').click()" class="w-full bg-emerald-600 text-white font-black py-4 rounded-xl text-[10px] uppercase shadow-md">Upload Daily CSV</button>
+                                <h3 class="font-black uppercase text-xs mb-4 text-emerald-600">Sync Inventory</h3>
+                                <button onclick="document.getElementById('pos-csv').click()" class="w-full bg-emerald-600 text-white font-black py-4 rounded-xl text-[10px] uppercase shadow-md">Import Sales CSV</button>
                                 <input type="file" id="pos-csv" class="hidden" onchange="window.importSales(event)">
                             </div>
                         </div>
@@ -125,8 +125,8 @@
                         <h3 class="font-black uppercase text-xs mb-6 italic">Secure Red Book</h3>
                         <div id="redbook-feed" class="flex-grow overflow-y-auto space-y-4 no-scrollbar"></div>
                         <div class="mt-4 pt-4 border-t dark:border-slate-700">
-                            <textarea id="log-input" class="heavy-input text-xs mb-2" placeholder="Incident or log note..."></textarea>
-                            <button onclick="window.logIncident()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-black text-[10px] uppercase">Submit Entry</button>
+                            <textarea id="log-input" class="heavy-input text-xs mb-2" placeholder="Entry note..."></textarea>
+                            <button onclick="window.logIncident()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-black text-[10px] uppercase">Submit to Cloud</button>
                         </div>
                     </div>
                 </div>
@@ -137,12 +137,12 @@
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
                     <div class="lg:col-span-4 xl:col-span-3">
                         <div class="stats-card sticky top-24 border-2 border-black">
-                            <h2 class="text-xl font-black uppercase mb-6 italic">Item Configuration</h2>
+                            <h2 class="text-xl font-black uppercase mb-6 italic">Item Entry</h2>
                             <form id="item-form" class="space-y-4">
                                 <input type="hidden" id="edit-id">
                                 <div><label class="form-label">Product Name</label><input type="text" id="p-name" class="heavy-input" required></div>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div><label class="form-label">SKU (POS)</label><input type="text" id="p-sku" class="heavy-input" required></div>
+                                    <div><label class="form-label">SKU / Code</label><input type="text" id="p-sku" class="heavy-input" required></div>
                                     <div><label class="form-label">Vendor</label><input type="text" id="p-vendor" class="heavy-input"></div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
@@ -159,13 +159,13 @@
                                 </div>
                                 <div><label class="form-label">Category</label><select id="p-cat" class="heavy-input"></select></div>
                                 <button type="submit" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs">Sync Product</button>
-                                <button type="button" id="cancel-edit" onclick="window.cancelEdit()" class="hidden w-full text-[10px] font-black text-slate-400 mt-2 uppercase text-center">Discard Edit</button>
+                                <button type="button" id="cancel-edit" onclick="window.cancelEdit()" class="hidden w-full text-[10px] font-black text-slate-400 mt-2 uppercase text-center">Cancel</button>
                             </form>
                         </div>
                     </div>
                     <div class="lg:col-span-8 xl:col-span-9">
                         <div class="flex gap-4 mb-8">
-                            <input type="text" id="search-bar" oninput="window.renderInventory()" placeholder="Quick search inventory..." class="flex-grow p-5 bg-white dark:bg-slate-800 rounded-[2rem] border-2 border-slate-300 dark:border-slate-700 font-bold outline-none shadow-sm">
+                            <input type="text" id="search-bar" oninput="window.renderInventory()" placeholder="Find stock by name..." class="flex-grow p-5 bg-white dark:bg-slate-800 rounded-[2rem] border-2 border-slate-300 dark:border-slate-700 font-bold outline-none shadow-sm">
                             <button onclick="document.getElementById('batch-scan').click()" class="bg-indigo-600 text-white px-10 rounded-full font-black uppercase text-[10px] shadow-lg">Scan PDF</button>
                             <input type="file" id="batch-scan" multiple class="hidden" onchange="window.handleBatchScan(event)">
                         </div>
@@ -177,10 +177,10 @@
             <!-- VIEW: PRODUCTION -->
             <div id="view-production" class="view-section hidden">
                 <header class="flex justify-between items-center mb-10">
-                    <h1 class="text-4xl font-black tracking-tighter italic dark:text-white">Recipe <span class="text-purple-600">Scaling</span></h1>
+                    <h1 class="text-4xl font-black tracking-tighter italic dark:text-white">Recipe <span class="text-purple-600">Vault</span></h1>
                     <div class="flex gap-3">
-                        <button onclick="document.getElementById('recipe-keeper-zip').click()" class="bg-purple-600 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase shadow-lg">Import ZIP</button>
-                        <input type="file" id="recipe-keeper-zip" class="hidden" accept=".zip" onchange="window.importRecipesFromZip(event)">
+                        <button onclick="document.getElementById('recipe-keeper-import').click()" class="bg-purple-600 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase shadow-lg">Import ZIP / HTML</button>
+                        <input type="file" id="recipe-keeper-import" class="hidden" accept=".zip,.html" onchange="window.importRecipesHandler(event)">
                         <button onclick="window.addRecipePrompt()" class="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase">+ New Recipe</button>
                     </div>
                 </header>
@@ -191,18 +191,18 @@
             <div id="view-safety" class="view-section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="stats-card">
-                        <h3 class="font-black uppercase text-xs mb-6 italic">Equipment Temp Log</h3>
+                        <h3 class="font-black uppercase text-xs mb-6 italic">Fridge Temps</h3>
                         <div id="fridge-grid" class="space-y-4"></div>
                     </div>
                     <div class="stats-card h-fit">
-                        <h3 class="font-black uppercase text-xs mb-6 italic">Task Checklists</h3>
+                        <h3 class="font-black uppercase text-xs mb-6 italic">Duty Checklists</h3>
                         <div class="flex flex-col gap-4">
-                            <button onclick="window.logCheck('Opening Checklist')" class="p-6 bg-blue-50 text-blue-600 rounded-3xl font-black text-xs uppercase text-left border border-blue-100">Morning Shift Open</button>
-                            <button onclick="window.logCheck('Closing Checklist')" class="p-6 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase text-left">Night Shift Close</button>
+                            <button onclick="window.logCheck('Opening Checklist')" class="p-6 bg-blue-50 text-blue-600 rounded-3xl font-black text-xs uppercase text-left border border-blue-100">Morning Shift Check</button>
+                            <button onclick="window.logCheck('Closing Checklist')" class="p-6 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase text-left">Night Shift Check</button>
                         </div>
                     </div>
                     <div class="stats-card h-[500px] flex flex-col">
-                        <h3 class="font-black uppercase text-xs mb-6 italic">Cloud Activity Log</h3>
+                        <h3 class="font-black uppercase text-xs mb-6 italic">Safety History</h3>
                         <div id="safety-history" class="overflow-y-auto space-y-3 no-scrollbar flex-grow text-[10px]"></div>
                     </div>
                 </div>
@@ -212,7 +212,7 @@
             <div id="view-intel" class="view-section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="stats-card lg:col-span-1">
-                        <h3 class="font-black uppercase text-xs mb-8 italic">BCG Profit Matrix</h3>
+                        <h3 class="font-black uppercase text-xs mb-8 italic">Profit Matrix</h3>
                         <div class="bcg-matrix">
                             <div class="bcg-quadrant q-star">Stars</div>
                             <div class="bcg-quadrant q-puzzle">Puzzles</div>
@@ -222,19 +222,19 @@
                         <div id="matrix-stats" class="mt-4 grid grid-cols-2 gap-2 text-[8px] font-black uppercase text-center"></div>
                     </div>
                     <div class="stats-card lg:col-span-2">
-                        <h3 class="font-black uppercase text-xs mb-6 italic">Asset & Maintenance</h3>
+                        <h3 class="font-black uppercase text-xs mb-6 italic">Equipment Maintenance</h3>
                         <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                        <button onclick="window.addAssetPrompt()" class="w-full mt-6 py-4 border-2 border-dashed border-slate-200 rounded-2xl text-[10px] font-black uppercase text-slate-400">+ Add Equipment</button>
+                        <button onclick="window.addAssetPrompt()" class="w-full mt-6 py-4 border-2 border-dashed border-slate-200 rounded-2xl text-[10px] font-black uppercase text-slate-400">+ Add Asset</button>
                     </div>
                 </div>
                 <div class="mt-8 stats-card bg-emerald-50">
-                    <h3 class="font-black uppercase text-xs mb-6 text-emerald-700 italic">Core Financial Metrics</h3>
+                    <h3 class="font-black uppercase text-xs mb-6 text-emerald-700 italic">Financial Health</h3>
                     <div class="flex items-center justify-between">
                         <div>
                             <div id="prime-cost-display" class="text-4xl font-black text-emerald-900">-- %</div>
-                            <div class="text-[10px] font-black text-emerald-600 uppercase mt-1">Prime Cost (COGS + Wages Ratio)</div>
+                            <div class="text-[10px] font-black text-emerald-600 uppercase mt-1">Prime Cost (COGS + Wages)</div>
                         </div>
-                        <button onclick="window.exportFullHistory()" class="bg-white px-6 py-3 rounded-xl border border-emerald-200 font-black text-[10px] uppercase text-emerald-700 shadow-sm">Export 8-Week CSV</button>
+                        <button onclick="window.exportFullData()" class="bg-white px-6 py-3 rounded-xl border border-emerald-200 font-black text-[10px] uppercase text-emerald-700 shadow-sm">Download Analytics</button>
                     </div>
                 </div>
             </div>
@@ -242,10 +242,10 @@
         </div>
     </div>
 
-    <!-- SETTINGS MODAL -->
+    <!-- SETTINGS -->
     <div id="settings-modal" class="hidden fixed inset-0 z-[600] flex items-center justify-center modal-bg p-4">
         <div class="bg-white dark:bg-slate-800 rounded-[3.5rem] p-12 max-w-xl w-full shadow-2xl">
-            <h3 class="text-2xl font-black uppercase mb-10 italic dark:text-white">Admin Dashboard</h3>
+            <h3 class="text-2xl font-black uppercase mb-10 italic dark:text-white">Venue Configuration</h3>
             <div class="space-y-8">
                 <div class="space-y-4">
                     <div><label class="form-label">Business Name</label><input type="text" id="set-name" onchange="window.saveBranding()" class="heavy-input"></div>
@@ -255,7 +255,11 @@
                     <label class="form-label">Gemini Master Key</label>
                     <input type="password" id="api-key" onchange="window.saveApiKey()" class="heavy-input">
                 </div>
-                <button onclick="window.toggleSettings()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase">Save & Close</button>
+                <div class="flex gap-3">
+                    <button onclick="window.toggleDarkMode()" class="flex-grow py-4 bg-slate-100 dark:bg-slate-700 rounded-xl font-black text-xs uppercase">Theme</button>
+                    <button onclick="window.logout()" class="px-8 py-4 bg-red-50 text-red-600 rounded-xl font-black text-xs uppercase">Logout</button>
+                </div>
+                <button onclick="window.toggleSettings()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase">Close Settings</button>
             </div>
         </div>
     </div>
@@ -282,7 +286,7 @@
         };
 
         window.inventory = [];
-        window.config = { name: "Hobart Executive", logo: "", categories: ["Bar", "Kitchen", "Ramen", "Prep", "Cleaning"], fridges: ["Fridge 1", "Fridge 2", "Coolroom"] };
+        window.config = { name: "Hobart Executive", logo: "", categories: ["Bar", "Kitchen", "Ramen", "Prep", "Cleaning"], fridges: ["Fridge 1", "Coolroom", "Freezer"] };
         window.compliance = [];
         window.assets = [];
         window.recipes = [];
@@ -319,7 +323,8 @@
 
         // --- NAVIGATION ---
         window.setView = (v) => {
-            document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden'));
+            const sections = document.querySelectorAll('.view-section');
+            sections.forEach(s => s.classList.add('hidden'));
             const target = document.getElementById(`view-${v}`);
             if (target) target.classList.remove('hidden');
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('nav-active'));
@@ -327,7 +332,7 @@
             if (activeNav) activeNav.classList.add('nav-active');
         };
 
-        // --- WEATHER & HOBART INTEL ---
+        // --- WEATHER & DASHBOARD ---
         async function fetchWeather() {
             try {
                 const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-42.8821&longitude=147.3272&current_weather=true&daily=sunrise,sunset&timezone=auto");
@@ -340,6 +345,72 @@
             } catch(e) {}
         }
 
+        window.updateStats = () => {
+            const v = window.inventory.reduce((acc, i) => acc + (parseFloat(i.quantity || 0) * parseFloat(i.unitCost || 0)), 0);
+            document.getElementById('d-stock').textContent = `$${v.toLocaleString()}`;
+            const alerts = document.getElementById('stock-alerts');
+            const low = window.inventory.filter(i => parseFloat(i.quantity) < 5);
+            alerts.innerHTML = low.map(i => `<div class="p-2 bg-red-50 text-red-600 rounded-lg font-black text-[9px] uppercase border border-red-100 flex justify-between"><span>${i.name}</span><span>${i.quantity}</span></div>`).join('') || '<p class="text-[9px] text-slate-400 italic">Inventory healthy</p>';
+        };
+
+        // --- RECIPE HANDLER (HTML/ZIP SUPPORT) ---
+        window.importRecipesHandler = async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const recipes = [];
+            
+            if (file.name.endsWith('.zip')) {
+                const zip = new JSZip();
+                const contents = await zip.loadAsync(file);
+                for (let filename of Object.keys(contents.files)) {
+                    if (filename.endsWith('.html')) {
+                        const htmlString = await contents.files[filename].async("string");
+                        recipes.push(parseRecipeHtml(htmlString));
+                    } else if (filename.endsWith('.json')) {
+                        const jsonString = await contents.files[filename].async("string");
+                        const data = JSON.parse(jsonString);
+                        (data.recipes || [data]).forEach(r => recipes.push({
+                            id: Date.now() + Math.random(),
+                            name: r.title || r.name,
+                            ingredients: r.ingredients || [],
+                            method: r.directions || r.method || ''
+                        }));
+                    }
+                }
+            } else if (file.name.endsWith('.html')) {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const recipe = parseRecipeHtml(e.target.result);
+                    await updateDoc(refs.rec(), { items: arrayUnion(recipe) }).catch(() => setDoc(refs.rec(), { items: [recipe] }));
+                    window.showMsg("Recipe Imported!");
+                };
+                reader.readAsText(file);
+                return;
+            }
+            
+            if (recipes.length > 0) {
+                await updateDoc(refs.rec(), { items: arrayUnion(...recipes) }).catch(() => setDoc(refs.rec(), { items: recipes }));
+                window.showMsg(`${recipes.length} Recipes Synced!`);
+            }
+        };
+
+        function parseRecipeHtml(htmlString) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlString, 'text/html');
+            const title = doc.querySelector('h2')?.innerText || doc.title || 'New Recipe';
+            const ingredients = Array.from(doc.querySelectorAll('[itemprop="recipeIngredients"] p')).map(p => p.innerText);
+            const method = Array.from(doc.querySelectorAll('[itemprop="recipeDirections"] p')).map(p => p.innerText).join('\n');
+            
+            return {
+                id: Date.now() + Math.random(),
+                name: title,
+                category: 'Imported',
+                ingredients: ingredients,
+                method: method
+            };
+        }
+
         // --- RENDERERS ---
         window.renderInventory = () => {
             const list = document.getElementById('inventory-list');
@@ -349,7 +420,7 @@
                 <li class="p-6 bg-white dark:bg-slate-800 rounded-[2.5rem] border-2 border-slate-200 dark:border-slate-700 flex justify-between items-center transition ${parseFloat(i.quantity) < 5 ? 'low-stock' : ''}">
                     <div>
                         <div class="font-black dark:text-white uppercase text-sm italic">${i.name}</div>
-                        <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">$${(i.unitCost||0).toFixed(2)} / ${i.uom || 'Btl'} • Used: ${i.weeklyUsage || 0}/wk</div>
+                        <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">$${(i.unitCost||0).toFixed(2)} / ${i.uom || 'Unit'} • Used: ${i.weeklyUsage || 0}/wk</div>
                     </div>
                     <div class="flex items-center gap-4">
                         <div class="flex items-center bg-slate-50 dark:bg-slate-900 rounded-2xl p-1">
@@ -376,20 +447,12 @@
                 </div>`).join('');
         };
 
-        window.renderRedBook = () => {
-            document.getElementById('redbook-feed').innerHTML = window.compliance.filter(l => l.type === 'Incident').reverse().map(l => `
-                <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border-l-4 border-red-500">
-                    <div class="flex justify-between font-black text-red-600 text-[8px] uppercase mb-1"><span>Incident Report</span><span>${l.date} ${l.time}</span></div>
-                    <p class="text-xs font-bold dark:text-white">${l.value}</p>
-                </div>`).join('');
-        };
-
         window.renderRecipes = () => {
             document.getElementById('recipe-grid').innerHTML = window.recipes.map(r => `
                 <div class="stats-card hover:border-purple-600 transition cursor-pointer">
                     <div class="text-[7px] font-black text-purple-600 uppercase mb-2">${r.category}</div>
                     <div class="font-black text-xs uppercase dark:text-white">${r.name}</div>
-                    <div class="mt-4 text-[9px] font-bold text-slate-400">Scale Ingredients ➔</div>
+                    <div class="mt-4 text-[9px] font-bold text-slate-400">Scaling Hub ➔</div>
                 </div>`).join('');
         };
 
@@ -398,37 +461,25 @@
                 <div class="stats-card border-l-8 border-blue-500">
                     <h4 class="font-black uppercase text-xs mb-2 dark:text-white">${a.name}</h4>
                     <div class="text-[9px] font-bold text-slate-400 uppercase space-y-1">
+                        <div>Purchase: <span class="text-slate-600">${a.purch || 'N/A'}</span></div>
                         <div>Rep Agent: <span class="text-blue-600 font-black">${a.agent || 'N/A'}</span></div>
                         <div>Due: <span class="text-amber-600">${a.service || 'N/A'}</span></div>
                     </div>
                 </div>`).join('');
         };
 
-        // --- RECIPE ZIP IMPORT (Recipe Keeper) ---
-        window.importRecipesFromZip = async (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-            const zip = new JSZip();
-            try {
-                const contents = await zip.loadAsync(file);
-                const jsonFile = Object.keys(contents.files).find(f => f.endsWith('.json'));
-                if (!jsonFile) throw new Error("No data file found in ZIP");
-                
-                const rawData = await contents.files[jsonFile].async("string");
-                const data = JSON.parse(rawData);
-                
-                // Specifically parsing recipeSage.json format from Recipe Keeper ZIP
-                const items = (data.recipes || data).map(r => ({
-                    id: Date.now() + Math.random(),
-                    name: r.title || r.name,
-                    category: r.category || 'General',
-                    ingredients: r.ingredients || [],
-                    method: r.directions || r.method || ''
-                }));
-                
-                await updateDoc(refs.rec(), { items: arrayUnion(...items) }).catch(() => setDoc(refs.rec(), { items }));
-                window.showMsg("ZIP Data Imported!");
-            } catch(e) { window.showMsg("ZIP Error: " + e.message, "error"); }
+        window.renderRedBook = () => {
+            document.getElementById('redbook-feed').innerHTML = window.compliance.filter(l => l.type === 'Incident').reverse().map(l => `
+                <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border-l-4 border-red-500">
+                    <div class="flex justify-between font-black text-red-600 text-[8px] uppercase mb-1"><span>Incident Report</span><span>${l.date} ${l.time}</span></div>
+                    <p class="text-xs font-bold dark:text-white">${l.value}</p>
+                </div>`).join('');
+        };
+
+        window.renderMatrix = () => {
+            const labels = document.getElementById('matrix-stats');
+            if(!labels) return;
+            labels.innerHTML = `<div>Stars: ${window.inventory.length}</div><div>Dogs: 0</div>`;
         };
 
         // --- HELPERS ---
@@ -450,14 +501,6 @@
             const log = { type: 'Incident', item: 'Red Book', value: v, staff: auth.currentUser.email, date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString() };
             await updateDoc(refs.com(), { logs: arrayUnion(log) }).catch(() => setDoc(refs.com(), { logs: [log] }));
             document.getElementById('log-input').value = ''; window.showMsg("Incident Logged");
-        };
-
-        window.updateStats = () => {
-            const v = window.inventory.reduce((acc, i) => acc + (parseFloat(i.quantity || 0) * parseFloat(i.unitCost || 0)), 0);
-            document.getElementById('d-stock').textContent = `$${v.toLocaleString()}`;
-            const alerts = document.getElementById('stock-alerts');
-            const low = window.inventory.filter(i => parseFloat(i.quantity) < 5);
-            alerts.innerHTML = low.map(i => `<div class="p-2 bg-red-50 text-red-600 rounded-lg font-black text-[9px] uppercase border border-red-100 flex justify-between"><span>${i.name}</span><span>${i.quantity}</span></div>`).join('') || '<p class="text-[9px] text-slate-400 italic">Inventory healthy</p>';
         };
 
         window.saveApiKey = () => localStorage.setItem('venueApiKey', document.getElementById('api-key').value);
