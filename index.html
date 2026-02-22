@@ -6,6 +6,7 @@
     <title>Venue Manager Pro | Hobart Executive OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
@@ -13,17 +14,23 @@
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; transition: 0.3s; }
         body.dark { background-color: #0f172a; color: #f8fafc; }
         
-        /* ULTRA-HIGH CONTRAST & VISIBILITY */
-        .form-label { font-weight: 900; font-size: 0.7rem; text-transform: uppercase; color: #334155; margin-bottom: 6px; display: block; }
-        .dark .form-label { color: #cbd5e1; }
+        /* THE "FIXED" VISIBILITY STYLING */
+        .form-label { font-weight: 900; font-size: 0.7rem; text-transform: uppercase; color: #000; margin-bottom: 6px; display: block; }
+        .dark .form-label { color: #fff; }
         
         .heavy-input { 
-            background: white !important; border: 2px solid #0f172a !important; border-radius: 0.75rem !important; 
-            padding: 0.75rem !important; font-size: 0.95rem !important; font-weight: 700 !important; outline: none !important; width: 100%;
+            background: white !important; 
+            border: 2px solid #000000 !important; 
+            border-radius: 0.75rem !important; 
+            padding: 0.8rem !important; 
+            font-size: 0.95rem !important; 
+            font-weight: 700 !important; 
+            outline: none !important; 
+            width: 100%;
             color: #000000 !important;
         }
-        .dark .heavy-input { background: #1e293b !important; border-color: #f8fafc !important; color: white !important; }
-        .heavy-input:focus { border-color: var(--primary) !important; }
+        .dark .heavy-input { background: #1e293b !important; border-color: #ffffff !important; color: white !important; }
+        .heavy-input:focus { border-color: var(--primary) !important; ring: 2px; }
 
         .stats-card { background: white; border: 2px solid #e2e8f0; border-radius: 1.5rem; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .dark .stats-card { background: #1e293b; border-color: #334155; }
@@ -42,23 +49,23 @@
         .low-stock { border-left: 8px solid #ef4444 !important; background-color: #fef2f2; }
         .dark .low-stock { background-color: #451a1a; }
         
-        .view-section { animation: fadeIn 0.3s ease-out; }
+        .view-section { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
-    <!-- LOGIN -->
+    <!-- AUTH SCREEN -->
     <div id="login-screen" class="fixed inset-0 z-[500] bg-slate-900 flex items-center justify-center p-6">
         <div class="max-w-sm w-full bg-white dark:bg-slate-800 rounded-[2.5rem] p-10 shadow-2xl">
             <div id="auth-logo" class="w-24 h-24 bg-slate-100 rounded-3xl mx-auto mb-6 flex items-center justify-center text-4xl">🏢</div>
-            <h2 id="auth-title" class="text-xl font-black mb-6 text-center uppercase tracking-tight dark:text-white">Venue Access</h2>
+            <h2 id="auth-title" class="text-xl font-black mb-6 text-center uppercase tracking-tight dark:text-white">Venue OS Terminal</h2>
             <div class="space-y-4">
                 <div><label class="form-label">Email</label><input type="email" id="auth-email" class="heavy-input" placeholder="admin@hobart.com"></div>
                 <div><label class="form-label">Password</label><input type="password" id="auth-pass" class="heavy-input" placeholder="••••••••"></div>
                 <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl uppercase text-xs shadow-xl">Sign In</button>
                 <p id="auth-err" class="text-red-500 text-[10px] font-black text-center hidden mt-4 p-3 bg-red-50 rounded-xl"></p>
-                <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black text-slate-400 uppercase mt-4 text-center">Create New Access</button>
+                <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black text-slate-400 uppercase mt-4 text-center">Create New Profile</button>
             </div>
         </div>
     </div>
@@ -78,22 +85,23 @@
             <nav id="main-nav" class="flex gap-3 mb-10 no-scrollbar overflow-x-auto pb-2 sticky top-0 z-50 py-2">
                 <button id="nav-control" onclick="window.setView('control')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Control</button>
                 <button id="nav-stock" onclick="window.setView('stock')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Inventory</button>
-                <button id="nav-safety" onclick="window.setView('safety')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Safety</button>
+                <button id="nav-production" onclick="window.setView('production')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Production</button>
+                <button id="nav-safety" onclick="window.setView('safety')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Compliance</button>
                 <button id="nav-intel" onclick="window.setView('intel')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Intelligence</button>
-                <button onclick="window.toggleSettings()" class="px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-slate-200 dark:bg-slate-700 ml-auto shadow-sm">⚙️ Admin</button>
+                <button onclick="window.toggleSettings()" class="px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-slate-200 dark:bg-slate-700 ml-auto shadow-sm">⚙️ Settings</button>
             </nav>
 
-            <!-- VIEW: CONTROL (DASHBOARD) -->
+            <!-- VIEW: CONTROL -->
             <div id="view-control" class="view-section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2 space-y-8">
                         <div class="stats-card">
                             <h3 class="font-black uppercase text-xs mb-6 italic">Shift Intelligence (Hobart)</h3>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center border-b pb-8 dark:border-slate-700">
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1">TEMP</div><div id="d-temp" class="text-2xl font-black text-blue-600">--°</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1">WIND SPEED</div><div id="d-wind" class="text-2xl font-black text-amber-500">--</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1">SUN UP</div><div id="d-sunrise" class="text-xl font-black text-slate-800 dark:text-white">--</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1">SUN DOWN</div><div id="d-sunset" class="text-xl font-black text-slate-800 dark:text-white">--</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase">Temp</div><div id="d-temp" class="text-2xl font-black text-blue-600">--°</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase">Wind</div><div id="d-wind" class="text-2xl font-black text-amber-500">--</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase">Sunrise</div><div id="d-sunrise" class="text-xl font-black">--</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase">Sunset</div><div id="d-sunset" class="text-xl font-black">--</div></div>
                             </div>
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-6 text-center mt-8">
                                 <div><div class="text-[9px] font-black text-slate-400 mb-1">SALES vs LY</div><div id="d-sales" class="text-2xl font-black text-emerald-500">$0</div></div>
@@ -103,11 +111,11 @@
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="stats-card border-l-8 border-red-500">
-                                <h3 class="font-black uppercase text-xs mb-4">Urgent Stock Alerts</h3>
+                                <h3 class="font-black uppercase text-xs mb-4">Stock Alerts</h3>
                                 <div id="stock-alerts" class="space-y-2 overflow-y-auto max-h-[180px]"></div>
                             </div>
                             <div class="stats-card">
-                                <h3 class="font-black uppercase text-xs mb-4">POS Sales Import</h3>
+                                <h3 class="font-black uppercase text-xs mb-4">Daily POS Import</h3>
                                 <button onclick="document.getElementById('pos-csv').click()" class="w-full bg-emerald-600 text-white font-black py-4 rounded-xl text-[10px] uppercase shadow-md">Upload Daily CSV</button>
                                 <input type="file" id="pos-csv" class="hidden" onchange="window.importSales(event)">
                             </div>
@@ -117,7 +125,7 @@
                         <h3 class="font-black uppercase text-xs mb-6 italic">Secure Red Book</h3>
                         <div id="redbook-feed" class="flex-grow overflow-y-auto space-y-4 no-scrollbar"></div>
                         <div class="mt-4 pt-4 border-t dark:border-slate-700">
-                            <textarea id="log-input" class="heavy-input text-xs mb-2" placeholder="Enter report..."></textarea>
+                            <textarea id="log-input" class="heavy-input text-xs mb-2" placeholder="Enter incident or log..."></textarea>
                             <button onclick="window.logIncident()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-black text-[10px] uppercase">Post Entry</button>
                         </div>
                     </div>
@@ -128,7 +136,7 @@
             <div id="view-stock" class="view-section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
                     <div class="lg:col-span-4 xl:col-span-3">
-                        <div class="stats-card sticky top-24 border-2 border-slate-900">
+                        <div class="stats-card sticky top-24 border-2 border-black">
                             <h2 class="text-xl font-black uppercase mb-6 italic">Item Setup</h2>
                             <form id="item-form" class="space-y-4">
                                 <input type="hidden" id="edit-id">
@@ -138,12 +146,12 @@
                                     <div><label class="form-label">Vendor</label><input type="text" id="p-vendor" class="heavy-input"></div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div><label class="form-label">Cost/Unit</label><input type="number" id="p-cost" step="0.01" class="heavy-input"></div>
+                                    <div><label class="form-label">Unit Cost</label><input type="number" id="p-cost" step="0.01" class="heavy-input"></div>
                                     <div><label class="form-label">Menu Price</label><input type="number" id="p-price" step="0.01" class="heavy-input"></div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
                                     <div><label class="form-label">Pack Size</label><input type="number" id="p-pack" value="1" class="heavy-input"></div>
-                                    <div><label class="form-label">UOM</label><select id="p-uom" class="heavy-input"><option>Bottle</option><option>Each</option><option>Ctn</option><option>Kg</option></select></div>
+                                    <div><label class="form-label">UOM</label><select id="p-uom" class="heavy-input"><option>Bottle</option><option>Each</option><option>Ctn</option><option>Kg</option><option>Ltr</option></select></div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
                                     <div><label class="form-label">OnHand Qty</label><input type="number" id="p-qty" step="any" class="heavy-input"></div>
@@ -151,7 +159,7 @@
                                 </div>
                                 <div><label class="form-label">Category</label><select id="p-cat" class="heavy-input"></select></div>
                                 <button type="submit" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs">Sync Product</button>
-                                <button type="button" id="cancel-edit" onclick="window.cancelEdit()" class="hidden w-full text-[10px] font-black text-slate-400 mt-2 uppercase">Cancel</button>
+                                <button type="button" id="cancel-edit" onclick="window.cancelEdit()" class="hidden w-full text-[10px] font-black text-slate-400 mt-2 uppercase text-center">Cancel</button>
                             </form>
                         </div>
                     </div>
@@ -166,22 +174,35 @@
                 </div>
             </div>
 
+            <!-- VIEW: PRODUCTION (RECIPES) -->
+            <div id="view-production" class="view-section hidden">
+                <header class="flex justify-between items-center mb-10">
+                    <h1 class="text-4xl font-black tracking-tighter italic dark:text-white">Recipe <span class="text-purple-600">Vault</span></h1>
+                    <div class="flex gap-3">
+                        <button onclick="document.getElementById('recipe-keeper-zip').click()" class="bg-purple-600 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase shadow-lg">Import ZIP</button>
+                        <input type="file" id="recipe-keeper-zip" class="hidden" accept=".zip" onchange="window.importRecipesFromZip(event)">
+                        <button onclick="window.addRecipePrompt()" class="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase">+ New Recipe</button>
+                    </div>
+                </header>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="recipe-grid"></div>
+            </div>
+
             <!-- VIEW: SAFETY -->
             <div id="view-safety" class="view-section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="stats-card">
-                        <h3 class="font-black uppercase text-xs mb-6 italic">Fridge Logs</h3>
+                        <h3 class="font-black uppercase text-xs mb-6 italic">Fridge Temp Log</h3>
                         <div id="fridge-grid" class="space-y-4"></div>
                     </div>
-                    <div class="stats-card">
-                        <h3 class="font-black uppercase text-xs mb-6 italic">Checklists</h3>
+                    <div class="stats-card h-fit">
+                        <h3 class="font-black uppercase text-xs mb-6 italic">Shift Checklists</h3>
                         <div class="flex flex-col gap-4">
-                            <button onclick="window.logCheck('Open Checklist')" class="p-6 bg-blue-50 text-blue-600 rounded-3xl font-black text-xs uppercase text-left border border-blue-100">Opening Checklist</button>
-                            <button onclick="window.logCheck('Close Checklist')" class="p-6 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase text-left">Closing Checklist</button>
+                            <button onclick="window.logCheck('Opening Checklist')" class="p-6 bg-blue-50 text-blue-600 rounded-3xl font-black text-xs uppercase text-left border border-blue-100">Opening Checklist</button>
+                            <button onclick="window.logCheck('Closing Checklist')" class="p-6 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase text-left">Closing Checklist</button>
                         </div>
                     </div>
                     <div class="stats-card h-[500px] flex flex-col">
-                        <h3 class="font-black uppercase text-xs mb-6 italic">Activity</h3>
+                        <h3 class="font-black uppercase text-xs mb-6 italic">Activity Log</h3>
                         <div id="safety-history" class="overflow-y-auto space-y-3 no-scrollbar flex-grow text-[10px]"></div>
                     </div>
                 </div>
@@ -191,32 +212,32 @@
             <div id="view-intel" class="view-section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="stats-card lg:col-span-1">
-                        <h3 class="font-black uppercase text-xs mb-8 italic">BCG Matrix</h3>
+                        <h3 class="font-black uppercase text-xs mb-8 italic">BCG Profit Matrix</h3>
                         <div class="bcg-matrix">
-                            <div class="bcg-quadrant q-puzzle">Puzzles</div>
                             <div class="bcg-quadrant q-star">Stars</div>
-                            <div class="bcg-quadrant q-dog">Dogs</div>
+                            <div class="bcg-quadrant q-puzzle">Puzzles</div>
                             <div class="bcg-quadrant q-plow">Plowhorses</div>
+                            <div class="bcg-quadrant q-dog">Dogs</div>
                         </div>
                         <div id="matrix-stats" class="mt-4 grid grid-cols-2 gap-2 text-[8px] font-black uppercase text-center"></div>
                     </div>
                     <div class="stats-card lg:col-span-2">
-                        <h3 class="font-black uppercase text-xs mb-6 italic">Asset Tracker</h3>
+                        <h3 class="font-black uppercase text-xs mb-6 italic">Asset Lifecycle Tracker</h3>
                         <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                        <button onclick="window.addAssetPrompt()" class="w-full mt-6 py-4 border-2 border-dashed border-slate-200 rounded-2xl text-[10px] font-black uppercase text-slate-400">+ New Asset</button>
+                        <button onclick="window.addAssetPrompt()" class="w-full mt-6 py-4 border-2 border-dashed border-slate-200 rounded-2xl text-[10px] font-black uppercase text-slate-400">+ Register Equipment</button>
                     </div>
                 </div>
-                <div class="mt-8 stats-card">
-                    <h3 class="font-black uppercase text-xs mb-6">Financial Prime Cost</h3>
-                    <div id="prime-cost-display" class="text-4xl font-black text-emerald-500">-- %</div>
-                    <div class="mt-2 text-[10px] font-black text-slate-400 uppercase">COGS + Labor Ratio</div>
+                <div class="mt-8 stats-card bg-emerald-50">
+                    <h3 class="font-black uppercase text-xs mb-6 text-emerald-700">Financial Performance</h3>
+                    <div id="prime-cost-display" class="text-4xl font-black text-emerald-900">-- %</div>
+                    <div class="text-[10px] font-black text-emerald-600 uppercase mt-2">Prime Cost (COGS + Labor Ratio)</div>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <!-- SETTINGS -->
+    <!-- SETTINGS MODAL -->
     <div id="settings-modal" class="hidden fixed inset-0 z-[600] flex items-center justify-center modal-bg p-4">
         <div class="bg-white dark:bg-slate-800 rounded-[3.5rem] p-12 max-w-xl w-full shadow-2xl">
             <h3 class="text-2xl font-black uppercase mb-10 italic dark:text-white">Admin Hub</h3>
@@ -226,12 +247,8 @@
                     <div><label class="form-label">Logo URL</label><input type="text" id="set-logo" onchange="window.saveBranding()" class="heavy-input"></div>
                 </div>
                 <div class="bg-indigo-50 dark:bg-indigo-900/10 p-6 rounded-3xl border border-indigo-100">
-                    <label class="form-label">Gemini Key</label>
+                    <label class="form-label">Gemini Master Key</label>
                     <input type="password" id="api-key" onchange="window.saveApiKey()" class="heavy-input">
-                </div>
-                <div class="flex gap-3">
-                    <button onclick="window.toggleDarkMode()" class="flex-grow py-4 bg-slate-100 dark:bg-slate-700 rounded-xl font-black text-xs uppercase">Theme</button>
-                    <button onclick="window.logout()" class="px-8 py-4 bg-red-50 text-red-600 rounded-xl font-black text-xs uppercase">Logout</button>
                 </div>
                 <button onclick="window.toggleSettings()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase">Close</button>
             </div>
@@ -255,13 +272,15 @@
             inv: () => doc(db, 'venues', venueId, 'data', 'inventory'), 
             cfg: () => doc(db, 'venues', venueId, 'data', 'config'),
             com: () => doc(db, 'venues', venueId, 'data', 'compliance'),
-            as: () => doc(db, 'venues', venueId, 'data', 'assets')
+            as: () => doc(db, 'venues', venueId, 'data', 'assets'),
+            rec: () => doc(db, 'venues', venueId, 'data', 'recipes')
         };
 
         window.inventory = [];
-        window.config = { name: "Hobart Executive", logo: "", categories: ["Bar", "Kitchen", "Ramen", "Prep", "Cleaning"], fridges: ["Fridge 1", "Fridge 2", "Coolroom"] };
+        window.config = { name: "Hobart Executive", logo: "", categories: ["Bar", "Kitchen", "Ramen", "Prep", "Cleaning"], fridges: ["Bar Fridge", "Walk-in Coolroom", "Kitchen Freezer"] };
         window.compliance = [];
         window.assets = [];
+        window.recipes = [];
 
         // --- AUTH ---
         window.handleAuth = async () => {
@@ -271,7 +290,7 @@
             try { if (isReg) await createUserWithEmailAndPassword(auth, e, p); else await signInWithEmailAndPassword(auth, e, p); }
             catch (err) { document.getElementById('auth-err').textContent = err.message; document.getElementById('auth-err').classList.remove('hidden'); }
         };
-        window.toggleAuthMode = () => { const t = document.getElementById('auth-toggle'); t.textContent = t.textContent.includes('Access') ? 'Back to Login' : 'Create New Access'; };
+        window.toggleAuthMode = () => { const t = document.getElementById('auth-toggle'); t.textContent = t.textContent.includes('Access') ? 'Back to Login' : 'Create New Profile'; };
         window.logout = () => signOut(auth);
         
         onAuthStateChanged(auth, (u) => {
@@ -283,6 +302,7 @@
             onSnapshot(refs.inv(), (s) => { if (s.exists()) { window.inventory = s.data().items || []; renderInventory(); updateStats(); } });
             onSnapshot(refs.as(), (s) => { if (s.exists()) { window.assets = s.data().items || []; renderAssets(); } });
             onSnapshot(refs.com(), (s) => { if (s.exists()) { window.compliance = s.data().logs || []; renderSafety(); renderRedBook(); } });
+            onSnapshot(refs.rec(), (s) => { if (s.exists()) { window.recipes = s.data().items || []; renderRecipes(); } });
             onSnapshot(refs.cfg(), (s) => { if (s.exists()) { 
                 window.config = { ...window.config, ...s.data() };
                 const d = s.data();
@@ -302,7 +322,7 @@
             if (activeNav) activeNav.classList.add('nav-active');
         };
 
-        // --- WEATHER (Hobart Specific) ---
+        // --- INTELLIGENCE (Weather & Dashboard) ---
         async function fetchWeather() {
             try {
                 const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-42.8821&longitude=147.3272&current_weather=true&daily=sunrise,sunset&timezone=auto");
@@ -315,7 +335,15 @@
             } catch(e) {}
         }
 
-        // --- RENDERING ---
+        window.updateStats = () => {
+            const v = window.inventory.reduce((acc, i) => acc + (parseFloat(i.quantity || 0) * parseFloat(i.unitCost || 0)), 0);
+            document.getElementById('d-stock').textContent = `$${v.toLocaleString()}`;
+            const alerts = document.getElementById('stock-alerts');
+            const low = window.inventory.filter(i => parseFloat(i.quantity) < 5);
+            alerts.innerHTML = low.map(i => `<div class="p-2 bg-red-50 text-red-600 rounded-lg font-black text-[9px] uppercase border border-red-100 flex justify-between"><span>${i.name}</span><span>${i.quantity}</span></div>`).join('') || '<p class="text-[9px] text-slate-400 italic">Inventory healthy</p>';
+        };
+
+        // --- RENDERERS ---
         window.renderInventory = () => {
             const list = document.getElementById('inventory-list');
             if(!list) return;
@@ -332,7 +360,7 @@
                             <span class="w-10 text-center font-black dark:text-white">${parseFloat(i.quantity||0).toFixed(1)}</span>
                             <button onclick="window.adjStock('${i.id}', 1)" class="w-10 h-10 text-blue-600">+</button>
                         </div>
-                        <button onclick="window.editItem('${i.id}')" class="text-slate-300">⚙️</button>
+                        <button onclick="window.editItem('${i.id}')" class="text-slate-300 hover:text-blue-600">⚙️</button>
                     </div>
                 </li>`).join('');
         };
@@ -341,7 +369,7 @@
             document.getElementById('fridge-grid').innerHTML = window.config.fridges.map(f => `
                 <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border dark:border-slate-700 flex justify-between items-center">
                     <span class="font-black text-[10px] uppercase">${f}</span>
-                    <div class="flex gap-2"><input type="number" id="t-${f.replace(/\s+/g,'')}" placeholder="°C" class="w-16 p-2 rounded-lg border text-xs font-black"><button onclick="window.logTemp('${f}')" class="bg-blue-600 text-white px-3 py-2 rounded-lg font-black text-[9px]">LOG</button></div>
+                    <div class="flex gap-2"><input type="number" id="t-${f.replace(/\s+/g,'')}" placeholder="°C" class="w-16 p-2 rounded-lg border-2 border-black text-xs font-black"><button onclick="window.logTemp('${f}')" class="bg-blue-600 text-white px-3 py-2 rounded-lg font-black text-[9px]">LOG</button></div>
                 </div>`).join('');
             
             document.getElementById('safety-history').innerHTML = window.compliance.filter(l => l.type !== 'Incident').reverse().map(l => `
@@ -359,20 +387,49 @@
                 </div>`).join('');
         };
 
-        window.renderAssets = () => {
-            document.getElementById('asset-grid').innerHTML = window.assets.map(a => `
-                <div class="stats-card border-l-8 border-blue-500">
-                    <h4 class="font-black uppercase text-xs mb-2">${a.name}</h4>
-                    <div class="text-[9px] font-bold text-slate-400 uppercase">Rep: ${a.agent || 'N/A'} • Warranty: ${a.warr || '--'}m</div>
+        window.renderRecipes = () => {
+            document.getElementById('recipe-grid').innerHTML = window.recipes.map(r => `
+                <div class="stats-card hover:border-purple-600 transition cursor-pointer">
+                    <div class="text-[7px] font-black text-purple-600 uppercase mb-2">${r.category}</div>
+                    <div class="font-black text-xs uppercase dark:text-white">${r.name}</div>
                 </div>`).join('');
         };
 
-        window.updateStats = () => {
-            const v = window.inventory.reduce((acc, i) => acc + (parseFloat(i.quantity || 0) * parseFloat(i.unitCost || 0)), 0);
-            document.getElementById('d-stock').textContent = `$${v.toLocaleString()}`;
-            const alerts = document.getElementById('stock-alerts');
-            const low = window.inventory.filter(i => parseFloat(i.quantity) < 5);
-            alerts.innerHTML = low.map(i => `<div class="p-2 bg-red-50 text-red-600 rounded-lg font-black text-[9px] uppercase border border-red-100 flex justify-between"><span>${i.name}</span><span>${i.quantity}</span></div>`).join('') || '<p class="text-[9px] text-slate-400 italic">No alerts</p>';
+        window.renderAssets = () => {
+            document.getElementById('asset-grid').innerHTML = window.assets.map(a => `
+                <div class="stats-card border-l-8 border-blue-500">
+                    <h4 class="font-black uppercase text-xs mb-2 dark:text-white">${a.name}</h4>
+                    <div class="text-[9px] font-bold text-slate-400 uppercase space-y-1">
+                        <div>Rep: <span class="text-blue-600">${a.agent || 'N/A'}</span></div>
+                        <div>Due: <span class="text-amber-600">${a.service || 'N/A'}</span></div>
+                    </div>
+                </div>`).join('');
+        };
+
+        // --- ZIP IMPORT ENGINE ---
+        window.importRecipesFromZip = async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            const zip = new JSZip();
+            try {
+                const contents = await zip.loadAsync(file);
+                const jsonFile = Object.keys(contents.files).find(f => f.endsWith('.json'));
+                if (!jsonFile) throw new Error("No JSON found in ZIP");
+                
+                const rawData = await contents.files[jsonFile].async("string");
+                const data = JSON.parse(rawData);
+                
+                const items = (data.recipes || data).map(r => ({
+                    id: Date.now() + Math.random(),
+                    name: r.title || r.name,
+                    category: r.category || 'General',
+                    ingredients: r.ingredients || [],
+                    method: r.directions || r.method || ''
+                }));
+                
+                await updateDoc(refs.rec(), { items: arrayUnion(...items) }).catch(() => setDoc(refs.rec(), { items }));
+                window.showMsg("ZIP Data Extracted & Synced!");
+            } catch(e) { window.showMsg("ZIP Error: " + e.message, "error"); }
         };
 
         // --- HELPERS ---
@@ -403,10 +460,16 @@
             await setDoc(refs.cfg(), { logo, name }, { merge: true });
         };
 
-        window.adjStock = (id, amt) => { const i = window.inventory.find(x => x.id === id); if(i) { i.quantity += amt; setDoc(refs.inv(), { items: window.inventory }); } };
+        window.adjStock = (id, amt) => { const i = window.inventory.find(x => x.id === id); if(i) { i.quantity = Math.max(0, (parseFloat(i.quantity)||0) + amt); setDoc(refs.inv(), { items: window.inventory }); } };
         window.toggleSettings = () => document.getElementById('settings-modal').classList.toggle('hidden');
         window.toggleDarkMode = () => document.body.classList.toggle('dark');
-        window.showMsg = (t) => { const b = document.getElementById('msg-box'); b.textContent = t; b.classList.remove('hidden'); setTimeout(() => b.classList.add('hidden'), 3000); };
+        window.showMsg = (t, type = "success") => { 
+            const b = document.getElementById('msg-box'); 
+            b.textContent = t; 
+            b.className = `fixed top-8 right-8 z-[700] p-6 rounded-2xl shadow-2xl text-[10px] font-black uppercase text-white ${type === "error" ? "bg-red-600" : "bg-green-600"}`;
+            b.classList.remove('hidden'); 
+            setTimeout(() => b.classList.add('hidden'), 3000); 
+        };
         function updateSelects() { document.getElementById('p-cat').innerHTML = window.config.categories.map(c => `<option>${c}</option>`).join(''); }
 
         window.onload = () => {
