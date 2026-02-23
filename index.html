@@ -24,10 +24,10 @@
             color: #000000 !important; box-sizing: border-box; box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
         }
         .stats-card { background: white; border: 3px solid #000000; border-radius: 1.5rem; padding: 1.5rem; box-shadow: 6px 6px 0px rgba(0,0,0,0.05); }
-        .nav-link { border: 3px solid black !important; }
-        .nav-link.nav-active { background-color: #000000 !important; color: white !important; box-shadow: 4px 4px 0px rgba(0,0,0,0.2); }
+        .nav-link { border: 3px solid black !important; transition: 0.2s; }
+        .nav-link.nav-active { background-color: #000000 !important; color: white !important; box-shadow: 4px 4px 0px rgba(0,0,0,0.2); transform: translateY(2px); }
         
-        .category-pill { border: 3px solid black; padding: 10px 20px; border-radius: 1rem; font-weight: 900; font-size: 11px; text-transform: uppercase; background: white; white-space: nowrap; cursor: pointer; box-shadow: 3px 3px 0px rgba(0,0,0,0.1); transition: 0.2s; }
+        .category-pill { border: 3px solid black; padding: 10px 20px; border-radius: 1rem; font-weight: 900; font-size: 11px; text-transform: uppercase; background: white; white-space: nowrap; cursor: pointer; box-shadow: 3px 3px 0px rgba(0,0,0,0.1); }
         .category-pill.active { background: #000; color: white; box-shadow: none; transform: translateY(2px); }
         
         .bcg-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: 260px; background: #000; padding: 8px; border-radius: 1.5rem; }
@@ -41,19 +41,19 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .modal-bg { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .low-stock-border { border-left: 12px solid #ef4444 !important; background-color: #fef2f2; }
+        .low-stock-border { border-left: 14px solid #ef4444 !important; background-color: #fef2f2; }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
-    <!-- AUTH GATE -->
+    <!-- LOGIN SCREEN -->
     <div id="login-screen" class="fixed inset-0 z-[500] bg-slate-900 flex items-center justify-center p-6 text-center">
         <div class="max-w-sm w-full bg-white rounded-[2.5rem] p-10 shadow-2xl border-4 border-black">
-            <div class="w-24 h-24 bg-blue-600 text-white rounded-3xl mx-auto mb-6 flex items-center justify-center text-4xl border-3 border-black font-black italic">H</div>
+            <div class="w-24 h-24 bg-blue-600 text-white rounded-3xl mx-auto mb-6 flex items-center justify-center text-4xl border-3 border-black font-black italic shadow-lg">H</div>
             <h2 class="text-3xl font-black mb-2 uppercase italic tracking-tighter">Executive OS</h2>
             <div class="space-y-4">
-                <button onclick="window.signInQuick()" id="quick-access-btn" class="w-full bg-blue-600 text-white font-black py-5 rounded-xl uppercase text-xs border-3 border-black shadow-lg">Quick Access</button>
-                <div class="py-2 flex items-center gap-3"><div class="flex-grow h-0.5 bg-slate-100"></div><span class="text-[10px] font-black text-slate-300">OR</span><div class="flex-grow h-0.5 bg-slate-100"></div></div>
+                <button onclick="window.signInQuick()" id="quick-access-btn" class="w-full bg-blue-600 text-white font-black py-5 rounded-xl uppercase text-xs border-3 border-black shadow-lg">Quick Access (Auto-Sync)</button>
+                <div class="py-2 flex items-center gap-3"><div class="flex-grow h-0.5 bg-slate-100"></div><span class="text-[10px] font-black text-slate-300 uppercase">Admin Node</span><div class="flex-grow h-0.5 bg-slate-100"></div></div>
                 <input type="email" id="auth-email" class="heavy-input" placeholder="Email">
                 <input type="password" id="auth-pass" class="heavy-input" placeholder="Password">
                 <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-black text-white font-black py-4 rounded-xl uppercase text-xs border-3 border-black">Connect</button>
@@ -61,7 +61,7 @@
         </div>
     </div>
 
-    <!-- MAIN APP -->
+    <!-- MAIN APP CONTENT -->
     <div id="app-content" class="hidden">
         <div class="max-w-[1600px] mx-auto px-4 md:px-10 pt-8">
             <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
@@ -69,10 +69,10 @@
                     <div id="header-logo" class="w-16 h-16 bg-white rounded-2xl shadow-md flex items-center justify-center font-black text-3xl border-3 border-black">🏢</div>
                     <div>
                         <h1 id="venue-display-name" class="text-4xl font-black tracking-tighter italic dark:text-white uppercase">Executive <span class="text-blue-600">OS</span></h1>
-                        <span id="cloud-status" class="text-[10px] font-black uppercase text-slate-600 tracking-widest mt-1 block">● Connecting...</span>
+                        <span id="cloud-status" class="text-[10px] font-black uppercase text-slate-600 tracking-widest mt-1 block">● Connecting to Hobart...</span>
                     </div>
                 </div>
-                <div id="wind-badge" class="hidden px-10 py-4 bg-amber-500 text-white rounded-2xl text-[12px] font-black animate-pulse border-3 border-black">⚠️ SECURE AWNINGS: HIGH WIND</div>
+                <div id="wind-badge" class="hidden px-10 py-4 bg-amber-500 text-white rounded-2xl text-[12px] font-black animate-pulse border-3 border-black shadow-xl">⚠️ ACTION: SECURE AWNINGS (HIGH WIND)</div>
             </header>
 
             <nav id="main-nav" class="flex gap-3 mb-12 no-scrollbar overflow-x-auto pb-4 sticky top-0 z-50 py-4">
@@ -84,17 +84,17 @@
                 <button onclick="window.toggleSettings()" class="px-8 py-4 rounded-2xl font-black text-[11px] uppercase bg-slate-300 ml-auto border-3 border-black shadow-lg">⚙️ Admin Hub</button>
             </nav>
 
-            <!-- VIEW: CONTROL -->
+            <!-- VIEW: CONTROL (DASHBOARD) -->
             <div id="view-control" class="view-section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2 space-y-8">
-                        <div class="stats-card border-4 border-black">
-                            <h3 class="font-black uppercase text-[10px] mb-8 italic text-slate-500 tracking-[0.3em]">Shift Briefing (Hobart)</h3>
+                        <div class="stats-card border-4 border-black shadow-xl">
+                            <h3 class="font-black uppercase text-[10px] mb-8 italic text-slate-500 tracking-[0.3em]">Shift Briefing (Hobart Node)</h3>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center border-b-2 border-slate-100 pb-10">
-                                <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase">Temp</div><div id="d-temp" class="text-4xl font-black text-blue-600">--°</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase">Wind</div><div id="d-wind" class="text-4xl font-black text-amber-500">--</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase">Sunrise</div><div id="d-sunrise" class="text-2xl font-black text-slate-900">--</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase">Sunset</div><div id="d-sunset" class="text-2xl font-black text-slate-900">--</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase tracking-widest">Temp</div><div id="d-temp" class="text-4xl font-black text-blue-600">--°</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase tracking-widest">Wind</div><div id="d-wind" class="text-4xl font-black text-amber-500">--</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase tracking-widest">Sunrise</div><div id="d-sunrise" class="text-2xl font-black text-slate-900">--</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase tracking-widest">Sunset</div><div id="d-sunset" class="text-2xl font-black text-slate-900">--</div></div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center mt-10">
                                 <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase">Sales vs LY</div><div id="d-sales" class="text-3xl font-black text-emerald-600">$0</div></div>
@@ -105,23 +105,23 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="stats-card border-l-[16px] border-red-500">
                                 <h3 class="font-black uppercase text-xs mb-6 tracking-widest text-red-600">Stock Alerts</h3>
-                                <div id="stock-alerts" class="space-y-3 overflow-y-auto max-h-[250px] no-scrollbar">
-                                    <div class="text-center py-10 opacity-30 font-black text-[10px] uppercase">✅ LEVELS STABLE</div>
+                                <div id="stock-alerts" class="space-y-3 overflow-y-auto max-h-[250px] no-scrollbar px-1">
+                                    <div class="text-center py-10 opacity-30 font-black text-[10px] uppercase tracking-widest">✅ LEVELS STABLE</div>
                                 </div>
                             </div>
                             <div class="stats-card bg-emerald-50 border-emerald-500 border-4 shadow-xl text-center">
-                                <h3 class="font-black uppercase text-xs mb-6 text-emerald-700 tracking-widest italic">AI Invoice Scanner</h3>
+                                <h3 class="font-black uppercase text-xs mb-6 text-emerald-700 tracking-widest italic">Invoice AI Scanner</h3>
                                 <button onclick="document.getElementById('invoice-upload').click()" class="w-full bg-emerald-600 text-white font-black py-8 rounded-2xl text-[11px] uppercase shadow-lg border-3 border-black transition hover:bg-emerald-700">Scan PDF Invoices</button>
                                 <input type="file" id="invoice-upload" class="hidden" accept="image/*,.pdf" multiple onchange="window.handleInvoiceUpload(event)">
                             </div>
                         </div>
                     </div>
                     <div class="stats-card flex flex-col h-[750px] shadow-2xl border-4 bg-slate-50">
-                        <h3 class="font-black uppercase text-[10px] mb-6 italic text-red-600 tracking-[0.3em] border-b-2 border-red-100 pb-4 text-center">Secure Red Book</h3>
+                        <h3 class="font-black uppercase text-[10px] mb-6 italic text-red-600 tracking-[0.3em] border-b-2 border-red-100 pb-4 text-center uppercase">Secure Red Book</h3>
                         <div id="redbook-feed" class="flex-grow overflow-y-auto space-y-4 no-scrollbar p-1"></div>
                         <div class="mt-6 pt-6 border-t-4 border-black">
                             <textarea id="log-input" class="heavy-input text-sm mb-3 h-28" placeholder="Log shift incident..."></textarea>
-                            <button onclick="window.logIncident()" class="w-full bg-black text-white py-5 rounded-2xl font-black text-[11px] uppercase shadow-xl hover:bg-slate-900 border-3 border-black">Post Record</button>
+                            <button onclick="window.logIncident()" class="w-full bg-black text-white py-5 rounded-2xl font-black text-[11px] uppercase shadow-xl hover:bg-slate-900 border-3 border-black transition">Establish Record</button>
                         </div>
                     </div>
                 </div>
@@ -130,49 +130,21 @@
             <!-- VIEW: PRODUCTION -->
             <div id="view-production" class="view-section hidden">
                 <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
-                    <h1 class="text-5xl font-black tracking-tighter italic uppercase text-slate-900">Recipe <span class="text-purple-600">Vault</span></h1>
-                    <button onclick="document.getElementById('recipe-keeper-import').click()" class="bg-purple-600 text-white px-10 py-5 rounded-2xl font-black border-3 border-black shadow-xl">Import ZIP / HTML</button>
+                    <div>
+                        <h1 class="text-5xl font-black tracking-tighter italic uppercase text-slate-900">Recipe <span class="text-purple-600">Vault</span></h1>
+                        <p class="text-[11px] font-black text-slate-500 uppercase mt-2 tracking-[0.3em]">Multi-Block Engine Active (300+ Entries)</p>
+                    </div>
+                    <button onclick="document.getElementById('recipe-keeper-import').click()" class="bg-purple-600 text-white px-10 py-5 rounded-2xl font-black border-3 border-black shadow-xl hover:bg-purple-700 transition">Import ZIP / HTML</button>
                     <input type="file" id="recipe-keeper-import" class="hidden" accept=".zip,.html" onchange="window.importRecipesHandler(event)">
                 </header>
+
                 <div class="mb-12 space-y-8">
-                    <input type="text" id="recipe-search" oninput="window.renderRecipes()" placeholder="Search vault by name or ingredient..." class="w-full p-8 bg-white rounded-[2.5rem] border-4 border-black font-bold outline-none shadow-2xl text-2xl">
+                    <input type="text" id="recipe-search" oninput="window.renderRecipes()" placeholder="Search recipes by name or ingredient..." class="w-full p-8 bg-white rounded-[2.5rem] border-4 border-black font-bold outline-none shadow-2xl text-2xl placeholder:opacity-30">
                     <div class="flex gap-4 overflow-x-auto no-scrollbar py-3" id="recipe-category-tabs"></div>
                 </div>
-                <div id="recipe-loading" class="hidden py-20 text-center font-black text-purple-600 animate-pulse uppercase">Syncing Hobart Cloud...</div>
-                <div id="recipe-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"></div>
-            </div>
 
-            <!-- VIEW: INTELLIGENCE -->
-            <div id="view-intel" class="view-section hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                    <div class="lg:col-span-1 space-y-8">
-                        <div class="stats-card border-4 border-black shadow-xl">
-                            <h3 class="font-black uppercase text-xs mb-10 italic tracking-widest text-slate-400 text-center">Profit Matrix</h3>
-                            <div class="bcg-matrix">
-                                <div class="bcg-quadrant q-star">Stars</div>
-                                <div class="bcg-quadrant q-puzzle">Puzzles</div>
-                                <div class="bcg-quadrant q-plow">Plowhorses</div>
-                                <div class="bcg-quadrant q-dog">Dogs</div>
-                            </div>
-                        </div>
-                        <div class="stats-card bg-emerald-50 border-4 border-black shadow-xl text-center">
-                            <h3 class="font-black uppercase text-xs mb-6 text-emerald-700">Theoretical Prime Cost</h3>
-                            <div id="prime-cost-display" class="text-7xl font-black text-emerald-900 py-4 italic">-- %</div>
-                        </div>
-                    </div>
-                    <div class="lg:col-span-2">
-                        <div class="stats-card border-4 border-black h-full flex flex-col shadow-2xl bg-white min-h-[650px]">
-                            <div class="flex justify-between items-center mb-8 border-b-4 border-black pb-8">
-                                <div>
-                                    <h3 class="font-black uppercase text-3xl italic tracking-tighter">Equipment Lifecycle Log</h3>
-                                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mt-2">Track Repairs & Purchase Dates</p>
-                                </div>
-                                <button onclick="window.addAssetPrompt()" class="bg-black text-white px-8 py-5 rounded-2xl font-black text-[11px] border-3 border-black shadow-xl hover:scale-105 transition">+ Add Item</button>
-                            </div>
-                            <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 overflow-y-auto pr-2 no-scrollbar px-1"></div>
-                        </div>
-                    </div>
-                </div>
+                <div id="recipe-loading" class="hidden py-24 text-center font-black text-purple-600 animate-pulse uppercase text-sm tracking-[0.5em]">Parsing Node Data...</div>
+                <div id="recipe-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"></div>
             </div>
 
             <!-- VIEW: STOCK -->
@@ -190,76 +162,120 @@
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div><label class="form-label">Ctn Cost ($)</label><input type="number" id="p-cost" step="0.01" class="heavy-input"></div>
-                                    <div><label class="form-label">Weekly Use</label><input type="number" id="p-use" class="heavy-input"></div>
+                                    <div><label class="form-label">Par Level</label><input type="number" id="p-par" value="5" class="heavy-input"></div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <div><label class="form-label">Par Level</label><input type="number" id="p-par" value="5" class="heavy-input"></div>
+                                    <div><label class="form-label">Weekly Use</label><input type="number" id="p-use" class="heavy-input"></div>
                                     <div><label class="form-label">OnHand (Units)</label><input type="number" id="p-qty" step="any" class="heavy-input"></div>
                                 </div>
-                                <button type="submit" class="w-full bg-blue-600 text-white font-black py-6 rounded-2xl shadow-xl border-3 border-black uppercase text-xs">Update Cloud State</button>
+                                <button type="submit" class="w-full bg-blue-600 text-white font-black py-6 rounded-2xl shadow-xl border-3 border-black uppercase text-xs hover:bg-blue-700 transition">Update Cloud State</button>
                             </form>
                         </div>
                     </div>
                     <div class="lg:w-2/3">
-                        <input type="text" id="inventory-search" oninput="window.renderInventory()" placeholder="Find item..." class="p-8 bg-white rounded-[2.5rem] border-4 border-black font-bold outline-none shadow-xl w-full mb-10 text-2xl placeholder:opacity-30">
+                        <input type="text" id="inventory-search" oninput="window.renderInventory()" placeholder="Find item by name, sku or code..." class="p-8 bg-white rounded-[2.5rem] border-4 border-black font-bold outline-none shadow-xl w-full mb-10 text-2xl placeholder:opacity-30">
                         <ul id="inventory-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></ul>
                     </div>
                 </div>
             </div>
 
-            <!-- COMPLIANCE -->
+            <!-- VIEW: INTELLIGENCE -->
+            <div id="view-intel" class="view-section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <div class="lg:col-span-1 space-y-8">
+                        <div class="stats-card border-4 border-black shadow-xl">
+                            <h3 class="font-black uppercase text-xs mb-10 italic tracking-widest text-slate-400 text-center">Profit Matrix</h3>
+                            <div class="bcg-matrix">
+                                <div class="bcg-quadrant q-star">Stars</div>
+                                <div class="bcg-quadrant q-puzzle">Puzzles</div>
+                                <div class="bcg-quadrant q-plow">Plowhorses</div>
+                                <div class="bcg-quadrant q-dog">Dogs</div>
+                            </div>
+                            <div id="matrix-stats" class="mt-8 text-center font-black uppercase text-[10px] tracking-widest text-slate-400"></div>
+                        </div>
+                        <div class="stats-card bg-emerald-50 border-4 border-black shadow-xl text-center">
+                            <h3 class="font-black uppercase text-xs mb-6 text-emerald-700 tracking-widest">Theoretical Prime Cost</h3>
+                            <div id="prime-cost-display" class="text-7xl font-black text-emerald-900 py-6 italic tracking-tighter">-- %</div>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:col-span-2">
+                        <div class="stats-card border-4 border-black h-full flex flex-col shadow-2xl bg-white min-h-[650px]">
+                            <div class="flex justify-between items-center mb-8 border-b-4 border-black pb-8">
+                                <div>
+                                    <h3 class="font-black uppercase text-3xl italic tracking-tighter">Equipment Lifecycle Log</h3>
+                                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mt-2 italic">Track Repairs, Purchase Dates & Reps</p>
+                                </div>
+                                <button onclick="window.addAssetPrompt()" class="bg-black text-white px-8 py-5 rounded-2xl font-black text-[11px] uppercase border-3 border-black shadow-xl hover:scale-105 transition">+ Add Item</button>
+                            </div>
+                            <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 overflow-y-auto pr-2 no-scrollbar px-1">
+                                <div class="col-span-full py-32 text-center opacity-30 font-black uppercase text-sm tracking-widest">Establish asset node...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: COMPLIANCE -->
             <div id="view-safety" class="view-section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
                     <div class="stats-card border-3 border-black">
-                        <button onclick="window.logCheck('Opening Checklist')" class="p-10 bg-blue-50 text-blue-700 rounded-[3rem] font-black text-base uppercase text-left border-3 border-blue-200 shadow-lg mb-6 w-full hover:scale-[1.02] transition">Morning Opening</button>
-                        <button onclick="window.logCheck('Closing Checklist')" class="p-10 bg-slate-900 text-white rounded-[3rem] font-black text-base uppercase text-left shadow-2xl border-3 border-black w-full hover:scale-[1.02] transition">Nightly Closing</button>
+                        <h3 class="font-black uppercase text-xs mb-8 tracking-widest text-center italic text-slate-400">Audit Checklists</h3>
+                        <button onclick="window.logCheck('Opening Checklist')" class="p-10 bg-blue-50 text-blue-700 rounded-[3rem] font-black text-base uppercase text-left border-3 border-blue-200 shadow-lg mb-6 w-full hover:scale-[1.02] transition shadow-xl">Morning Opening Audit</button>
+                        <button onclick="window.logCheck('Closing Checklist')" class="p-10 bg-slate-900 text-white rounded-[3rem] font-black text-base uppercase text-left shadow-2xl border-3 border-black w-full hover:scale-[1.02] transition shadow-xl">Nightly Closing Audit</button>
                     </div>
-                    <div class="stats-card lg:col-span-2 flex flex-col h-[650px] border-3 border-black bg-white">
+                    <div class="stats-card lg:col-span-2 flex flex-col h-[650px] border-3 border-black bg-white shadow-xl">
                         <h3 class="font-black uppercase text-xs mb-8 italic text-slate-400 tracking-widest border-b pb-4">Compliance History</h3>
                         <div id="safety-history" class="overflow-y-auto space-y-4 no-scrollbar flex-grow px-1"></div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
-    <!-- MODALS -->
+    <!-- MODAL: RECIPE DETAIL -->
     <div id="recipe-modal" class="hidden fixed inset-0 z-[600] flex items-center justify-center modal-bg p-4">
         <div class="bg-white rounded-[4rem] p-16 max-w-4xl w-full shadow-2xl max-h-[94vh] overflow-hidden flex flex-col border-8 border-black">
             <div class="flex justify-between items-start mb-10">
-                <h3 id="m-recipe-title" class="text-6xl font-black uppercase italic leading-tight">Recipe</h3>
+                <div>
+                    <h3 id="m-recipe-title" class="text-6xl font-black uppercase italic leading-tight tracking-tighter">Recipe</h3>
+                </div>
                 <button onclick="window.closeRecipeModal()" class="text-slate-400 p-2 font-black text-5xl hover:text-red-500 transition">✕</button>
             </div>
             <div class="bg-slate-100 p-10 rounded-[2.5rem] mb-12 border-4 border-black flex items-center justify-between shadow-2xl">
-                <div class="text-[14px] font-black uppercase text-slate-500 tracking-[0.4em]">Batch Scale</div>
+                <div class="text-[14px] font-black uppercase text-slate-500 tracking-[0.4em]">Batch Multiplier</div>
                 <input type="number" id="yield-input" value="1" step="0.5" class="w-40 text-center font-black heavy-input !p-5 !text-6xl border-4 border-black" oninput="window.updateRecipeScaling()">
             </div>
             <div id="m-recipe-ing" class="flex-grow overflow-y-auto space-y-10 no-scrollbar px-2 text-xl font-bold list-disc pl-12"></div>
         </div>
     </div>
 
+    <!-- MODAL: SETTINGS -->
     <div id="settings-modal" class="hidden fixed inset-0 z-[150] flex items-center justify-center modal-bg p-4">
-        <div class="bg-white rounded-[3.5rem] p-12 max-w-xl w-full shadow-2xl border-4 border-black overflow-y-auto max-h-[90vh]">
-            <h3 class="text-3xl font-black uppercase mb-12 italic text-center">Node Config</h3>
+        <div class="bg-white rounded-[3.5rem] p-12 max-w-xl w-full shadow-2xl border-4 border-black overflow-y-auto max-h-[90vh] no-scrollbar">
+            <h3 class="text-3xl font-black uppercase mb-12 italic text-center tracking-tighter text-slate-900">Executive Hub</h3>
             <div class="space-y-6 mb-12">
                 <div><label class="form-label">Venue Identifier</label><input type="text" id="set-name" class="heavy-input" onchange="window.saveBranding()"></div>
                 <div class="bg-indigo-50 p-8 rounded-[2rem] border-4 border-indigo-600 shadow-inner text-center">
                     <label class="form-label text-indigo-700">Gemini Master Key</label>
-                    <input type="password" id="api-key" onchange="window.saveApiKey()" class="heavy-input border-2 border-indigo-600 shadow-none" placeholder="Master key for AI scans...">
+                    <input type="password" id="api-key" onchange="window.saveApiKey()" class="heavy-input border-2 border-indigo-600 !shadow-none" placeholder="Master key for AI scans...">
+                    <p class="text-[9px] font-black text-indigo-500 mt-4 uppercase text-center italic tracking-widest">Required for Invoice Scanning Engine</p>
                 </div>
             </div>
             <div class="flex flex-col gap-4">
-                <button onclick="window.exportCloudBackup()" class="py-5 bg-emerald-600 text-white rounded-2xl font-black border-3 border-black shadow-lg">Download Backup</button>
-                <button onclick="window.factoryReset()" class="py-6 bg-red-600 text-white rounded-2xl font-black border-3 border-black shadow-lg hover:bg-red-700 transition">☢️ Wipe Hobart Node</button>
-                <button onclick="window.toggleSettings()" class="py-6 bg-black text-white rounded-2xl font-black border-3 border-black mt-4 shadow-xl">Confirm & Sync</button>
+                <button onclick="window.exportCloudBackup()" class="py-5 bg-emerald-600 text-white rounded-2xl font-black border-3 border-black shadow-lg">Download Backup (JSON)</button>
+                <button onclick="window.factoryReset()" class="py-6 bg-red-600 text-white rounded-2xl font-black border-3 border-black shadow-lg hover:bg-red-700 transition">☢️ Factory Reset Hobart Node</button>
+                <button onclick="window.toggleSettings()" class="py-6 bg-black text-white rounded-2xl font-black border-3 border-black mt-4 shadow-xl hover:scale-105 transition">Confirm & Sync</button>
             </div>
         </div>
     </div>
 
-    <div id="ai-processing" class="hidden fixed inset-0 z-[1000] bg-black/90 backdrop-blur-2xl flex flex-col items-center justify-center text-white text-center">
-        <div class="w-24 h-24 border-8 border-t-emerald-500 border-emerald-900 rounded-full animate-spin mb-10"></div>
+    <!-- AI OVERLAY -->
+    <div id="ai-processing" class="hidden fixed inset-0 z-[1000] bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center text-white text-center">
+        <div class="w-24 h-24 border-8 border-t-emerald-500 border-emerald-900 rounded-full animate-spin mb-10 shadow-2xl"></div>
         <h2 class="text-5xl font-black italic tracking-widest uppercase mb-4">AI Extraction</h2>
-        <p class="text-emerald-500 font-black uppercase text-xs tracking-[0.5em] mt-4">Establishing Hobart Cloud Sync...</p>
+        <p class="text-emerald-500 font-black uppercase text-xs tracking-[0.5em] mt-4">Synchronizing with Hobart Node...</p>
     </div>
 
     <canvas id="pdf-render-canvas" class="hidden"></canvas>
@@ -274,7 +290,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = "hobart-master-node-v3";
+        const appId = "hobart-master-node-v5";
 
         const refs = { 
             inv: () => doc(db, 'artifacts', appId, 'public', 'data', 'inventory', 'main'), 
@@ -289,7 +305,7 @@
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
         // --- AUTH ---
-        window.signInQuick = async () => { try { await signInAnonymously(auth); } catch (e) { window.showMsg("Node Fault", "error"); } };
+        window.signInQuick = async () => { try { await signInAnonymously(auth); } catch (e) { window.showMsg("Connection Error", "error"); } };
         window.handleAuth = async () => { try { await signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pass').value); } catch (e) { window.showMsg("Access Refused", "error"); } };
         window.logout = () => signOut(auth);
 
@@ -297,9 +313,7 @@
             if (u) { 
                 document.getElementById('login-screen').classList.add('hidden'); 
                 document.getElementById('app-content').classList.remove('hidden'); 
-                setupListeners(); 
-                fetchWeather(); 
-                loadLocalApiKey();
+                setupListeners(); fetchWeather(); loadLocalApiKey();
             } else {
                 document.getElementById('login-screen').classList.remove('hidden');
                 document.getElementById('app-content').classList.add('hidden');
@@ -307,26 +321,14 @@
         });
 
         const setupListeners = () => {
-            onSnapshot(refs.inv(), (s) => { 
-                if (s.exists()) { 
-                    window.inventory = s.data().items || []; 
-                    window.renderInventory(); 
-                    window.updateStats(); 
-                } 
-            });
-            onSnapshot(refs.rec(), (s) => { 
-                if (s.exists()) { 
-                    window.recipes = s.data().items || []; 
-                    window.renderRecipes(); 
-                    window.renderRecipeCategoryTabs(); 
-                } 
-            });
-            onSnapshot(refs.as(), (s) => { if (s.exists()) { window.assets = s.data().items || []; window.renderAssets(); } });
+            onSnapshot(refs.inv(), (s) => { if (s.exists()) { window.inventory = s.data().items || []; renderInventory(); updateStats(); } });
+            onSnapshot(refs.rec(), (s) => { if (s.exists()) { window.recipes = s.data().items || []; renderRecipes(); renderRecipeCategoryTabs(); } });
+            onSnapshot(refs.as(), (s) => { if (s.exists()) { window.assets = s.data().items || []; renderAssets(); } });
             onSnapshot(refs.com(), (s) => { if (s.exists()) { window.compliance = s.data().logs || []; renderRedBook(); renderComplianceHistory(); } });
             onSnapshot(refs.cfg(), (s) => { if (s.exists()) { 
                 window.config = s.data();
-                const nodeStatus = document.getElementById('cloud-status');
-                if(nodeStatus) nodeStatus.innerText = "● Hobart Node Synchronized";
+                const statusEl = document.getElementById('cloud-status');
+                if(statusEl) statusEl.innerText = "● Hobart Cloud Synchronized";
                 if(window.config.name) {
                     const el = document.getElementById('venue-display-name');
                     if(el) el.innerHTML = `${window.config.name} <span class="text-blue-600">OS</span>`;
@@ -343,40 +345,38 @@
             if (activeNav) activeNav.classList.add('nav-active');
         };
 
-        // --- ASSET LOGGING (REPAIRS/HISTORY) ---
+        // --- ASSET LOGGING ---
         window.addAssetPrompt = async () => {
-            const asset = { id: Date.now(), name: prompt("Equipment Name?"), purch: prompt("Purchase Date?"), repairs: prompt("Repair history?"), agent: prompt("Rep Agent name/number?") };
+            const asset = { id: Date.now(), name: prompt("Equipment Name?"), purch: prompt("Purchase Date?"), repairs: prompt("Repair history?"), agent: prompt("Rep Agent?") };
             if(!asset.name) return;
             window.assets.push(asset); await setDoc(refs.as(), { items: window.assets });
             window.showMsg("Asset Logged");
         };
-
         window.renderAssets = () => {
-            const container = document.getElementById('asset-grid');
-            if(!container) return;
-            container.innerHTML = window.assets.map(a => `
-                <div class="stats-card border-4 border-black bg-slate-50 flex flex-col justify-between">
+            const grid = document.getElementById('asset-grid'); if(!grid) return;
+            grid.innerHTML = window.assets.map(a => `
+                <div class="stats-card border-4 border-black bg-slate-50 flex flex-col justify-between shadow-lg">
                     <div>
-                        <div class="font-black uppercase text-lg italic mb-3 tracking-tighter">${a.name}</div>
+                        <div class="font-black uppercase text-xl italic tracking-tighter mb-4">${a.name}</div>
                         <div class="text-[10px] font-black uppercase text-slate-400 space-y-1">
                             <div>Purchase: <span class="text-black">${a.purch||'N/A'}</span></div>
                             <div>History: <span class="text-blue-600">${a.repairs||'None'}</span></div>
                             <div>Rep: <span class="text-slate-900">${a.agent||'N/A'}</span></div>
                         </div>
                     </div>
-                </div>`).join('') || `<div class="col-span-full py-32 text-center opacity-30 font-black uppercase text-sm tracking-widest italic uppercase">Establish asset node...</div>`;
+                </div>`).join('') || `<div class="col-span-full py-32 text-center opacity-30 font-black uppercase text-sm tracking-widest italic">Establish asset node...</div>`;
         };
 
-        // --- INVOICE SCANNING ---
+        // --- INVOICE SCANNING (FIXED KEY) ---
         window.handleInvoiceUpload = async (event) => {
             const files = event.target.files; if (!files.length) return;
             const key = localStorage.getItem('venue_gemini_key');
-            if (!key) { window.showMsg("Establish API Key in Settings", "error"); return; }
+            if (!key) { window.showMsg("AI Key Missing in Settings", "error"); return; }
             document.getElementById('ai-processing').classList.remove('hidden');
             try {
                 for (let file of files) {
                     const base64 = file.type === "application/pdf" ? await window.pdfToImage(file) : await window.imgToBase64(file);
-                    const prompt = "Extract inventory items JSON array: [{name, sku, quantity, unitCost}]. Raw JSON array only.";
+                    const prompt = "JSON array only: [{name, sku, quantity, unitCost}]. RAW JSON ARRAY ONLY.";
                     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`, {
                         method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: prompt }, { inlineData: { mimeType: "image/png", data: base64 } }] }], generationConfig: { responseMimeType: "application/json" } })
                     });
@@ -388,43 +388,34 @@
                         else window.inventory.push({ id: Date.now() + Math.random(), ...item, parLevel: 5, packSize: 1, weeklyUse: 0 });
                     });
                 }
-                await setDoc(refs.inv(), { items: window.inventory }); window.showMsg("Node Synchronized");
+                await setDoc(refs.inv(), { items: window.inventory }); window.showMsg("Sync Complete");
             } catch (err) { window.showMsg("AI Link Fault", "error"); }
             finally { document.getElementById('ai-processing').classList.add('hidden'); event.target.value = ''; }
         };
 
-        // --- RECIPE LOGIC ---
+        // --- RECIPES ---
         window.filterRecipeCategory = (cat) => { window.activeRecipeCategory = cat; renderRecipeCategoryTabs(); renderRecipes(); };
         window.renderRecipeCategoryTabs = () => {
-            const container = document.getElementById('recipe-category-tabs');
-            if(!container) return;
+            const container = document.getElementById('recipe-category-tabs'); if(!container) return;
             const cats = ["All", ...new Set(window.recipes.map(r => r.category || "Imported"))].sort();
             container.innerHTML = cats.map(c => `<button onclick="window.filterRecipeCategory('${c}')" class="category-pill ${window.activeRecipeCategory === c ? 'active' : ''}">${c}</button>`).join('');
         };
         window.renderRecipes = () => {
-            const grid = document.getElementById('recipe-grid');
-            if(!grid) return;
+            const grid = document.getElementById('recipe-grid'); if(!grid) return;
             const search = document.getElementById('recipe-search').value.toLowerCase();
             const filtered = window.recipes.filter(r => (r.name.toLowerCase().includes(search) || r.ingredients.some(i => i.toLowerCase().includes(search))) && (window.activeRecipeCategory === "All" || r.category === window.activeRecipeCategory));
-            grid.innerHTML = filtered.map(r => `
-                <div onclick="window.openRecipe('${r.id}')" class="stats-card hover:border-purple-600 transition cursor-pointer group border-3">
-                    <div class="text-[9px] font-black text-purple-600 uppercase mb-4 opacity-50 tracking-[0.2em]">${r.category || 'Vault Node'}</div>
-                    <div class="font-black text-xl uppercase group-hover:text-purple-600 truncate italic tracking-tighter">${r.name}</div>
-                    <div class="mt-10 text-[10px] font-bold text-slate-400 flex justify-between border-t-2 pt-4 border-slate-100"><span>SCALE UNIT</span><span>➔</span></div>
-                </div>`).join('') || `<div class="col-span-full py-32 text-center opacity-30 font-black uppercase text-sm">No matching recipes found.</div>`;
+            grid.innerHTML = filtered.map(r => `<div onclick="window.openRecipe('${r.id}')" class="stats-card hover:border-purple-600 transition cursor-pointer group border-3"><div class="text-[9px] font-black text-purple-600 uppercase mb-4 opacity-50 tracking-widest">${r.category || 'Vault'}</div><div class="font-black text-xl uppercase group-hover:text-purple-600 truncate italic">${r.name}</div></div>`).join('') || `<div class="col-span-full py-32 text-center opacity-30 font-black uppercase text-sm">No results</div>`;
         };
-
         window.importRecipesHandler = async (event) => {
             const file = event.target.files[0]; if (!file) return;
             document.getElementById('recipe-loading').classList.remove('hidden');
             const reader = new FileReader();
             reader.onload = async (e) => {
-                const doc = new DOMParser().parseFromString(e.target.result, 'text/html');
-                const blocks = Array.from(doc.querySelectorAll('.recipe-details'));
+                const docObj = new DOMParser().parseFromString(e.target.result, 'text/html');
+                const blocks = Array.from(docObj.querySelectorAll('.recipe-details'));
                 const found = blocks.map((b, idx) => ({ id: Date.now() + idx, name: b.querySelector('h2')?.innerText?.trim() || 'Untitled', ingredients: Array.from(b.querySelectorAll('[itemprop="recipeIngredients"] p, li')).map(el => el.innerText.trim()), method: Array.from(b.querySelectorAll('[itemprop="recipeDirections"] p, li')).map(el => el.innerText.trim()).join('\n'), category: (b.querySelector('.recipe-category') || b.querySelector('[itemprop="recipeCategory"]'))?.innerText?.trim() || 'Imported' })).filter(r => r.ingredients.length > 0);
                 await updateDoc(refs.rec(), { items: arrayUnion(...found) }).catch(() => setDoc(refs.rec(), { items: found })); 
-                window.showMsg("Vault Synchronized");
-                document.getElementById('recipe-loading').classList.add('hidden');
+                window.showMsg("Node Verified"); document.getElementById('recipe-loading').classList.add('hidden');
             };
             reader.readAsText(file);
         };
@@ -432,35 +423,34 @@
         window.updateRecipeScaling = () => { const mult = parseFloat(document.getElementById('yield-input').value) || 1; document.getElementById('m-recipe-ing').innerHTML = window.currentRecipe.ingredients.map(ing => `<li>${ing.replace(/([\d\.]+)/, (m) => (parseFloat(m) * mult).toFixed(1).replace(/\.0$/, ''))}</li>`).join(''); };
         window.closeRecipeModal = () => document.getElementById('recipe-modal').classList.add('hidden');
 
-        // --- INVENTORY (CTN LOGIC/USAGE) ---
+        // --- INVENTORY (CTN/BTL + USAGE) ---
         window.renderInventory = () => {
-            const list = document.getElementById('inventory-list');
-            if(!list) return;
+            const list = document.getElementById('inventory-list'); if(!list) return;
             const s = document.getElementById('inventory-search').value.toLowerCase();
             list.innerHTML = window.inventory.filter(i => i.name.toLowerCase().includes(s)).map(i => `
                 <li class="p-6 bg-white border-4 border-black rounded-[2rem] flex justify-between items-center shadow-xl ${parseFloat(i.quantity) <= (i.parLevel || 5) ? 'low-stock-border' : ''}">
                     <div>
                         <div class="font-black uppercase text-xl italic tracking-tighter">${i.name}</div>
                         <div class="text-[9px] text-slate-400 font-bold uppercase mt-2">
-                            $${(parseFloat(i.unitCost)||0).toFixed(2)} / Ctn • Unit: $${((parseFloat(i.unitCost)||0)/(parseFloat(i.packSize)||1)).toFixed(2)} • Used: ${i.weeklyUse||0}
+                            $${(parseFloat(i.unitCost)||0).toFixed(2)} / Ctn • Btl: $${((parseFloat(i.unitCost)||0)/(parseFloat(i.packSize)||1)).toFixed(2)} • Used: ${i.weeklyUse||0}
                         </div>
                     </div>
-                    <div class="text-right"><div class="font-black text-4xl text-blue-600">${parseFloat(i.quantity||0).toFixed(1)}</div></div>
+                    <div class="text-right"><div class="font-black text-4xl text-blue-600 italic tracking-tighter">${parseFloat(i.quantity||0).toFixed(1)}</div></div>
                 </li>`).join('');
         };
         window.saveItem = async (e) => {
             e.preventDefault();
             const newItem = { id: Date.now(), name: document.getElementById('p-name').value, sku: document.getElementById('p-sku').value, unitCost: document.getElementById('p-cost').value, quantity: document.getElementById('p-qty').value, parLevel: document.getElementById('p-par').value, weeklyUse: document.getElementById('p-use').value, packSize: document.getElementById('p-pack').value };
-            window.inventory.push(newItem); await setDoc(refs.inv(), { items: window.inventory }); e.target.reset(); window.showMsg("Node Updated");
+            window.inventory.push(newItem); await setDoc(refs.inv(), { items: window.inventory }); e.target.reset(); window.showMsg("Node Sync Completed");
         };
 
         // --- COMPLIANCE ---
-        window.logCheck = async (title) => { const log = { type: 'Checklist', item: title, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString(), staff: auth.currentUser.email || "Node_Access" }; await updateDoc(refs.com(), { logs: arrayUnion(log) }); window.showMsg(`${title} Saved`); };
-        window.logIncident = async () => { const val = document.getElementById('log-input').value; if(!val) return; const log = { type: 'Incident', value: val, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString(), staff: auth.currentUser.email || "Node_Access" }; await updateDoc(refs.com(), { logs: arrayUnion(log) }); document.getElementById('log-input').value = ''; window.showMsg("Entry Establishing Record"); };
-        window.renderRedBook = () => { const container = document.getElementById('redbook-feed'); if(container) container.innerHTML = window.compliance.filter(l => l.type === 'Incident').reverse().map(l => `<div class="p-6 bg-white border-3 border-black border-l-[12px] border-l-red-500 rounded-3xl mb-4 shadow-md text-sm font-bold italic">"${l.value}" <br><small class="text-[8px] opacity-40 uppercase italic">${l.date} ${l.time}</small></div>`).join(''); };
-        window.renderComplianceHistory = () => { const container = document.getElementById('safety-history'); if(container) container.innerHTML = window.compliance.filter(l => l.type === 'Checklist').reverse().map(l => `<div class="p-4 bg-white border-3 border-black rounded-[2rem] flex justify-between items-center mb-3 shadow-lg"><div><div class="font-black text-blue-600 uppercase text-[11px] tracking-widest">${l.item}</div><div class="text-[10px] font-bold text-slate-400 uppercase">${l.date} • ${l.time}</div></div><span class="text-[11px] font-black uppercase bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full border-2 border-emerald-500 shadow-sm">Verified</span></div>`).join(''); };
+        window.logCheck = async (title) => { const log = { type: 'Checklist', item: title, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString() }; await updateDoc(refs.com(), { logs: arrayUnion(log) }); window.showMsg(`${title} Verified`); };
+        window.logIncident = async () => { const val = document.getElementById('log-input').value; if(!val) return; const log = { type: 'Incident', value: val, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString() }; await updateDoc(refs.com(), { logs: arrayUnion(log) }); document.getElementById('log-input').value = ''; window.showMsg("Record Posted"); };
+        window.renderRedBook = () => { const el = document.getElementById('redbook-feed'); if(el) el.innerHTML = window.compliance.filter(l => l.type === 'Incident').reverse().map(l => `<div class="p-6 bg-white border-3 border-black border-l-red-500 rounded-3xl mb-4 shadow-md text-sm font-bold italic">"${l.value}"</div>`).join(''); };
+        window.renderComplianceHistory = () => { const el = document.getElementById('safety-history'); if(el) el.innerHTML = window.compliance.filter(l => l.type === 'Checklist').reverse().map(l => `<div class="p-4 bg-slate-50 border-3 border-black rounded-[2rem] flex justify-between items-center mb-3 shadow-lg"><div><div class="font-black text-blue-600 uppercase text-[11px]">${l.item}</div><div class="text-[10px] font-bold text-slate-400 uppercase">${l.date}</div></div><span class="text-[11px] font-black uppercase text-emerald-600">Verified</span></div>`).join(''); };
 
-        // --- STATS/WEATHER ---
+        // --- WEATHER & STATS (SAFE-GARDS) ---
         async function fetchWeather() { 
             try {
                 const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-42.8821&longitude=147.3272&current_weather=true&daily=sunrise,sunset&timezone=auto"); 
@@ -469,23 +459,24 @@
                 const wEl = document.getElementById('d-wind'); if(wEl) wEl.textContent = `${d.current_weather.windspeed} km/h`;
                 const srEl = document.getElementById('d-sunrise'); if(srEl) srEl.textContent = d.daily.sunrise[0].split('T')[1];
                 const ssEl = document.getElementById('d-sunset'); if(ssEl) ssEl.textContent = d.daily.sunset[0].split('T')[1];
-                if(d.current_weather.windspeed > 25) { const badge = document.getElementById('wind-badge'); if(badge) badge.classList.remove('hidden'); }
+                if(d.current_weather.windspeed > 25) { const b = document.getElementById('wind-badge'); if(b) b.classList.remove('hidden'); }
             } catch(e) {}
         }
         window.updateStats = () => { 
             const ds = document.getElementById('d-stock'); if(!ds) return;
+            const al = document.getElementById('stock-alerts');
             const v = window.inventory.reduce((acc, i) => acc + (parseFloat(i.quantity || 0) * (parseFloat(i.unitCost || 0)/(parseFloat(i.packSize)||1))), 0); 
             ds.textContent = `$${v.toLocaleString(undefined, {minimumFractionDigits: 2})}`; 
             const low = window.inventory.filter(i => parseFloat(i.quantity) <= (i.parLevel || 5));
-            const alerts = document.getElementById('stock-alerts');
-            if(alerts) alerts.innerHTML = low.length > 0 ? low.map(i => `<div class="p-4 bg-red-50 text-red-600 rounded-2xl text-[11px] font-black uppercase flex justify-between border-2 border-red-500 shadow-md"><span>${i.name}</span><span>QTY: ${i.quantity}</span></div>`).join('') : '<div class="text-center py-10 opacity-30 font-black text-[10px] uppercase">✅ NODE STABLE</div>';
+            if(al) al.innerHTML = low.length > 0 ? low.map(i => `<div class="p-4 bg-red-50 text-red-600 rounded-2xl text-[11px] font-black uppercase flex justify-between border-2 border-red-500 shadow-md"><span>${i.name}</span><span>QTY: ${i.quantity}</span></div>`).join('') : '<div class="text-center py-10 opacity-30 font-black text-[10px] uppercase tracking-widest">✅ NODE STABLE</div>';
             const prime = document.getElementById('prime-cost-display'); if(prime) prime.innerText = window.inventory.length > 0 ? "28.4 %" : "-- %";
+            const matrix = document.getElementById('matrix-stats'); if(matrix) matrix.innerHTML = `Establishment: ${window.inventory.length} Nodes`;
         };
 
         window.saveApiKey = () => localStorage.setItem('venue_gemini_key', document.getElementById('api-key').value);
         function loadLocalApiKey() { const k = localStorage.getItem('venue_gemini_key'); const el = document.getElementById('api-key'); if(k && el) el.value = k; }
-        window.exportCloudBackup = () => { const blob = new Blob([JSON.stringify({ inventory: window.inventory, recipes: window.recipes, compliance: window.compliance, assets: window.assets, config: window.config }, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Hobart_OS_Backup.json`; a.click(); };
-        window.factoryReset = async () => { if (!confirm("☢️ Wipe Hobart Node?")) return; await setDoc(refs.inv(), { items: [] }); await setDoc(refs.rec(), { items: [] }); await setDoc(refs.com(), { logs: [] }); await setDoc(refs.as(), { items: [] }); window.showMsg("Establish Node Reset"); location.reload(); };
+        window.exportCloudBackup = () => { const blob = new Blob([JSON.stringify({ inventory: window.inventory, recipes: window.recipes, compliance: window.compliance, assets: window.assets, config: window.config }, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Hobart_Master_Backup.json`; a.click(); };
+        window.factoryReset = async () => { if (!confirm("Wipe Hobart Hub?")) return; await setDoc(refs.inv(), { items: [] }); await setDoc(refs.rec(), { items: [] }); await setDoc(refs.com(), { logs: [] }); await setDoc(refs.as(), { items: [] }); window.showMsg("Node Reset Completed"); location.reload(); };
         window.showMsg = (t) => { const b = document.getElementById('msg-box'); if(b) { b.textContent = t; b.classList.remove('hidden'); setTimeout(() => b.classList.add('hidden'), 3000); } };
         window.toggleSettings = () => document.getElementById('settings-modal').classList.toggle('hidden');
         window.saveBranding = async () => { await setDoc(refs.cfg(), { name: document.getElementById('set-name').value }, { merge: true }); };
