@@ -14,31 +14,50 @@
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; transition: 0.3s; }
         body.dark { background-color: #0f172a; color: #f8fafc; }
         
+        /* MANDATORY VISIBILITY STYLING */
         .form-label { font-weight: 900; font-size: 0.75rem; text-transform: uppercase; color: #000; margin-bottom: 6px; display: block; }
         .dark .form-label { color: #fff; }
         
         .heavy-input { 
-            background: white !important; border: 3px solid #000000 !important; border-radius: 0.75rem !important; 
-            padding: 0.85rem !important; font-size: 1rem !important; font-weight: 700 !important; outline: none !important; width: 100%;
-            color: #000000 !important; box-sizing: border-box;
+            background: white !important; 
+            border: 3px solid #000000 !important; 
+            border-radius: 0.75rem !important; 
+            padding: 0.85rem !important; 
+            font-size: 1rem !important; 
+            font-weight: 700 !important; 
+            outline: none !important; 
+            width: 100%;
+            color: #000000 !important;
+            box-sizing: border-box;
         }
         .dark .heavy-input { background: #1e293b !important; border-color: #ffffff !important; color: white !important; }
-        
+        .heavy-input:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2); }
+
         .stats-card { background: white; border: 2px solid #e2e8f0; border-radius: 1.5rem; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .dark .stats-card { background: #1e293b; border-color: #334155; }
         
         .nav-link.nav-active { background-color: var(--primary) !important; color: white !important; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
+        /* BCG Matrix */
+        .bcg-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; height: 240px; }
+        .bcg-quadrant { padding: 12px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 10px; font-weight: 900; text-transform: uppercase; }
+        .q-star { background: #dcfce7; color: #166534; }
+        .q-puzzle { background: #fef9c3; color: #854d0e; }
+        .q-plow { background: #dbeafe; color: #1e40af; }
+        .q-dog { background: #fee2e2; color: #991b1b; }
+        
+        .low-stock { border-left: 8px solid #ef4444 !important; background-color: #fef2f2; }
+        .dark .low-stock { background-color: #451a1a; }
+        
         .view-section { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         .modal-bg { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
-    <!-- AUTH SCREEN -->
+    <!-- AUTH LAYER -->
     <div id="login-screen" class="fixed inset-0 z-[500] bg-slate-900 flex items-center justify-center p-6">
         <div class="max-w-sm w-full bg-white dark:bg-slate-800 rounded-[2.5rem] p-10 shadow-2xl">
             <div id="auth-logo" class="w-24 h-24 bg-slate-100 rounded-3xl mx-auto mb-6 flex items-center justify-center text-4xl">🏢</div>
@@ -53,14 +72,14 @@
         </div>
     </div>
 
-    <!-- MAIN APP CONTENT -->
+    <!-- MAIN APP -->
     <div id="app-content" class="hidden">
         <div class="max-w-[1600px] mx-auto px-4 md:px-8 pt-8">
             
             <header class="flex justify-between items-center mb-8">
                 <div class="flex items-center gap-4">
                     <div id="header-logo" class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center overflow-hidden">🏢</div>
-                    <h1 id="venue-display-name" class="text-2xl font-black tracking-tighter italic dark:text-white uppercase">Hobart <span class="text-blue-600">Executive</span></h1>
+                    <h1 id="venue-display-name" class="text-2xl font-black tracking-tighter italic dark:text-white uppercase">Executive <span class="text-blue-600">OS</span></h1>
                 </div>
                 <div id="wind-badge" class="hidden px-6 py-2 bg-amber-500 text-white rounded-full text-[10px] font-black animate-pulse">⚠️ SECURE AWNINGS: HIGH WIND</div>
             </header>
@@ -70,6 +89,7 @@
                 <button id="nav-stock" onclick="window.setView('stock')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Inventory</button>
                 <button id="nav-production" onclick="window.setView('production')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Production</button>
                 <button id="nav-safety" onclick="window.setView('safety')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Compliance</button>
+                <button id="nav-intel" onclick="window.setView('intel')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Intelligence</button>
                 <button onclick="window.toggleSettings()" class="px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-slate-200 dark:bg-slate-700 ml-auto shadow-sm">⚙️ Admin</button>
             </nav>
 
@@ -78,7 +98,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2 space-y-8">
                         <div class="stats-card">
-                            <h3 class="font-black uppercase text-xs mb-6 italic">Hobart Shift Intelligence</h3>
+                            <h3 class="font-black uppercase text-xs mb-6 italic">Hobart Briefing</h3>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center border-b pb-8 dark:border-slate-700">
                                 <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase">Temp</div><div id="d-temp" class="text-2xl font-black text-blue-600">--°</div></div>
                                 <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase">Wind</div><div id="d-wind" class="text-2xl font-black text-amber-500">--</div></div>
@@ -86,9 +106,9 @@
                                 <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase">Sunset</div><div id="d-sunset" class="text-xl font-black">--</div></div>
                             </div>
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-6 text-center mt-8">
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1">SALES vs LY</div><div id="d-sales" class="text-2xl font-black text-emerald-500">$0</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1">CRUISE PAX</div><div id="d-pax" class="text-2xl font-black text-blue-600">0</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1">STOCK VALUE</div><div id="d-stock" class="text-2xl font-black">$0.00</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase">Sales vs LY</div><div id="d-sales" class="text-2xl font-black text-emerald-500">$0</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase">Cruise PAX</div><div id="d-pax" class="text-2xl font-black text-blue-600">0</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase">Stock Value</div><div id="d-stock" class="text-2xl font-black">$0.00</div></div>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -97,18 +117,18 @@
                                 <div id="stock-alerts" class="space-y-2 overflow-y-auto max-h-[180px]"></div>
                             </div>
                             <div class="stats-card">
-                                <h3 class="font-black uppercase text-xs mb-4">POS Export Sync</h3>
-                                <button onclick="document.getElementById('pos-csv').click()" class="w-full bg-emerald-600 text-white font-black py-4 rounded-xl text-[10px] uppercase shadow-md">Upload Daily CSV</button>
+                                <h3 class="font-black uppercase text-xs mb-4">Daily Sync</h3>
+                                <button onclick="document.getElementById('pos-csv').click()" class="w-full bg-emerald-600 text-white font-black py-4 rounded-xl text-[10px] uppercase shadow-md">Upload POS CSV</button>
                                 <input type="file" id="pos-csv" class="hidden" onchange="window.importSales(event)">
                             </div>
                         </div>
                     </div>
                     <div class="stats-card flex flex-col h-[600px]">
-                        <h3 class="font-black uppercase text-xs mb-6 italic">Secure Red Book</h3>
+                        <h3 class="font-black uppercase text-xs mb-6 italic text-red-600">Secure Red Book</h3>
                         <div id="redbook-feed" class="flex-grow overflow-y-auto space-y-4 no-scrollbar"></div>
                         <div class="mt-4 pt-4 border-t dark:border-slate-700">
-                            <textarea id="log-input" class="heavy-input text-xs mb-2" placeholder="Note down incidents..."></textarea>
-                            <button onclick="window.logIncident()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-black text-[10px] uppercase">Post Entry</button>
+                            <textarea id="log-input" class="heavy-input text-xs mb-2" placeholder="Entry notes..."></textarea>
+                            <button onclick="window.logIncident()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-black text-[10px] uppercase">Submit Entry</button>
                         </div>
                     </div>
                 </div>
@@ -119,16 +139,16 @@
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
                     <div class="lg:col-span-4 xl:col-span-3">
                         <div class="stats-card sticky top-24 border-2 border-black">
-                            <h2 class="text-xl font-black uppercase mb-6 italic">Item Setup</h2>
+                            <h2 class="text-xl font-black uppercase mb-6 italic">Item Configuration</h2>
                             <form id="item-form" class="space-y-4">
                                 <input type="hidden" id="edit-id">
                                 <div><label class="form-label">Product Name</label><input type="text" id="p-name" class="heavy-input" required></div>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div><label class="form-label">SKU (POS)</label><input type="text" id="p-sku" class="heavy-input" required></div>
+                                    <div><label class="form-label">SKU / POS Code</label><input type="text" id="p-sku" class="heavy-input" required></div>
                                     <div><label class="form-label">Vendor</label><input type="text" id="p-vendor" class="heavy-input"></div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div><label class="form-label">Unit Cost</label><input type="number" id="p-cost" step="0.01" class="heavy-input"></div>
+                                    <div><label class="form-label">Cost/Unit</label><input type="number" id="p-cost" step="0.01" class="heavy-input"></div>
                                     <div><label class="form-label">Menu Price</label><input type="number" id="p-price" step="0.01" class="heavy-input"></div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
@@ -141,14 +161,13 @@
                                 </div>
                                 <div><label class="form-label">Category</label><select id="p-cat" class="heavy-input"></select></div>
                                 <button type="submit" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs">Sync Product</button>
-                                <button type="button" id="cancel-edit" onclick="window.cancelEdit()" class="hidden w-full text-[10px] font-black text-slate-400 mt-2 uppercase text-center">Cancel</button>
                             </form>
                         </div>
                     </div>
                     <div class="lg:col-span-8 xl:col-span-9">
                         <div class="flex gap-4 mb-8">
-                            <input type="text" id="search-bar" oninput="window.renderInventory()" placeholder="Find stock..." class="flex-grow p-5 bg-white dark:bg-slate-800 rounded-[2rem] border-2 border-slate-300 dark:border-slate-700 font-bold outline-none shadow-sm">
-                            <button onclick="document.getElementById('batch-scan').click()" class="bg-indigo-600 text-white px-10 rounded-full font-black uppercase text-[10px] shadow-lg">Scan PDF</button>
+                            <input type="text" id="search-bar" oninput="window.renderInventory()" placeholder="Find item by name or code..." class="flex-grow p-5 bg-white dark:bg-slate-800 rounded-[2rem] border-2 border-slate-300 dark:border-slate-700 font-bold outline-none shadow-sm">
+                            <button onclick="document.getElementById('batch-scan').click()" class="bg-indigo-600 text-white px-10 rounded-full font-black uppercase text-[10px] shadow-lg">Scan PDF Invoice</button>
                             <input type="file" id="batch-scan" multiple class="hidden" onchange="window.handleBatchScan(event)">
                         </div>
                         <ul id="inventory-list" class="space-y-4"></ul>
@@ -156,12 +175,12 @@
                 </div>
             </div>
 
-            <!-- VIEW: PRODUCTION (RECIPES) -->
+            <!-- VIEW: PRODUCTION -->
             <div id="view-production" class="view-section hidden">
                 <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
                     <div>
                         <h1 class="text-4xl font-black tracking-tighter italic dark:text-white">Recipe <span class="text-purple-600">Vault</span></h1>
-                        <p class="text-[10px] font-black text-slate-400 uppercase mt-1">Direct ZIP/HTML Import Enabled</p>
+                        <p class="text-[10px] font-black text-slate-400 uppercase mt-1">Multi-Block Import Enabled</p>
                     </div>
                     <div class="flex gap-3">
                         <button onclick="document.getElementById('recipe-keeper-import').click()" class="bg-purple-600 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase shadow-lg">Import ZIP / HTML</button>
@@ -180,74 +199,82 @@
                         <div id="fridge-grid" class="space-y-4"></div>
                     </div>
                     <div class="stats-card h-fit">
-                        <h3 class="font-black uppercase text-xs mb-6 italic">Shift Checklists</h3>
+                        <h3 class="font-black uppercase text-xs mb-6 italic">Checklists</h3>
                         <div class="flex flex-col gap-4">
-                            <button onclick="window.logCheck('Opening Checklist')" class="p-6 bg-blue-50 text-blue-600 rounded-3xl font-black text-xs uppercase text-left border border-blue-100">Opening Checklist</button>
-                            <button onclick="window.logCheck('Closing Checklist')" class="p-6 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase text-left">Closing Checklist</button>
+                            <button onclick="window.logCheck('Opening Checklist')" class="p-6 bg-blue-50 text-blue-600 rounded-3xl font-black text-xs uppercase text-left border border-blue-100">Morning Shift Open</button>
+                            <button onclick="window.logCheck('Closing Checklist')" class="p-6 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase text-left">Night Shift Close</button>
                         </div>
                     </div>
                     <div class="stats-card h-[500px] flex flex-col">
-                        <h3 class="font-black uppercase text-xs mb-6 italic">Compliance History</h3>
+                        <h3 class="font-black uppercase text-xs mb-6 italic">Cloud Activity Log</h3>
                         <div id="safety-history" class="overflow-y-auto space-y-3 no-scrollbar flex-grow text-[10px]"></div>
                     </div>
                 </div>
             </div>
 
+            <!-- VIEW: INTELLIGENCE -->
+            <div id="view-intel" class="view-section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="stats-card lg:col-span-1">
+                        <h3 class="font-black uppercase text-xs mb-8 italic">BCG Profit Matrix</h3>
+                        <div class="bcg-matrix">
+                            <div class="bcg-quadrant q-star">Stars</div>
+                            <div class="bcg-quadrant q-puzzle">Puzzles</div>
+                            <div class="bcg-quadrant q-plow">Plowhorses</div>
+                            <div class="bcg-quadrant q-dog">Dogs</div>
+                        </div>
+                        <div id="matrix-stats" class="mt-4 grid grid-cols-2 gap-2 text-[8px] font-black uppercase text-center"></div>
+                    </div>
+                    <div class="stats-card lg:col-span-2">
+                        <h3 class="font-black uppercase text-xs mb-6 italic">Equipment Lifecycle</h3>
+                        <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                        <button onclick="window.addAssetPrompt()" class="w-full mt-6 py-4 border-2 border-dashed border-slate-200 rounded-2xl text-[10px] font-black uppercase text-slate-400">+ Add Asset</button>
+                    </div>
+                </div>
+                <div class="mt-8 stats-card bg-emerald-50">
+                    <h3 class="font-black uppercase text-xs mb-6 text-emerald-700 italic">Financial Performance</h3>
+                    <div id="prime-cost-display" class="text-4xl font-black text-emerald-900">-- %</div>
+                    <p class="text-[10px] font-black text-emerald-600 uppercase mt-1">COGS + Labor Prime Ratio</p>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <!-- RECIPE MODAL (Scaling Hub) -->
+    <!-- RECIPE SCALE MODAL -->
     <div id="recipe-modal" class="hidden fixed inset-0 z-[600] flex items-center justify-center modal-bg p-4">
         <div class="bg-white dark:bg-slate-800 rounded-[3rem] p-10 max-w-2xl w-full shadow-2xl max-h-[85vh] overflow-hidden flex flex-col">
             <div class="flex justify-between items-start mb-6">
-                <div>
-                    <h3 id="m-recipe-title" class="text-3xl font-black uppercase italic dark:text-white leading-tight">Recipe Name</h3>
-                    <div id="m-recipe-cat" class="text-[10px] font-black text-blue-600 uppercase mt-1">Category</div>
-                </div>
-                <button onclick="window.closeRecipeModal()" class="text-slate-400 p-2">✕</button>
+                <h3 id="m-recipe-title" class="text-3xl font-black uppercase italic dark:text-white leading-tight">Recipe</h3>
+                <button onclick="window.closeRecipeModal()" class="text-slate-400 p-2 font-black text-xl">✕</button>
             </div>
-            
-            <div class="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl mb-6 border border-slate-100 dark:border-slate-700 flex items-center justify-between">
-                <div class="text-[10px] font-black uppercase text-slate-400">Yield Multiplier (Scaling)</div>
+            <div class="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl mb-6 border border-slate-100 flex items-center justify-between">
+                <div class="text-[10px] font-black uppercase text-slate-400">Scale Multiplier</div>
                 <div class="flex items-center gap-3">
-                    <button onclick="window.scaleRecipe(0.5)" class="w-10 h-10 bg-white border rounded-xl font-black">-</button>
+                    <button onclick="window.scaleRecipe(-0.5)" class="w-10 h-10 bg-white border rounded-xl font-black">-</button>
                     <input type="number" id="yield-input" value="1" step="0.5" class="w-20 text-center font-black heavy-input !p-2" oninput="window.updateRecipeScaling()">
-                    <button onclick="window.scaleRecipe(1)" class="w-10 h-10 bg-white border rounded-xl font-black text-blue-600">+</button>
+                    <button onclick="window.scaleRecipe(0.5)" class="w-10 h-10 bg-white border rounded-xl font-black text-blue-600">+</button>
                 </div>
             </div>
-
-            <div class="flex-grow overflow-y-auto no-scrollbar space-y-8">
-                <div>
-                    <h4 class="text-[10px] font-black uppercase text-slate-400 mb-4 tracking-widest">Ingredients</h4>
-                    <ul id="m-recipe-ing" class="space-y-2 text-sm font-bold dark:text-white list-disc pl-5"></ul>
-                </div>
-                <div>
-                    <h4 class="text-[10px] font-black uppercase text-slate-400 mb-4 tracking-widest">Method</h4>
-                    <p id="m-recipe-method" class="text-sm dark:text-slate-300 leading-relaxed whitespace-pre-wrap"></p>
-                </div>
+            <div class="flex-grow overflow-y-auto space-y-8 no-scrollbar">
+                <ul id="m-recipe-ing" class="space-y-2 text-sm font-bold dark:text-white list-disc pl-5"></ul>
+                <p id="m-recipe-method" class="text-sm dark:text-slate-300 leading-relaxed whitespace-pre-wrap border-t pt-6"></p>
             </div>
         </div>
     </div>
 
-    <!-- SETTINGS -->
     <div id="settings-modal" class="hidden fixed inset-0 z-[600] flex items-center justify-center modal-bg p-4">
         <div class="bg-white dark:bg-slate-800 rounded-[3.5rem] p-12 max-w-xl w-full shadow-2xl">
-            <h3 class="text-2xl font-black uppercase mb-10 italic dark:text-white text-center">Venue Configuration</h3>
-            <div class="space-y-8">
-                <div class="space-y-4">
-                    <div><label class="form-label">Business Name</label><input type="text" id="set-name" onchange="window.saveBranding()" class="heavy-input"></div>
-                    <div><label class="form-label">Branding Logo URL</label><input type="text" id="set-logo" onchange="window.saveBranding()" class="heavy-input"></div>
-                </div>
-                <div class="bg-indigo-50 dark:bg-indigo-900/10 p-6 rounded-3xl border border-indigo-100">
-                    <label class="form-label">Gemini Master Key</label>
-                    <input type="password" id="api-key" onchange="window.saveApiKey()" class="heavy-input">
-                </div>
-                <div class="flex gap-3">
-                    <button onclick="window.toggleDarkMode()" class="flex-grow py-4 bg-slate-100 dark:bg-slate-700 rounded-xl font-black text-xs uppercase">Toggle Mode</button>
-                    <button onclick="window.logout()" class="px-8 py-4 bg-red-50 text-red-600 rounded-xl font-black text-xs uppercase">Logout</button>
-                </div>
-                <button onclick="window.toggleSettings()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase">Save & Exit</button>
+            <h3 class="text-xl font-black uppercase mb-8 italic dark:text-white">Admin Hub</h3>
+            <div class="space-y-4 mb-10">
+                <div><label class="form-label">Venue Name</label><input type="text" id="set-name" class="heavy-input"></div>
+                <div><label class="form-label">Logo URL</label><input type="text" id="set-logo" class="heavy-input"></div>
             </div>
+            <div class="bg-indigo-50 dark:bg-indigo-900/10 p-6 rounded-3xl border border-indigo-100 mb-8">
+                <label class="form-label">Gemini Key</label>
+                <input type="password" id="api-key" onchange="window.saveApiKey()" class="heavy-input">
+            </div>
+            <button onclick="window.toggleSettings()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase">Save & Exit</button>
         </div>
     </div>
 
@@ -266,28 +293,31 @@
 
         const refs = { 
             inv: () => doc(db, 'venues', venueId, 'data', 'inventory'), 
-            cfg: () => doc(db, 'venues', venueId, 'data', 'config'),
+            rec: () => doc(db, 'venues', venueId, 'data', 'recipes'),
             com: () => doc(db, 'venues', venueId, 'data', 'compliance'),
-            rec: () => doc(db, 'venues', venueId, 'data', 'recipes')
+            cfg: () => doc(db, 'venues', venueId, 'data', 'config')
         };
 
         window.inventory = [];
-        window.config = { name: "Hobart Executive", categories: ["Bar", "Kitchen", "Ramen", "Prep", "Cleaning"], fridges: ["Fridge 1", "Coolroom", "Freezer"] };
-        window.compliance = [];
         window.recipes = [];
-        window.currentRecipe = null;
-
-        // --- AUTH ---
+        window.config = { name: "Hobart Executive", categories: ["Bar", "Kitchen", "Ramen", "Prep", "Garnish", "Cleaning"], fridges: ["Bar Fridge", "Coolroom", "Kitchen Freezer"] };
+        
         window.handleAuth = async () => {
             const e = document.getElementById('auth-email').value;
             const p = document.getElementById('auth-pass').value;
             const isReg = document.getElementById('auth-toggle').textContent.includes('New');
-            try { if (isReg) await createUserWithEmailAndPassword(auth, e, p); else await signInWithEmailAndPassword(auth, e, p); }
-            catch (err) { document.getElementById('auth-err').textContent = err.message; document.getElementById('auth-err').classList.remove('hidden'); }
+            try { 
+                if (isReg) await createUserWithEmailAndPassword(auth, e, p); 
+                else await signInWithEmailAndPassword(auth, e, p); 
+            } catch (err) { 
+                document.getElementById('auth-err').textContent = err.message; 
+                document.getElementById('auth-err').classList.remove('hidden'); 
+            }
         };
+
         window.toggleAuthMode = () => { const t = document.getElementById('auth-toggle'); t.textContent = t.textContent.includes('Access') ? 'Back to Login' : 'Create New Profile'; };
         window.logout = () => signOut(auth);
-        
+
         onAuthStateChanged(auth, (u) => {
             if (u) { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-content').classList.remove('hidden'); setupListeners(); fetchWeather(); }
             else { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-content').classList.add('hidden'); }
@@ -295,18 +325,15 @@
 
         const setupListeners = () => {
             onSnapshot(refs.inv(), (s) => { if (s.exists()) { window.inventory = s.data().items || []; renderInventory(); updateStats(); } });
-            onSnapshot(refs.com(), (s) => { if (s.exists()) { window.compliance = s.data().logs || []; renderSafety(); renderRedBook(); } });
             onSnapshot(refs.rec(), (s) => { if (s.exists()) { window.recipes = s.data().items || []; renderRecipes(); } });
             onSnapshot(refs.cfg(), (s) => { if (s.exists()) { 
-                window.config = { ...window.config, ...s.data() };
                 const d = s.data();
-                if(d.logo) { document.getElementById('header-logo').innerHTML = `<img src="${d.logo}" class="w-full h-full object-contain">`; document.getElementById('auth-logo').innerHTML = `<img src="${d.logo}" class="w-full h-full object-contain">`; }
-                if(d.name) { document.getElementById('venue-display-name').textContent = d.name; document.getElementById('auth-title').textContent = d.name; }
+                if(d.logo) document.getElementById('header-logo').innerHTML = `<img src="${d.logo}" class="w-full h-full object-contain">`;
+                if(d.name) document.getElementById('venue-display-name').textContent = d.name;
                 updateSelects();
             }});
         };
 
-        // --- NAVIGATION ---
         window.setView = (v) => {
             document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden'));
             const target = document.getElementById(`view-${v}`);
@@ -316,11 +343,11 @@
             if (activeNav) activeNav.classList.add('nav-active');
         };
 
-        // --- RECIPE IMPORT ENGINE (ZIP / HTML) ---
+        // --- SPLIT LOGIC: MULTI-RECIPE HTML IMPORT ---
         window.importRecipesHandler = async (event) => {
             const file = event.target.files[0];
             if (!file) return;
-            const recipes = [];
+            let foundRecipes = [];
 
             if (file.name.endsWith('.zip')) {
                 const zip = new JSZip();
@@ -328,55 +355,55 @@
                 for (let filename of Object.keys(contents.files)) {
                     if (filename.endsWith('.html')) {
                         const htmlString = await contents.files[filename].async("string");
-                        recipes.push(parseRecipeHtml(htmlString));
+                        foundRecipes = [...foundRecipes, ...parseAllRecipesInHtml(htmlString)];
                     }
                 }
             } else if (file.name.endsWith('.html')) {
                 const reader = new FileReader();
                 reader.onload = async (e) => {
-                    const recipe = parseRecipeHtml(e.target.result);
-                    await updateDoc(refs.rec(), { items: arrayUnion(recipe) }).catch(() => setDoc(refs.rec(), { items: [recipe] }));
-                    window.showMsg("Recipe Import Complete!");
+                    foundRecipes = parseAllRecipesInHtml(e.target.result);
+                    if (foundRecipes.length > 0) syncRecipes(foundRecipes);
                 };
                 reader.readAsText(file);
                 return;
             }
-            
-            if (recipes.length > 0) {
-                await updateDoc(refs.rec(), { items: arrayUnion(...recipes) }).catch(() => setDoc(refs.rec(), { items: recipes }));
-                window.showMsg(`${recipes.length} Recipes Synced!`);
-            }
+            if (foundRecipes.length > 0) syncRecipes(foundRecipes);
         };
 
-        function parseRecipeHtml(htmlString) {
+        function parseAllRecipesInHtml(htmlString) {
             const parser = new DOMParser();
             const doc = parser.parseFromString(htmlString, 'text/html');
-            const title = doc.querySelector('h2')?.innerText || doc.title || 'Imported Recipe';
-            // Targets the itemprop logic from Recipe Keeper exports
-            const ingredients = Array.from(doc.querySelectorAll('[itemprop="recipeIngredients"] p')).map(p => p.innerText);
-            const method = Array.from(doc.querySelectorAll('[itemprop="recipeDirections"] p')).map(p => p.innerText).join('\n');
+            // Specifically loops through every .recipe-details block found
+            const blocks = doc.querySelectorAll('.recipe-details');
             
-            return {
-                id: Date.now() + Math.random(),
-                name: title,
-                category: 'Imported',
-                ingredients: ingredients,
-                method: method
-            };
+            return Array.from(blocks).map(block => {
+                const title = block.querySelector('h2')?.innerText || 'Imported Recipe';
+                const ingredients = Array.from(block.querySelectorAll('[itemprop="recipeIngredients"] p')).map(p => p.innerText);
+                const method = Array.from(block.querySelectorAll('[itemprop="recipeDirections"] p')).map(p => p.innerText).join('\n');
+                
+                return {
+                    id: Date.now() + Math.random(),
+                    name: title,
+                    ingredients: ingredients,
+                    method: method,
+                    category: 'Imported'
+                };
+            }).filter(r => r.ingredients.length > 0);
         }
+
+        const syncRecipes = async (items) => {
+            await updateDoc(refs.rec(), { items: arrayUnion(...items) }).catch(() => setDoc(refs.rec(), { items }));
+            window.showMsg(`${items.length} Recipes Imported!`);
+        };
 
         window.renderRecipes = () => {
             const grid = document.getElementById('recipe-grid');
             if(!grid) return;
             grid.innerHTML = window.recipes.map(r => `
-                <div onclick="window.openRecipe('${r.id}')" class="stats-card hover:border-purple-600 transition cursor-pointer group">
-                    <div class="text-[8px] font-black text-purple-600 uppercase mb-2">${r.category}</div>
-                    <div class="font-black text-sm uppercase dark:text-white group-hover:text-purple-600 transition">${r.name}</div>
-                    <div class="mt-6 text-[8px] font-bold text-slate-400 uppercase flex justify-between items-center">
-                        <span>View Method</span>
-                        <span class="bg-slate-50 dark:bg-slate-900 px-2 py-1 rounded">➔</span>
-                    </div>
-                </div>`).join('') || '<div class="col-span-full py-20 text-center text-slate-400 font-black uppercase text-xs">Import or add your first recipe</div>';
+                <div onclick="window.openRecipe('${r.id}')" class="stats-card hover:border-purple-600 transition cursor-pointer">
+                    <div class="font-black text-sm uppercase dark:text-white">${r.name}</div>
+                    <div class="mt-4 text-[9px] font-bold text-slate-400">View & Scale ➔</div>
+                </div>`).join('');
         };
 
         window.openRecipe = (id) => {
@@ -385,7 +412,6 @@
             window.currentRecipe = r;
             document.getElementById('yield-input').value = 1;
             document.getElementById('m-recipe-title').innerText = r.name;
-            document.getElementById('m-recipe-cat').innerText = r.category;
             document.getElementById('m-recipe-method').innerText = r.method;
             window.updateRecipeScaling();
             document.getElementById('recipe-modal').classList.remove('hidden');
@@ -393,23 +419,32 @@
 
         window.updateRecipeScaling = () => {
             const mult = parseFloat(document.getElementById('yield-input').value) || 1;
-            const ingList = document.getElementById('m-recipe-ing');
-            ingList.innerHTML = window.currentRecipe.ingredients.map(ing => {
-                // Scaling regex for "300g azuki beans" -> "600g azuki beans"
-                const scaled = ing.replace(/([\d\.]+)/, (match) => (parseFloat(match) * mult).toFixed(1).replace(/\.0$/, ''));
+            document.getElementById('m-recipe-ing').innerHTML = window.currentRecipe.ingredients.map(ing => {
+                const scaled = ing.replace(/([\d\.]+)/, (m) => (parseFloat(m) * mult).toFixed(1).replace(/\.0$/, ''));
                 return `<li>${scaled}</li>`;
             }).join('');
         };
 
         window.scaleRecipe = (val) => {
             const input = document.getElementById('yield-input');
-            input.value = Math.max(0.1, parseFloat(input.value) + (val == 1 ? 0.5 : -0.5));
+            input.value = Math.max(0.1, parseFloat(input.value) + val);
             window.updateRecipeScaling();
         };
 
-        window.closeRecipeModal = () => document.getElementById('recipe-modal').classList.add('hidden');
+        window.renderInventory = () => {
+            const list = document.getElementById('inventory-list');
+            if(!list) return;
+            const s = document.getElementById('search-bar').value.toLowerCase();
+            list.innerHTML = window.inventory.filter(i => i.name.toLowerCase().includes(s)).map(i => `
+                <li class="p-6 bg-white rounded-[2rem] border-2 border-slate-200 flex justify-between items-center">
+                    <div>
+                        <div class="font-black uppercase text-sm">${i.name}</div>
+                        <div class="text-[9px] text-slate-400 font-black uppercase">$${(i.unitCost||0).toFixed(2)} / ${i.uom||'Unit'} • Pack: ${i.packSize||1}</div>
+                    </div>
+                    <div class="font-black text-lg">${parseFloat(i.quantity||0).toFixed(1)}</div>
+                </li>`).join('');
+        };
 
-        // --- DASHBOARD INTEL ---
         async function fetchWeather() {
             try {
                 const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-42.8821&longitude=147.3272&current_weather=true&daily=sunrise,sunset&timezone=auto");
@@ -422,78 +457,18 @@
             } catch(e) {}
         }
 
-        // --- RENDERERS ---
-        window.renderInventory = () => {
-            const list = document.getElementById('inventory-list');
-            if(!list) return;
-            const s = document.getElementById('search-bar').value.toLowerCase();
-            list.innerHTML = window.inventory.filter(i => i.name.toLowerCase().includes(s)).map(i => `
-                <li class="p-6 bg-white dark:bg-slate-800 rounded-[2.5rem] border-2 border-slate-200 dark:border-slate-700 flex justify-between items-center transition ${parseFloat(i.quantity) < 5 ? 'low-stock' : ''}">
-                    <div>
-                        <div class="font-black dark:text-white uppercase text-sm italic">${i.name}</div>
-                        <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">$${(i.unitCost||0).toFixed(2)} / ${i.uom || 'Unit'} • Used: ${i.weeklyUsage || 0}/wk</div>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div class="flex items-center bg-slate-50 dark:bg-slate-900 rounded-2xl p-1">
-                            <button onclick="window.adjStock('${i.id}', -1)" class="w-10 h-10">-</button>
-                            <span class="w-10 text-center font-black dark:text-white">${parseFloat(i.quantity||0).toFixed(1)}</span>
-                            <button onclick="window.adjStock('${i.id}', 1)" class="w-10 h-10 text-blue-600">+</button>
-                        </div>
-                    </div>
-                </li>`).join('');
-        };
-
-        window.renderSafety = () => {
-            document.getElementById('fridge-grid').innerHTML = window.config.fridges.map(f => `
-                <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border dark:border-slate-700 flex justify-between items-center">
-                    <span class="font-black text-[10px] uppercase">${f}</span>
-                    <div class="flex gap-2"><input type="number" id="t-${f.replace(/\s+/g,'')}" placeholder="°C" class="w-16 p-2 rounded-lg border-2 border-black text-xs font-black"><button onclick="window.logTemp('${f}')" class="bg-blue-600 text-white px-3 py-2 rounded-lg font-black text-[9px]">LOG</button></div>
-                </div>`).join('');
-            
-            document.getElementById('safety-history').innerHTML = window.compliance.reverse().map(l => `
-                <div class="p-3 bg-white dark:bg-slate-800 rounded-xl border dark:border-slate-700">
-                    <div class="flex justify-between font-black text-blue-600 uppercase mb-1"><span>${l.type}: ${l.item}</span><span>${l.time}</span></div>
-                    <p class="font-bold dark:text-white">${l.value}${l.type === 'Temp' ? '°C' : ''}</p>
-                </div>`).join('');
-        };
-
         window.updateStats = () => {
             const v = window.inventory.reduce((acc, i) => acc + (parseFloat(i.quantity || 0) * parseFloat(i.unitCost || 0)), 0);
             document.getElementById('d-stock').textContent = `$${v.toLocaleString()}`;
         };
 
-        // --- HELPERS ---
-        window.logTemp = async (item) => {
-            const v = document.getElementById(`t-${item.replace(/\s+/g,'')}`).value; if(!v) return;
-            const log = { type: 'Temp', item, value: v, staff: auth.currentUser.email, date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString() };
-            await updateDoc(refs.com(), { logs: arrayUnion(log) }).catch(() => setDoc(refs.com(), { logs: [log] }));
-            document.getElementById(`t-${item.replace(/\s+/g,'')}`).value = ''; window.showMsg("Temp Logged");
-        };
-
-        window.logCheck = async (title) => {
-            const log = { type: 'Checklist', item: title, value: 'COMPLETED', staff: auth.currentUser.email, date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString() };
-            await updateDoc(refs.com(), { logs: arrayUnion(log) }).catch(() => setDoc(refs.com(), { logs: [log] }));
-            window.showMsg("Checklist Saved");
-        };
-
-        window.saveApiKey = () => localStorage.setItem('venueApiKey', document.getElementById('api-key').value);
-        window.saveBranding = async () => {
-            const logo = document.getElementById('set-logo').value;
-            const name = document.getElementById('set-name').value;
-            await setDoc(refs.cfg(), { logo, name }, { merge: true });
-            window.showMsg("Branding Updated");
-        };
-
-        window.adjStock = (id, amt) => { const i = window.inventory.find(x => x.id === id); if(i) { i.quantity = Math.max(0, (parseFloat(i.quantity)||0) + amt); setDoc(refs.inv(), { items: window.inventory }); } };
+        window.showMsg = (t) => { const b = document.getElementById('msg-box'); b.textContent = t; b.classList.remove('hidden'); setTimeout(() => b.classList.add('hidden'), 3000); };
+        window.closeRecipeModal = () => document.getElementById('recipe-modal').classList.add('hidden');
         window.toggleSettings = () => document.getElementById('settings-modal').classList.toggle('hidden');
         window.toggleDarkMode = () => document.body.classList.toggle('dark');
-        window.showMsg = (t) => { const b = document.getElementById('msg-box'); b.textContent = t; b.classList.remove('hidden'); setTimeout(() => b.classList.add('hidden'), 3000); };
         function updateSelects() { document.getElementById('p-cat').innerHTML = window.config.categories.map(c => `<option>${c}</option>`).join(''); }
 
-        window.onload = () => {
-            window.setView('control');
-            const k = localStorage.getItem('venueApiKey'); if(k) document.getElementById('api-key').value = k;
-        };
+        window.onload = () => { window.setView('control'); };
     </script>
 </body>
 </html>
