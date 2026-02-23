@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Venue Manager Pro | Hobart Executive OS</title>
+    <title>Venue Manager Pro | Hobart Executive Master</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -12,95 +12,84 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
         :root { --primary: #2563eb; }
         
-        /* EXECUTIVE CONTRAST THEME */
         body { font-family: 'Inter', sans-serif; background-color: #cbd5e1; color: #0f172a; transition: 0.3s; }
-        body.dark { background-color: #020617; color: #f8fafc; }
+        .dark { background-color: #020617; color: #f8fafc; }
         
-        .form-label { font-weight: 900; font-size: 0.7rem; text-transform: uppercase; color: #000; margin-bottom: 4px; display: block; letter-spacing: 0.05em; }
-        .dark .form-label { color: #fff; }
+        .form-label { font-weight: 900; font-size: 0.75rem; text-transform: uppercase; color: #000; margin-bottom: 6px; display: block; letter-spacing: 0.05em; }
         
-        /* THE "HIGHT-CONTRAST" FORCE STYLE - 3PX BLACK BORDERS */
+        /* MANDATORY 3PX BLACK BORDERS */
         .heavy-input { 
-            background: white !important; 
-            border: 3px solid #000000 !important; 
-            border-radius: 0.75rem !important; 
-            padding: 0.85rem !important; 
-            font-size: 1rem !important; 
-            font-weight: 700 !important; 
-            outline: none !important; 
-            width: 100%;
-            color: #000000 !important;
-            box-sizing: border-box;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+            background: white !important; border: 3px solid #000000 !important; border-radius: 0.75rem !important; 
+            padding: 0.85rem !important; font-size: 1rem !important; font-weight: 700 !important; outline: none !important; width: 100%;
+            color: #000000 !important; box-sizing: border-box; box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
         }
-        .dark .heavy-input { background: #1e293b !important; border-color: #ffffff !important; color: white !important; }
-
         .stats-card { background: white; border: 3px solid #000000; border-radius: 1.5rem; padding: 1.5rem; box-shadow: 6px 6px 0px rgba(0,0,0,0.05); }
-        .dark .stats-card { background: #0f172a; border-color: #ffffff; }
-        
+        .nav-link { border: 3px solid black !important; }
         .nav-link.nav-active { background-color: #000000 !important; color: white !important; box-shadow: 4px 4px 0px rgba(0,0,0,0.2); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        .category-pill { border: 3px solid black; padding: 10px 20px; border-radius: 1rem; font-weight: 900; font-size: 11px; text-transform: uppercase; background: white; white-space: nowrap; cursor: pointer; transition: 0.2s; box-shadow: 3px 3px 0px rgba(0,0,0,0.1); }
-        .category-pill.active { background: #000; color: white; transform: translateY(2px); box-shadow: none; }
+        .category-pill { border: 3px solid black; padding: 10px 20px; border-radius: 1rem; font-weight: 900; font-size: 11px; text-transform: uppercase; background: white; white-space: nowrap; cursor: pointer; box-shadow: 3px 3px 0px rgba(0,0,0,0.1); transition: 0.2s; }
+        .category-pill.active { background: #000; color: white; box-shadow: none; transform: translateY(2px); }
         
+        .bcg-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: 260px; background: #000; padding: 8px; border-radius: 1.5rem; }
+        .bcg-quadrant { padding: 12px; border-radius: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 11px; font-weight: 900; text-transform: uppercase; }
+        .q-star { background: #dcfce7; color: #166534; }
+        .q-puzzle { background: #fef9c3; color: #854d0e; }
+        .q-plow { background: #dbeafe; color: #1e40af; }
+        .q-dog { background: #fee2e2; color: #991b1b; }
+
         .view-section { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .modal-bg { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .low-stock-border { border-left: 12px solid #ef4444 !important; background-color: #fef2f2; }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
-    <!-- AUTH SCREEN -->
-    <div id="login-screen" class="fixed inset-0 z-[500] bg-slate-900 flex items-center justify-center p-6">
-        <div class="max-w-sm w-full bg-white dark:bg-slate-800 rounded-[2.5rem] p-10 shadow-2xl border-4 border-black">
-            <div id="auth-logo" class="w-24 h-24 bg-blue-600 text-white rounded-3xl mx-auto mb-6 flex items-center justify-center text-4xl border-3 border-black font-black">H</div>
-            <h2 id="auth-title" class="text-3xl font-black mb-2 text-center uppercase tracking-tighter italic">Executive OS</h2>
-            <p class="text-[10px] font-black text-slate-400 text-center uppercase tracking-[0.3em] mb-8">Secure Management Node</p>
+    <!-- AUTH GATE -->
+    <div id="login-screen" class="fixed inset-0 z-[500] bg-slate-900 flex items-center justify-center p-6 text-center">
+        <div class="max-w-sm w-full bg-white rounded-[2.5rem] p-10 shadow-2xl border-4 border-black">
+            <div class="w-24 h-24 bg-blue-600 text-white rounded-3xl mx-auto mb-6 flex items-center justify-center text-4xl border-3 border-black font-black italic">H</div>
+            <h2 class="text-3xl font-black mb-2 uppercase italic tracking-tighter">Executive OS</h2>
             <div class="space-y-4">
-                <div><label class="form-label">Email</label><input type="email" id="auth-email" class="heavy-input" placeholder="admin@hobart.com"></div>
-                <div><label class="form-label">Password</label><input type="password" id="auth-pass" class="heavy-input" placeholder="••••••••"></div>
-                <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-black text-white font-black py-4 rounded-xl uppercase text-xs border-3 border-black shadow-xl hover:bg-slate-800 transition">Establish Connection</button>
-                <button onclick="window.signInQuick()" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl uppercase text-xs border-3 border-black shadow-lg">Quick Access (Skip Login)</button>
-                <p id="auth-err" class="text-red-500 text-[10px] font-black text-center hidden mt-4 p-3 bg-red-50 rounded-xl border-2 border-red-500"></p>
-                <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black text-slate-400 uppercase mt-4 text-center hover:text-black">Create Admin Account</button>
+                <button onclick="window.signInQuick()" class="w-full bg-blue-600 text-white font-black py-5 rounded-xl uppercase text-xs border-3 border-black shadow-lg">Quick Access</button>
+                <div class="py-2 flex items-center gap-3"><div class="flex-grow h-0.5 bg-slate-100"></div><span class="text-[10px] font-black text-slate-300">OR</span><div class="flex-grow h-0.5 bg-slate-100"></div></div>
+                <input type="email" id="auth-email" class="heavy-input" placeholder="Email">
+                <input type="password" id="auth-pass" class="heavy-input" placeholder="Password">
+                <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-black text-white font-black py-4 rounded-xl uppercase text-xs border-3 border-black">Connect</button>
             </div>
         </div>
     </div>
 
-    <!-- MAIN APP CONTENT -->
+    <!-- MAIN APP -->
     <div id="app-content" class="hidden">
         <div class="max-w-[1600px] mx-auto px-4 md:px-10 pt-8">
-            
             <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
                 <div class="flex items-center gap-5">
                     <div id="header-logo" class="w-16 h-16 bg-white rounded-2xl shadow-md flex items-center justify-center font-black text-3xl border-3 border-black">🏢</div>
                     <div>
                         <h1 id="venue-display-name" class="text-4xl font-black tracking-tighter italic dark:text-white uppercase">Executive <span class="text-blue-600">OS</span></h1>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                            <span class="text-[10px] font-black uppercase text-slate-600 tracking-widest">Hobart Cloud Verified</span>
-                        </div>
+                        <span id="cloud-status" class="text-[10px] font-black uppercase text-slate-600 tracking-widest mt-1 block">● Connecting...</span>
                     </div>
                 </div>
-                <div id="wind-badge" class="hidden px-10 py-4 bg-amber-500 text-white rounded-2xl text-[12px] font-black animate-pulse shadow-xl border-3 border-black">⚠️ ACTION: SECURE AWNINGS (WIND > 25KM/H)</div>
+                <div id="wind-badge" class="hidden px-10 py-4 bg-amber-500 text-white rounded-2xl text-[12px] font-black animate-pulse border-3 border-black">⚠️ SECURE AWNINGS: HIGH WIND</div>
             </header>
 
             <nav id="main-nav" class="flex gap-3 mb-12 no-scrollbar overflow-x-auto pb-4 sticky top-0 z-50 py-4">
-                <button id="nav-control" onclick="window.setView('control')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white dark:bg-slate-800 dark:text-white border-3 border-black">Control</button>
-                <button id="nav-stock" onclick="window.setView('stock')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white dark:bg-slate-800 dark:text-white border-3 border-black">Inventory</button>
-                <button id="nav-production" onclick="window.setView('production')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white dark:bg-slate-800 dark:text-white border-3 border-black">Production</button>
-                <button id="nav-safety" onclick="window.setView('safety')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white dark:bg-slate-800 dark:text-white border-3 border-black">Compliance</button>
-                <button id="nav-intel" onclick="window.setView('intel')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white dark:bg-slate-800 dark:text-white border-3 border-black">Intelligence</button>
-                <button onclick="window.toggleSettings()" class="px-8 py-4 rounded-2xl font-black text-[11px] uppercase bg-slate-300 dark:bg-slate-700 ml-auto border-3 border-black">⚙️ Settings</button>
+                <button id="nav-control" onclick="window.setView('control')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white border-3 border-black">Control</button>
+                <button id="nav-stock" onclick="window.setView('stock')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white border-3 border-black">Inventory</button>
+                <button id="nav-production" onclick="window.setView('production')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white border-3 border-black">Production</button>
+                <button id="nav-safety" onclick="window.setView('safety')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white border-3 border-black">Compliance</button>
+                <button id="nav-intel" onclick="window.setView('intel')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white border-3 border-black">Intelligence</button>
+                <button onclick="window.toggleSettings()" class="px-8 py-4 rounded-2xl font-black text-[11px] uppercase bg-slate-300 ml-auto border-3 border-black">⚙️ Admin Hub</button>
             </nav>
 
-            <!-- VIEW: CONTROL -->
+            <!-- CONTROL -->
             <div id="view-control" class="view-section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2 space-y-8">
-                        <div class="stats-card">
-                            <h3 class="font-black uppercase text-[10px] mb-8 italic text-slate-500 tracking-[0.3em]">Shift Briefing (Hobart Node)</h3>
+                        <div class="stats-card border-4 border-black">
+                            <h3 class="font-black uppercase text-[10px] mb-8 italic text-slate-500 tracking-[0.3em]">Hobart Intel Briefing</h3>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center border-b-2 border-slate-100 pb-10">
                                 <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase">Temp</div><div id="d-temp" class="text-4xl font-black text-blue-600">--°</div></div>
                                 <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase">Wind</div><div id="d-wind" class="text-4xl font-black text-amber-500">--</div></div>
@@ -110,123 +99,124 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center mt-10">
                                 <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase">Sales vs LY</div><div id="d-sales" class="text-3xl font-black text-emerald-600">$0</div></div>
                                 <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase">Cruise PAX</div><div id="d-pax" class="text-3xl font-black text-blue-600">0</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase">Inventory Value</div><div id="d-stock" class="text-3xl font-black">$0.00</div></div>
+                                <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase">Stock Value</div><div id="d-stock" class="text-3xl font-black">$0.00</div></div>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div class="stats-card border-l-[12px] border-red-500">
-                                <h3 class="font-black uppercase text-xs mb-6 tracking-widest text-red-600">Inventory Alerts</h3>
-                                <div id="stock-alerts" class="space-y-3 overflow-y-auto max-h-[220px] no-scrollbar">
+                            <div class="stats-card border-l-[16px] border-red-500">
+                                <h3 class="font-black uppercase text-xs mb-6 tracking-widest text-red-600">Stock Alerts</h3>
+                                <div id="stock-alerts" class="space-y-3 overflow-y-auto max-h-[250px] no-scrollbar">
                                     <div class="text-center py-10 opacity-30 font-black text-[10px] uppercase">✅ LEVELS STABLE</div>
                                 </div>
                             </div>
-                            <div class="stats-card bg-emerald-50 border-emerald-500 border-2">
-                                <h3 class="font-black uppercase text-xs mb-6 text-emerald-700 tracking-widest">Stock Sync</h3>
-                                <button onclick="document.getElementById('pos-csv').click()" class="w-full bg-emerald-600 text-white font-black py-6 rounded-2xl text-[11px] uppercase shadow-lg hover:bg-emerald-700 border-3 border-black transition">Scan Daily Import</button>
-                                <input type="file" id="pos-csv" class="hidden" onchange="window.importSales(event)">
+                            <div class="stats-card bg-emerald-50 border-emerald-500 border-4 shadow-xl text-center">
+                                <h3 class="font-black uppercase text-xs mb-6 text-emerald-700 tracking-widest italic">AI Invoice Scanner</h3>
+                                <button onclick="document.getElementById('invoice-upload').click()" class="w-full bg-emerald-600 text-white font-black py-8 rounded-2xl text-[11px] uppercase shadow-lg border-3 border-black hover:bg-emerald-700 transition">Scan PDF Invoices</button>
+                                <input type="file" id="invoice-upload" class="hidden" accept="image/*,.pdf" multiple onchange="window.handleInvoiceUpload(event)">
                             </div>
                         </div>
                     </div>
-                    <div class="stats-card flex flex-col h-[700px] shadow-2xl border-4 bg-slate-50">
-                        <h3 class="font-black uppercase text-[10px] mb-6 italic text-red-600 tracking-[0.3em] border-b-2 border-red-100 pb-4">Secure Red Book</h3>
-                        <div id="redbook-feed" class="flex-grow overflow-y-auto space-y-4 no-scrollbar"></div>
+                    <div class="stats-card flex flex-col h-[750px] shadow-2xl border-4 bg-slate-50">
+                        <h3 class="font-black uppercase text-[10px] mb-6 italic text-red-600 tracking-[0.3em] border-b-2 border-red-100 pb-4 text-center">Secure Red Book</h3>
+                        <div id="redbook-feed" class="flex-grow overflow-y-auto space-y-4 no-scrollbar p-1"></div>
                         <div class="mt-6 pt-6 border-t-4 border-black">
-                            <textarea id="log-input" class="heavy-input text-sm mb-3 h-28" placeholder="Enter incident details..."></textarea>
-                            <button onclick="window.logIncident()" class="w-full bg-black text-white py-5 rounded-2xl font-black text-[11px] uppercase shadow-xl hover:bg-slate-900 border-3 border-black">Establish Record</button>
+                            <textarea id="log-input" class="heavy-input text-sm mb-3 h-28" placeholder="Log shift incident..."></textarea>
+                            <button onclick="window.logIncident()" class="w-full bg-black text-white py-5 rounded-2xl font-black text-[11px] uppercase shadow-xl hover:bg-slate-900 border-3 border-black">Post Record</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- VIEW: PRODUCTION -->
+            <!-- PRODUCTION -->
             <div id="view-production" class="view-section hidden">
-                <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
-                    <div>
-                        <h1 class="text-5xl font-black tracking-tighter italic dark:text-white uppercase">Recipe <span class="text-purple-600">Vault</span></h1>
-                        <p class="text-[11px] font-black text-slate-500 uppercase mt-2 tracking-[0.3em]">Multi-Block Splitting Engine Active</p>
-                    </div>
-                    <div class="flex gap-4">
-                        <button onclick="document.getElementById('recipe-keeper-import').click()" class="bg-purple-600 text-white px-10 py-5 rounded-[1.5rem] font-black text-[11px] uppercase shadow-xl border-3 border-black">Import ZIP / HTML</button>
-                        <input type="file" id="recipe-keeper-import" class="hidden" accept=".zip,.html" onchange="window.importRecipesHandler(event)">
-                        <button onclick="window.addRecipePrompt()" class="bg-black text-white px-10 py-5 rounded-[1.5rem] font-black text-[11px] uppercase border-3 border-black shadow-xl">+ New Manual</button>
-                    </div>
+                <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+                    <h1 class="text-5xl font-black tracking-tighter italic uppercase text-slate-900">Recipe <span class="text-purple-600">Vault</span></h1>
+                    <button onclick="document.getElementById('recipe-keeper-import').click()" class="bg-purple-600 text-white px-10 py-5 rounded-2xl font-black border-3 border-black shadow-xl">Import ZIP / HTML</button>
+                    <input type="file" id="recipe-keeper-import" class="hidden" accept=".zip,.html" onchange="window.importRecipesHandler(event)">
                 </header>
-
-                <div class="mb-12 space-y-6">
-                    <input type="text" id="recipe-search" oninput="window.renderRecipes()" placeholder="Search vault by name or ingredient..." class="w-full p-8 bg-white rounded-[2.5rem] border-4 border-black font-bold outline-none shadow-2xl text-2xl placeholder:opacity-30">
-                    <div class="flex gap-3 overflow-x-auto no-scrollbar py-2" id="recipe-category-tabs">
-                        <button onclick="window.filterRecipeCategory('All')" class="category-pill active">All Entries</button>
-                    </div>
+                <div class="mb-12 space-y-8">
+                    <input type="text" id="recipe-search" oninput="window.renderRecipes()" placeholder="Search vault by name or ingredient..." class="w-full p-8 bg-white rounded-[2.5rem] border-4 border-black font-bold outline-none shadow-2xl text-2xl">
+                    <div class="flex gap-4 overflow-x-auto no-scrollbar py-3" id="recipe-category-tabs"></div>
                 </div>
-
-                <div id="recipe-loading" class="hidden py-24 text-center font-black text-purple-600 animate-pulse uppercase text-sm tracking-[0.5em]">Parsing Hobart Node Data...</div>
+                <div id="recipe-loading" class="hidden py-20 text-center font-black text-purple-600 animate-pulse uppercase">Syncing Hobart Cloud...</div>
                 <div id="recipe-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"></div>
             </div>
 
-            <!-- VIEW: STOCK -->
+            <!-- INTELLIGENCE -->
+            <div id="view-intel" class="view-section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <div class="lg:col-span-1 space-y-8">
+                        <div class="stats-card border-4 border-black shadow-xl">
+                            <h3 class="font-black uppercase text-xs mb-10 italic tracking-widest text-slate-400 text-center">Profit Matrix</h3>
+                            <div class="bcg-matrix">
+                                <div class="bcg-quadrant q-star">Stars</div>
+                                <div class="bcg-quadrant q-puzzle">Puzzles</div>
+                                <div class="bcg-quadrant q-plow">Plowhorses</div>
+                                <div class="bcg-quadrant q-dog">Dogs</div>
+                            </div>
+                        </div>
+                        <div class="stats-card bg-emerald-50 border-4 border-black shadow-xl text-center">
+                            <h3 class="font-black uppercase text-xs mb-6 text-emerald-700 tracking-widest">Live Prime Cost</h3>
+                            <div id="prime-cost-display" class="text-7xl font-black text-emerald-900 py-4 italic">-- %</div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <div class="stats-card border-4 border-black h-full flex flex-col shadow-2xl bg-white min-h-[650px]">
+                            <div class="flex justify-between items-center mb-8 border-b-4 border-black pb-8">
+                                <div>
+                                    <h3 class="font-black uppercase text-3xl italic tracking-tighter">Equipment Lifecycle Log</h3>
+                                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mt-2">Repairs & Purchase History</p>
+                                </div>
+                                <button onclick="window.addAssetPrompt()" class="bg-black text-white px-8 py-5 rounded-2xl font-black text-[11px] border-3 border-black shadow-xl">+ Add Item</button>
+                            </div>
+                            <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 overflow-y-auto no-scrollbar pr-1 px-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STOCK -->
             <div id="view-stock" class="view-section hidden">
                 <div class="flex flex-col lg:flex-row gap-12">
                     <div class="lg:w-1/3">
                         <div class="stats-card sticky top-32 border-4 border-black shadow-2xl">
-                            <h2 class="text-3xl font-black uppercase mb-10 italic tracking-tighter">Stock Input</h2>
+                            <h2 class="text-3xl font-black uppercase mb-10 italic tracking-tighter">Product Entry</h2>
                             <form id="item-form" class="space-y-6" onsubmit="window.saveItem(event)">
                                 <input type="hidden" id="edit-id">
-                                <div><label class="form-label">Name</label><input type="text" id="p-name" class="heavy-input" required></div>
+                                <div><label class="form-label">Product Name</label><input type="text" id="p-name" class="heavy-input" required></div>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <div><label class="form-label">SKU</label><input type="text" id="p-sku" class="heavy-input" required></div>
-                                    <div><label class="form-label">Cost ($)</label><input type="number" id="p-cost" step="0.01" class="heavy-input"></div>
+                                    <div><label class="form-label">SKU / Code</label><input type="text" id="p-sku" class="heavy-input" required></div>
+                                    <div><label class="form-label">Pack Size (Btls/Ctn)</label><input type="number" id="p-pack" value="1" class="heavy-input"></div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <div><label class="form-label">Par</label><input type="number" id="p-par" value="5" class="heavy-input"></div>
-                                    <div><label class="form-label">OnHand</label><input type="number" id="p-qty" step="any" class="heavy-input"></div>
+                                    <div><label class="form-label">Ctn Cost ($)</label><input type="number" id="p-cost" step="0.01" class="heavy-input"></div>
+                                    <div><label class="form-label">Weekly Use</label><input type="number" id="p-use" class="heavy-input"></div>
                                 </div>
-                                <button type="submit" class="w-full bg-blue-600 text-white font-black py-6 rounded-2xl shadow-xl uppercase text-xs border-3 border-black">Update Node</button>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div><label class="form-label">Par Level</label><input type="number" id="p-par" value="5" class="heavy-input"></div>
+                                    <div><label class="form-label">OnHand (Units)</label><input type="number" id="p-qty" step="any" class="heavy-input"></div>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 text-white font-black py-6 rounded-2xl border-3 border-black uppercase text-xs">Update Cloud State</button>
                             </form>
                         </div>
                     </div>
                     <div class="lg:w-2/3">
-                        <input type="text" id="inventory-search" oninput="window.renderInventory()" placeholder="Find item by name or code..." class="p-8 bg-white rounded-[2.5rem] border-4 border-black font-bold outline-none shadow-xl w-full mb-10 text-2xl">
+                        <input type="text" id="inventory-search" oninput="window.renderInventory()" placeholder="Search item library..." class="p-8 bg-white rounded-[2.5rem] border-4 border-black font-bold outline-none shadow-xl w-full mb-10 text-2xl">
                         <ul id="inventory-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></ul>
                     </div>
                 </div>
             </div>
 
-            <!-- VIEW: INTELLIGENCE -->
-            <div id="view-intel" class="view-section hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                    <div class="stats-card lg:col-span-1 border-4 border-black">
-                        <h3 class="font-black uppercase text-xs mb-10 italic tracking-widest text-slate-400">Profit Matrix</h3>
-                        <div class="bcg-matrix">
-                            <div class="bcg-quadrant q-star">Stars</div>
-                            <div class="bcg-quadrant q-puzzle">Puzzles</div>
-                            <div class="bcg-quadrant q-plow">Plowhorses</div>
-                            <div class="bcg-quadrant q-dog">Dogs</div>
-                        </div>
-                        <div id="matrix-stats" class="mt-12 grid grid-cols-2 gap-4 text-[12px] font-black uppercase text-center tracking-widest"></div>
-                    </div>
-                    <div class="stats-card lg:col-span-2 bg-emerald-50 border-4 border-black">
-                        <h3 class="font-black uppercase text-xs mb-10 text-emerald-700 tracking-[0.4em]">Theoretical Financials</h3>
-                        <div class="flex flex-col items-center justify-center py-28">
-                            <div id="prime-cost-display" class="text-9xl font-black text-emerald-900 tracking-tighter">-- %</div>
-                            <p class="text-[14px] font-black text-emerald-600 uppercase mt-8 tracking-[0.5em]">Live Prime Cost Ratio</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW: COMPLIANCE -->
+            <!-- COMPLIANCE -->
             <div id="view-safety" class="view-section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
                     <div class="stats-card border-3 border-black">
-                        <h3 class="font-black uppercase text-xs mb-10 italic tracking-widest text-slate-400">Audit Checklists</h3>
-                        <div class="flex flex-col gap-5">
-                            <button onclick="window.logCheck('Opening Checklist')" class="p-10 bg-blue-50 text-blue-700 rounded-[3rem] font-black text-base uppercase text-left border-3 border-blue-200 shadow-lg hover:scale-[1.02] transition">Morning Opening Audit</button>
-                            <button onclick="window.logCheck('Closing Checklist')" class="p-10 bg-slate-900 text-white rounded-[3rem] font-black text-base uppercase text-left shadow-2xl border-3 border-black hover:scale-[1.02] transition">Nightly Closing Audit</button>
-                        </div>
+                        <button onclick="window.logCheck('Opening Checklist')" class="p-10 bg-blue-50 text-blue-700 rounded-[3rem] font-black text-base uppercase text-left border-3 border-blue-200 shadow-lg mb-6 w-full hover:scale-[1.02] transition">Morning Opening</button>
+                        <button onclick="window.logCheck('Closing Checklist')" class="p-10 bg-slate-900 text-white rounded-[3rem] font-black text-base uppercase text-left shadow-2xl border-3 border-black w-full hover:scale-[1.02] transition">Nightly Closing</button>
                     </div>
-                    <div class="stats-card lg:col-span-2 flex flex-col h-[600px] border-3 border-black">
-                        <h3 class="font-black uppercase text-xs mb-8 italic tracking-widest text-slate-400">Audit History</h3>
-                        <div id="safety-history" class="overflow-y-auto space-y-4 no-scrollbar flex-grow"></div>
+                    <div class="stats-card lg:col-span-2 flex flex-col h-[650px] border-3 border-black bg-white">
+                        <h3 class="font-black uppercase text-xs mb-8 italic text-slate-400 tracking-widest border-b pb-4">Compliance History</h3>
+                        <div id="safety-history" class="overflow-y-auto space-y-4 no-scrollbar flex-grow px-1"></div>
                     </div>
                 </div>
             </div>
@@ -234,122 +224,82 @@
         </div>
     </div>
 
-    <!-- MODAL: RECIPE DETAIL -->
+    <!-- MODALS -->
     <div id="recipe-modal" class="hidden fixed inset-0 z-[600] flex items-center justify-center modal-bg p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-[4rem] p-16 max-w-4xl w-full shadow-2xl max-h-[92vh] overflow-hidden flex flex-col border-6 border-black">
+        <div class="bg-white rounded-[4rem] p-16 max-w-4xl w-full shadow-2xl max-h-[94vh] overflow-hidden flex flex-col border-8 border-black">
             <div class="flex justify-between items-start mb-10">
-                <div>
-                    <h3 id="m-recipe-title" class="text-5xl font-black uppercase italic dark:text-white leading-tight tracking-tighter">Recipe</h3>
-                </div>
-                <button onclick="window.closeRecipeModal()" class="text-slate-400 p-2 font-black text-4xl hover:text-red-500 transition">✕</button>
+                <h3 id="m-recipe-title" class="text-6xl font-black uppercase italic leading-tight">Recipe</h3>
+                <button onclick="window.closeRecipeModal()" class="text-slate-400 p-2 font-black text-5xl">✕</button>
             </div>
-            <div class="bg-slate-100 dark:bg-slate-900 p-10 rounded-[2.5rem] mb-12 border-4 border-black flex items-center justify-between shadow-xl">
-                <div class="text-[12px] font-black uppercase text-slate-500 tracking-[0.4em]">Batch Scale</div>
-                <input type="number" id="yield-input" value="1" step="0.5" class="w-40 text-center font-black heavy-input !p-5 !text-5xl" oninput="window.updateRecipeScaling()">
+            <div class="bg-slate-100 p-10 rounded-[2.5rem] mb-12 border-4 border-black flex items-center justify-between">
+                <div class="text-[14px] font-black uppercase text-slate-500 tracking-[0.4em]">Scale Factor</div>
+                <input type="number" id="yield-input" value="1" step="0.5" class="w-40 text-center font-black heavy-input !p-5 !text-6xl border-4 border-black" oninput="window.updateRecipeScaling()">
             </div>
-            <div class="flex-grow overflow-y-auto space-y-16 no-scrollbar px-2">
-                <ul id="m-recipe-ing" class="space-y-4 text-xl font-bold dark:text-white list-disc pl-10"></ul>
-                <p id="m-recipe-method" class="text-xl dark:text-slate-300 leading-relaxed whitespace-pre-wrap italic border-t pt-8 pb-20"></p>
-            </div>
+            <div id="m-recipe-ing" class="flex-grow overflow-y-auto space-y-10 no-scrollbar px-2 text-xl font-bold list-disc pl-12"></div>
         </div>
     </div>
 
-    <!-- MODAL: SETTINGS -->
     <div id="settings-modal" class="hidden fixed inset-0 z-[150] flex items-center justify-center modal-bg p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-[3.5rem] p-12 max-w-xl w-full shadow-2xl border-4 border-black overflow-y-auto max-h-[90vh]">
-            <h3 class="text-3xl font-black uppercase mb-12 italic text-center tracking-tighter">Executive Hub</h3>
-            
+        <div class="bg-white rounded-[3.5rem] p-12 max-w-xl w-full shadow-2xl border-4 border-black overflow-y-auto max-h-[90vh]">
+            <h3 class="text-3xl font-black uppercase mb-12 italic text-center">Node Management</h3>
             <div class="space-y-6 mb-12">
                 <div><label class="form-label">Venue Identifier</label><input type="text" id="set-name" class="heavy-input" onchange="window.saveBranding()"></div>
-                <div class="bg-indigo-50 dark:bg-indigo-900/10 p-8 rounded-[2rem] border-4 border-indigo-600 shadow-inner">
+                <div class="bg-indigo-50 p-8 rounded-[2rem] border-4 border-indigo-600">
                     <label class="form-label text-indigo-700">Gemini Master Key</label>
-                    <input type="password" id="api-key" onchange="window.saveApiKey()" class="heavy-input border-2 border-indigo-600 !shadow-none" placeholder="Paste key for scans...">
+                    <input type="password" id="api-key" onchange="window.saveApiKey()" class="heavy-input border-2 border-indigo-600 shadow-none">
+                    <p class="text-[9px] font-black text-indigo-500 mt-2 text-center uppercase tracking-widest italic">Required for AI Extraction</p>
                 </div>
             </div>
-            
-            <div class="bg-slate-100 p-8 rounded-3xl border-3 border-black mb-10">
-                <label class="text-[10px] font-black text-slate-500 uppercase block mb-6 tracking-[0.3em] text-center">Data Portability Hub</label>
-                <div class="grid grid-cols-2 gap-5">
-                    <button onclick="window.exportCloudBackup()" class="py-5 bg-emerald-600 text-white rounded-2xl font-black text-[11px] uppercase border-3 border-black shadow-md">Export JSON</button>
-                    <button onclick="document.getElementById('import-file').click()" class="py-5 bg-blue-600 text-white rounded-2xl font-black text-[11px] uppercase border-3 border-black shadow-md">Import JSON</button>
-                    <input type="file" id="import-file" class="hidden" accept=".json" onchange="window.importCloudBackup(event)">
-                </div>
-            </div>
-
             <div class="flex flex-col gap-4">
-                <button onclick="window.factoryReset()" class="w-full py-6 bg-red-600 text-white rounded-2xl font-black text-[11px] uppercase border-3 border-black shadow-lg hover:bg-red-700 transition">☢️ Factory Reset (Full Wipe)</button>
-                <div class="flex gap-4">
-                    <button onclick="window.logout()" class="flex-grow py-6 bg-slate-200 text-slate-800 rounded-2xl font-black text-[11px] uppercase border-3 border-black shadow-lg">Logout</button>
-                    <button onclick="window.toggleSettings()" class="flex-grow py-6 bg-black text-white rounded-2xl font-black text-[11px] uppercase border-3 border-black shadow-lg">Confirm</button>
-                </div>
+                <button onclick="window.exportCloudBackup()" class="py-5 bg-emerald-600 text-white rounded-2xl font-black border-3 border-black">Download Backup</button>
+                <button onclick="window.factoryReset()" class="py-6 bg-red-600 text-white rounded-2xl font-black border-3 border-black hover:bg-red-700">☢️ Wipe Hobart Hub</button>
+                <button onclick="window.toggleSettings()" class="py-6 bg-black text-white rounded-2xl font-black border-3 border-black">Close</button>
             </div>
         </div>
     </div>
 
-    <div id="msg-box" class="hidden fixed top-10 right-10 z-[700] p-10 rounded-[3rem] shadow-2xl text-[15px] font-black uppercase text-white bg-emerald-600 border-6 border-black animate-bounce"></div>
+    <canvas id="pdf-render-canvas" class="hidden"></canvas>
+    <div id="msg-box" class="hidden fixed top-10 right-10 z-[700] p-10 rounded-[3rem] shadow-2xl text-[16px] font-black uppercase text-white bg-emerald-600 border-8 border-black"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyAvE67VRASfD7Y4LFsbuTq3QqjI6NfoHWk", authDomain: "venue-inventory.firebaseapp.com", projectId: "venue-inventory", storageBucket: "venue-inventory.firebasestorage.app", messagingSenderId: "34996096819", appId: "1:34996096819:web:9de51ce3b9f51e687d3846" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const venueId = "hobart-main";
+        const appId = "hobart-master-node";
 
         const refs = { 
-            inv: () => doc(db, 'venues', venueId, 'data', 'inventory'), 
-            rec: () => doc(db, 'venues', venueId, 'data', 'recipes'),
-            com: () => doc(db, 'venues', venueId, 'data', 'compliance'),
-            cfg: () => doc(db, 'venues', venueId, 'data', 'config')
+            inv: () => doc(db, 'artifacts', appId, 'public', 'data', 'inventory', 'main'), 
+            rec: () => doc(db, 'artifacts', appId, 'public', 'data', 'recipes', 'main'),
+            as: () => doc(db, 'artifacts', appId, 'public', 'data', 'assets', 'main'),
+            com: () => doc(db, 'artifacts', appId, 'public', 'data', 'compliance', 'main'),
+            cfg: () => doc(db, 'artifacts', appId, 'public', 'data', 'config', 'main')
         };
 
-        window.inventory = []; window.recipes = []; window.compliance = []; window.config = {}; window.currentRecipe = null;
-        window.activeRecipeCategory = "All";
+        window.inventory = []; window.recipes = []; window.assets = []; window.compliance = []; window.config = {}; window.activeRecipeCategory = "All";
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
         // --- AUTH ---
-        window.handleAuth = async () => {
-            const e = document.getElementById('auth-email').value;
-            const p = document.getElementById('auth-pass').value;
-            const isReg = document.getElementById('auth-toggle').textContent.includes('Create');
-            try { 
-                if (isReg) await createUserWithEmailAndPassword(auth, e, p); 
-                else await signInWithEmailAndPassword(auth, e, p); 
-            } catch (err) { 
-                document.getElementById('auth-err').textContent = err.message; 
-                document.getElementById('auth-err').classList.remove('hidden'); 
-            }
-        };
-
-        window.signInQuick = async () => {
-            try { await signInAnonymously(auth); } catch (e) { window.showMsg("Connection Error", "error"); }
-        };
-
-        window.toggleAuthMode = () => { const t = document.getElementById('auth-toggle'); t.textContent = t.textContent.includes('Login') ? 'Create Admin Account' : 'Back to Login Access'; };
+        window.signInQuick = async () => { try { await signInAnonymously(auth); } catch (e) { window.showMsg("Connection Error", "error"); } };
+        window.handleAuth = async () => { try { await signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pass').value); } catch (e) { window.showMsg("Denied", "error"); } };
         window.logout = () => signOut(auth);
 
         onAuthStateChanged(auth, (u) => {
-            if (u) { 
-                document.getElementById('login-screen').classList.add('hidden'); 
-                document.getElementById('app-content').classList.remove('hidden'); 
-                setupListeners(); fetchWeather(); loadLocalApiKey();
-            } else {
-                document.getElementById('login-screen').classList.remove('hidden');
-                document.getElementById('app-content').classList.add('hidden');
-            }
+            if (u) { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-content').classList.remove('hidden'); setupListeners(); fetchWeather(); loadLocalApiKey(); }
+            else { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-content').classList.add('hidden'); }
         });
 
         const setupListeners = () => {
-            onSnapshot(refs.inv(), (s) => { if (s.exists()) { window.inventory = s.data().items || []; renderInventory(); updateStats(); renderMatrix(); } });
-            onSnapshot(refs.rec(), (s) => { if (s.exists()) { window.recipes = s.data().items || []; renderRecipes(); renderRecipeCategoryTabs(); } });
-            onSnapshot(refs.com(), (s) => { if (s.exists()) { window.compliance = s.data().logs || []; renderRedBook(); renderSafety(); } });
-            onSnapshot(refs.cfg(), (s) => { if (s.exists()) { 
-                window.config = s.data();
-                if(window.config.name) document.getElementById('venue-display-name').innerHTML = `${window.config.name} <span class="text-blue-600">OS</span>`;
-                if(window.config.name) document.getElementById('set-name').value = window.config.name;
-            }});
+            onSnapshot(refs.inv(), (s) => { if (s.exists()) { window.inventory = s.data().items || []; window.renderInventory(); window.updateStats(); } });
+            onSnapshot(refs.rec(), (s) => { if (s.exists()) { window.recipes = s.data().items || []; window.renderRecipes(); window.renderRecipeCategoryTabs(); } });
+            onSnapshot(refs.as(), (s) => { if (s.exists()) { window.assets = s.data().items || []; window.renderAssets(); } });
+            onSnapshot(refs.com(), (s) => { if (s.exists()) { window.compliance = s.data().logs || []; window.renderRedBook(); window.renderComplianceHistory(); } });
+            onSnapshot(refs.cfg(), (s) => { if (s.exists()) { window.config = s.data(); if(window.config.name) { const el = document.getElementById('venue-display-name'); if(el) el.innerHTML = `${window.config.name} <span class="text-blue-600">OS</span>`; } }});
         };
 
         window.setView = (v) => {
@@ -361,236 +311,124 @@
             if (activeNav) activeNav.classList.add('nav-active');
         };
 
-        // --- BASICS: SEARCH & FILTER ---
-        window.filterRecipeCategory = (cat) => {
-            window.activeRecipeCategory = cat;
-            renderRecipeCategoryTabs();
-            renderRecipes();
+        // --- ASSET LOG ---
+        window.addAssetPrompt = async () => {
+            const asset = { id: Date.now(), name: prompt("Equipment?"), purch: prompt("Purchase Date?"), agent: prompt("Rep/Service Agent?"), repairs: prompt("Repair History?") };
+            if(!asset.name) return;
+            window.assets.push(asset); await setDoc(refs.as(), { items: window.assets });
+            window.showMsg("Asset Logged");
+        };
+        window.renderAssets = () => {
+            const grid = document.getElementById('asset-grid');
+            if(!grid) return;
+            grid.innerHTML = window.assets.map(a => `<div class="stats-card border-4 border-black bg-slate-50"><div><div class="font-black uppercase text-lg italic mb-3">${a.name}</div><div class="text-[10px] font-black uppercase text-slate-400 space-y-1"><div>Purchased: <span class="text-black">${a.purch||'N/A'}</span></div><div>Rep: <span class="text-blue-600">${a.agent||'N/A'}</span></div><div class="mt-4 pt-2 border-t text-slate-800 normal-case italic font-bold">History: ${a.repairs||'None'}</div></div></div></div>`).join('') || `<div class="col-span-full py-32 text-center opacity-30 font-black uppercase text-sm tracking-widest italic uppercase">Establish asset node...</div>`;
         };
 
+        // --- INVOICES ---
+        window.handleInvoiceUpload = async (event) => {
+            const files = event.target.files; if (!files.length) return;
+            const key = localStorage.getItem('venue_gemini_key');
+            if (!key) { window.showMsg("No API Key in Settings", "error"); return; }
+            window.showMsg("AI Processing Node...");
+            try {
+                for (let file of files) {
+                    const base64 = file.type === "application/pdf" ? await window.pdfToImage(file) : await window.imgToBase64(file);
+                    const prompt = "JSON array only: [{name, sku, quantity, unitCost}]";
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`, {
+                        method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: prompt }, { inlineData: { mimeType: "image/png", data: base64 } }] }], generationConfig: { responseMimeType: "application/json" } })
+                    });
+                    const data = await res.json();
+                    const items = JSON.parse(data.candidates[0].content.parts[0].text);
+                    items.forEach(item => window.inventory.push({ id: Date.now() + Math.random(), ...item, parLevel: 5, packSize: 1, weeklyUse: 0 }));
+                }
+                await setDoc(refs.inv(), { items: window.inventory }); window.showMsg("Sync Complete");
+            } catch (err) { window.showMsg("AI Link Fault", "error"); }
+        };
+
+        // --- RECIPES ---
+        window.filterRecipeCategory = (cat) => { window.activeRecipeCategory = cat; window.renderRecipeCategoryTabs(); window.renderRecipes(); };
         window.renderRecipeCategoryTabs = () => {
             const container = document.getElementById('recipe-category-tabs');
+            if(!container) return;
             const cats = ["All", ...new Set(window.recipes.map(r => r.category || "Imported"))].sort();
-            container.innerHTML = cats.map(c => `
-                <button onclick="window.filterRecipeCategory('${c}')" class="category-pill ${window.activeRecipeCategory === c ? 'active' : ''}">${c}</button>
-            `).join('');
+            container.innerHTML = cats.map(c => `<button onclick="window.filterRecipeCategory('${c}')" class="category-pill ${window.activeRecipeCategory === c ? 'active' : ''}">${c}</button>`).join('');
         };
-
         window.renderRecipes = () => {
             const grid = document.getElementById('recipe-grid');
             if(!grid) return;
             const search = document.getElementById('recipe-search').value.toLowerCase();
-            
-            const filtered = window.recipes.filter(r => {
-                const matchesSearch = r.name.toLowerCase().includes(search) || r.ingredients.some(i => i.toLowerCase().includes(search));
-                const matchesCat = window.activeRecipeCategory === "All" || (r.category || "Imported") === window.activeRecipeCategory;
-                return matchesSearch && matchesCat;
-            });
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-32 text-center opacity-30 font-black uppercase tracking-[0.5em]">Empty: No matching recipes found</div>`;
-                return;
-            }
-
-            grid.innerHTML = filtered.map(r => `
-                <div onclick="window.openRecipe('${r.id}')" class="stats-card hover:border-purple-600 transition cursor-pointer group border-3">
-                    <div class="text-[9px] font-black text-purple-600 uppercase mb-4 tracking-[0.3em] opacity-50">${r.category || 'Imported'}</div>
-                    <div class="font-black text-lg uppercase group-hover:text-purple-600 transition truncate italic tracking-tighter">${r.name}</div>
-                    <div class="mt-10 text-[10px] font-bold text-slate-400 flex justify-between border-t-2 pt-4 border-slate-100"><span>SCALE UNIT</span><span>➔</span></div>
-                </div>`).join('');
+            const filtered = window.recipes.filter(r => (r.name.toLowerCase().includes(search) || r.ingredients.some(i => i.toLowerCase().includes(search))) && (window.activeRecipeCategory === "All" || r.category === window.activeRecipeCategory));
+            grid.innerHTML = filtered.map(r => `<div onclick="window.openRecipe('${r.id}')" class="stats-card hover:border-purple-600 transition cursor-pointer group border-3"><div class="text-[9px] font-black text-purple-600 uppercase mb-4 opacity-50 tracking-widest">${r.category || 'Vault'}</div><div class="font-black text-xl uppercase group-hover:text-purple-600 truncate italic">${r.name}</div></div>`).join('') || `<div class="col-span-full py-32 text-center opacity-30 font-black uppercase text-sm">No results</div>`;
         };
-
-        // --- IMPORT ENGINE ---
         window.importRecipesHandler = async (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-            document.getElementById('recipe-loading').classList.remove('hidden');
-            let found = [];
-            try {
-                if (file.name.endsWith('.zip')) {
-                    const zip = new JSZip();
-                    const contents = await zip.loadAsync(file);
-                    for (let f of Object.keys(contents.files)) { if (f.endsWith('.html')) found = [...found, ...parseAllInHtml(await contents.files[f].async("string"))]; }
-                } else if (file.name.endsWith('.html')) {
-                    const reader = new FileReader();
-                    reader.onload = async (e) => { found = parseAllInHtml(e.target.result); await syncRecipes(found); };
-                    reader.readAsText(file); return;
-                }
-                if (found.length > 0) await syncRecipes(found);
-            } catch (err) { window.showMsg("Node Fault", "error"); }
-            finally { document.getElementById('recipe-loading').classList.add('hidden'); }
-        };
-
-        function parseAllInHtml(htmlString) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(htmlString, 'text/html');
-            const blocks = Array.from(doc.querySelectorAll('.recipe-details'));
-            if (blocks.length <= 1) {
-                const results = []; let curr = null;
-                Array.from(doc.body.children).forEach(child => {
-                    if (child.tagName === 'H2') { if (curr) results.push(curr); curr = { name: child.innerText.trim(), ingredients: [], method: "", category: "Imported" }; }
-                    else if (curr) {
-                        const ings = Array.from(child.querySelectorAll('[itemprop="recipeIngredients"] p, li')).map(el => el.innerText.trim());
-                        const dirs = Array.from(child.querySelectorAll('[itemprop="recipeDirections"] p, li')).map(el => el.innerText.trim());
-                        if (ings.length > 0) curr.ingredients.push(...ings);
-                        if (dirs.length > 0) curr.method += dirs.join('\n') + '\n';
-                    }
-                });
-                if (curr) results.push(curr);
-                return results.map(r => ({ ...r, id: Math.random() + Date.now() }));
-            }
-            return blocks.map((b, idx) => ({
-                id: Date.now() + idx + Math.random(),
-                name: b.querySelector('h2')?.innerText?.trim() || 'Untitled Entry',
-                ingredients: Array.from(b.querySelectorAll('[itemprop="recipeIngredients"] p, li')).map(el => el.innerText.trim()),
-                method: Array.from(b.querySelectorAll('[itemprop="recipeDirections"] p, li')).map(el => el.innerText.trim()).join('\n'),
-                category: (b.querySelector('.recipe-category') || b.querySelector('[itemprop="recipeCategory"]'))?.innerText?.trim() || 'Imported'
-            })).filter(r => r.ingredients.length > 0);
-        }
-
-        const syncRecipes = async (items) => {
-            await updateDoc(refs.rec(), { items: arrayUnion(...items) }).catch(() => setDoc(refs.rec(), { items }));
-            window.showMsg(`${items.length} Vault Nodes Added!`);
-        };
-
-        window.openRecipe = (id) => {
-            const r = window.recipes.find(x => x.id == id);
-            if(!r) return; window.currentRecipe = r;
-            document.getElementById('yield-input').value = 1;
-            document.getElementById('m-recipe-title').innerText = r.name;
-            document.getElementById('m-recipe-method').innerText = r.method;
-            window.updateRecipeScaling();
-            document.getElementById('recipe-modal').classList.remove('hidden');
-        };
-
-        window.updateRecipeScaling = () => {
-            const mult = parseFloat(document.getElementById('yield-input').value) || 1;
-            document.getElementById('m-recipe-ing').innerHTML = window.currentRecipe.ingredients.map(ing => {
-                const scaled = ing.replace(/([\d\.]+)/, (m) => (parseFloat(m) * mult).toFixed(1).replace(/\.0$/, ''));
-                return `<li>${scaled}</li>`;
-            }).join('');
-        };
-
-        window.scaleRecipe = (val) => {
-            const input = document.getElementById('yield-input');
-            input.value = Math.max(0.1, parseFloat(input.value) + val);
-            window.updateRecipeScaling();
-        };
-
-        // --- BACKUP ---
-        window.exportCloudBackup = () => {
-            const data = { inventory: window.inventory, recipes: window.recipes, compliance: window.compliance, config: window.config, date: new Date().toISOString() };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-            a.download = `Hobart_Node_Backup.json`; a.click();
-            window.showMsg("Backup Downloaded");
-        };
-
-        window.importCloudBackup = (event) => {
             const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = async (e) => {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (confirm("Restore State?")) {
-                        await setDoc(refs.inv(), { items: data.inventory || [] });
-                        await setDoc(refs.rec(), { items: data.recipes || [] });
-                        await setDoc(refs.com(), { logs: data.compliance || [] });
-                        await setDoc(refs.cfg(), data.config || {});
-                        window.showMsg("Restore Complete");
-                        setTimeout(() => location.reload(), 1500);
-                    }
-                } catch (err) { window.showMsg("File Fault", "error"); }
+                const doc = new DOMParser().parseFromString(e.target.result, 'text/html');
+                const blocks = Array.from(doc.querySelectorAll('.recipe-details'));
+                const found = blocks.map((b, idx) => ({ id: Date.now() + idx, name: b.querySelector('h2')?.innerText?.trim() || 'Untitled', ingredients: Array.from(b.querySelectorAll('[itemprop="recipeIngredients"] p, li')).map(el => el.innerText.trim()), method: Array.from(b.querySelectorAll('[itemprop="recipeDirections"] p, li')).map(el => el.innerText.trim()).join('\n'), category: (b.querySelector('.recipe-category') || b.querySelector('[itemprop="recipeCategory"]'))?.innerText?.trim() || 'Imported' })).filter(r => r.ingredients.length > 0);
+                await updateDoc(refs.rec(), { items: arrayUnion(...found) }).catch(() => setDoc(refs.rec(), { items: found })); 
+                window.showMsg("Import Node Verified");
             };
             reader.readAsText(file);
         };
+        window.openRecipe = (id) => { const r = window.recipes.find(x => x.id == id); if(!r) return; window.currentRecipe = r; document.getElementById('yield-input').value = 1; document.getElementById('m-recipe-title').innerText = r.name; window.updateRecipeScaling(); document.getElementById('recipe-modal').classList.remove('hidden'); };
+        window.updateRecipeScaling = () => { const mult = parseFloat(document.getElementById('yield-input').value) || 1; document.getElementById('m-recipe-ing').innerHTML = window.currentRecipe.ingredients.map(ing => `<li>${ing.replace(/([\d\.]+)/, (m) => (parseFloat(m) * mult).toFixed(1).replace(/\.0$/, ''))}</li>`).join(''); };
+        window.closeRecipeModal = () => document.getElementById('recipe-modal').classList.add('hidden');
 
-        window.factoryReset = async () => {
-            if (!confirm("Permanently wipe Hobart Cloud Node?")) return;
-            await setDoc(refs.inv(), { items: [] });
-            await setDoc(refs.rec(), { items: [] });
-            await setDoc(refs.com(), { logs: [] });
-            window.showMsg("Cloud Wiped");
-            location.reload();
-        };
-
-        // --- HOBART INTEL ---
-        async function fetchWeather() {
-            try {
-                const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-42.8821&longitude=147.3272&current_weather=true&daily=sunrise,sunset&timezone=auto");
-                const d = await res.json();
-                document.getElementById('d-temp').textContent = `${Math.round(d.current_weather.temperature)}°`;
-                document.getElementById('d-wind').textContent = `${d.current_weather.windspeed} km/h`;
-                document.getElementById('d-sunrise').textContent = d.daily.sunrise[0].split('T')[1];
-                document.getElementById('d-sunset').textContent = d.daily.sunset[0].split('T')[1];
-                if(d.current_weather.windspeed > 25) document.getElementById('wind-badge').classList.remove('hidden');
-            } catch(e) {}
-        }
-
-        window.updateStats = () => {
-            const v = window.inventory.reduce((acc, i) => acc + (parseFloat(i.quantity || 0) * parseFloat(i.unitCost || 0)), 0);
-            document.getElementById('d-stock').textContent = `$${v.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-            const low = window.inventory.filter(i => parseFloat(i.quantity) <= (i.parLevel || 5));
-            document.getElementById('stock-alerts').innerHTML = low.length > 0 
-                ? low.map(i => `<div class="p-4 bg-red-50 text-red-600 rounded-2xl text-[11px] font-black uppercase flex justify-between border-3 border-red-500 shadow-md"><span>${i.name}</span><span>QTY: ${i.quantity}</span></div>`).join('')
-                : '<div class="text-center py-10 opacity-30 font-black text-[10px] uppercase">✅ LEVELS STABLE</div>';
-        };
-
+        // --- INVENTORY ---
         window.renderInventory = () => {
             const list = document.getElementById('inventory-list');
             if(!list) return;
-            const search = document.getElementById('inventory-search').value.toLowerCase();
-            list.innerHTML = window.inventory.filter(i => i.name.toLowerCase().includes(search) || (i.sku||"").toLowerCase().includes(search)).map(i => `
-                <li class="p-6 bg-white rounded-[2.5rem] border-4 border-black flex justify-between items-center shadow-xl ${parseFloat(i.quantity) <= (i.parLevel || 5) ? 'low-stock' : ''}">
-                    <div><div class="font-black uppercase text-lg italic tracking-tighter">${i.name}</div><div class="text-[10px] text-slate-400 font-bold uppercase mt-2">$${(parseFloat(i.unitCost)||0).toFixed(2)} / Unit</div></div>
+            const s = document.getElementById('inventory-search').value.toLowerCase();
+            list.innerHTML = window.inventory.filter(i => i.name.toLowerCase().includes(s)).map(i => `
+                <li class="p-6 bg-white border-4 border-black rounded-[2rem] flex justify-between items-center shadow-xl ${parseFloat(i.quantity) <= (i.parLevel || 5) ? 'low-stock-border' : ''}">
+                    <div><div class="font-black uppercase text-xl italic tracking-tighter">${i.name}</div><div class="text-[9px] text-slate-400 font-bold uppercase mt-2">$${(parseFloat(i.unitCost)||0).toFixed(2)} / Ctn • Unit: $${((parseFloat(i.unitCost)||0)/(parseFloat(i.packSize)||1)).toFixed(2)} • Wkly: ${i.weeklyUse||0}</div></div>
                     <div class="text-right"><div class="font-black text-4xl text-blue-600">${parseFloat(i.quantity||0).toFixed(1)}</div></div>
                 </li>`).join('');
         };
-
         window.saveItem = async (e) => {
             e.preventDefault();
-            const newItem = { id: Date.now(), name: document.getElementById('p-name').value, sku: document.getElementById('p-sku').value, unitCost: document.getElementById('p-cost').value, quantity: document.getElementById('p-qty').value, parLevel: document.getElementById('p-par').value };
-            window.inventory.push(newItem); await setDoc(refs.inv(), { items: window.inventory });
-            e.target.reset(); window.showMsg("Node Updated");
+            window.inventory.push({ id: Date.now(), name: document.getElementById('p-name').value, sku: document.getElementById('p-sku').value, unitCost: document.getElementById('p-cost').value, quantity: document.getElementById('p-qty').value, parLevel: document.getElementById('p-par').value, weeklyUse: document.getElementById('p-use').value, packSize: document.getElementById('p-pack').value });
+            await setDoc(refs.inv(), { items: window.inventory }); e.target.reset(); window.showMsg("Node Updated");
         };
 
-        // --- INTELLIGENCE ---
-        window.renderMatrix = () => {
-            const value = window.inventory.reduce((acc, i) => acc + (parseFloat(i.quantity) * parseFloat(i.unitCost)), 0);
-            document.getElementById('prime-cost-display').innerText = value > 0 ? "28.4 %" : "-- %";
-            document.getElementById('matrix-stats').innerHTML = `<div class="p-5 bg-white border-3 border-black rounded-2xl">Nodes: ${window.inventory.length}</div>`;
+        // --- SYSTEM ---
+        async function fetchWeather() { 
+            try {
+                const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-42.8821&longitude=147.3272&current_weather=true&daily=sunrise,sunset&timezone=auto"); 
+                const d = await res.json(); 
+                const t = document.getElementById('d-temp'); if(t) t.textContent = `${Math.round(d.current_weather.temperature)}°`;
+                const w = document.getElementById('d-wind'); if(w) w.textContent = `${d.current_weather.windspeed} km/h`;
+                const sr = document.getElementById('d-sunrise'); if(sr) sr.textContent = d.daily.sunrise[0].split('T')[1];
+                const ss = document.getElementById('d-sunset'); if(ss) ss.textContent = d.daily.sunset[0].split('T')[1];
+                if(d.current_weather.windspeed > 25) { const b = document.getElementById('wind-badge'); if(b) b.classList.remove('hidden'); }
+            } catch(e) {}
+        }
+        window.updateStats = () => { 
+            const ds = document.getElementById('d-stock'); 
+            const al = document.getElementById('stock-alerts');
+            const v = window.inventory.reduce((acc, i) => acc + (parseFloat(i.quantity || 0) * (parseFloat(i.unitCost || 0)/(parseFloat(i.packSize)||1))), 0); 
+            if(ds) ds.textContent = `$${v.toLocaleString(undefined, {minimumFractionDigits: 2})}`; 
+            const low = window.inventory.filter(i => parseFloat(i.quantity) <= (i.parLevel || 5));
+            if(al) al.innerHTML = low.length > 0 ? low.map(i => `<div class="p-4 bg-red-50 text-red-600 rounded-2xl text-[11px] font-black uppercase flex justify-between border-2 border-red-500 shadow-md"><span>${i.name}</span><span>QTY: ${i.quantity}</span></div>`).join('') : '<div class="text-center py-10 opacity-30 font-black text-[10px] uppercase">✅ NODE STABLE</div>';
+            const prime = document.getElementById('prime-cost-display'); if(prime) prime.innerText = window.inventory.length > 0 ? "28.4 %" : "-- %";
         };
 
-        // --- LOGS ---
-        window.logIncident = async () => {
-            const val = document.getElementById('log-input').value; if(!val) return;
-            const log = { type: 'Incident', value: val, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString(), staff: auth.currentUser.email };
-            await updateDoc(refs.com(), { logs: arrayUnion(log) }).catch(() => setDoc(refs.com(), { logs: [log] }));
-            document.getElementById('log-input').value = ''; window.showMsg("Entry Saved");
-        };
+        window.logCheck = async (title) => { const log = { type: 'Checklist', item: title, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString() }; await updateDoc(refs.com(), { logs: arrayUnion(log) }); window.showMsg(`${title} Saved`); };
+        window.logIncident = async () => { const val = document.getElementById('log-input').value; if(!val) return; const log = { type: 'Incident', value: val, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString() }; await updateDoc(refs.com(), { logs: arrayUnion(log) }); document.getElementById('log-input').value = ''; window.showMsg("Saved"); };
+        window.renderRedBook = () => { const el = document.getElementById('redbook-feed'); if(el) el.innerHTML = window.compliance.filter(l => l.type === 'Incident').reverse().map(l => `<div class="p-6 bg-white border-3 border-black border-l-red-500 rounded-3xl mb-4 shadow-md text-sm font-bold italic">"${l.value}"</div>`).join(''); };
+        window.renderComplianceHistory = () => { const el = document.getElementById('safety-history'); if(el) el.innerHTML = window.compliance.filter(l => l.type === 'Checklist').reverse().map(l => `<div class="p-4 bg-slate-50 border-3 border-black rounded-[2rem] flex justify-between items-center mb-3"><div><div class="font-black text-blue-600 uppercase text-[11px]">${l.item}</div><div class="text-[10px] font-bold text-slate-400 uppercase">${l.date}</div></div><span class="text-[11px] font-black uppercase text-emerald-600">Verified</span></div>`).join(''); };
 
-        window.logCheck = async (title) => {
-            const log = { type: 'Checklist', item: title, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString(), staff: auth.currentUser.email };
-            await updateDoc(refs.com(), { logs: arrayUnion(log) }).catch(() => setDoc(refs.com(), { logs: [log] }));
-            window.showMsg(`${title} Saved`);
-        };
-
-        window.renderRedBook = () => {
-            document.getElementById('redbook-feed').innerHTML = window.compliance.filter(l => l.type === 'Incident').reverse().map(l => `<div class="p-6 bg-white border-3 border-black border-l-[12px] border-l-red-500 rounded-3xl mb-4 shadow-md"><div class="flex justify-between font-black text-[10px] uppercase text-red-600 mb-3 tracking-widest"><span>${l.date} ${l.time}</span></div><p class="text-sm font-bold leading-relaxed italic text-slate-800">"${l.value}"</p></div>`).join('');
-        };
-
-        window.renderSafety = () => {
-            document.getElementById('safety-history').innerHTML = window.compliance.filter(l => l.type === 'Checklist').reverse().map(l => `<div class="p-4 bg-white border-3 border-black rounded-[2rem] flex justify-between items-center mb-3 shadow-lg"><div><div class="font-black text-blue-600 uppercase text-[11px] tracking-widest">${l.item}</div><div class="text-[10px] font-bold text-slate-400 mt-1 uppercase">${l.date} • ${l.time}</div></div><span class="text-[11px] font-black uppercase bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full border-2 border-emerald-500 shadow-sm">Verified</span></div>`).join('');
-        };
-
-        // --- HELPERS ---
         window.saveApiKey = () => localStorage.setItem('venue_gemini_key', document.getElementById('api-key').value);
-        function loadLocalApiKey() { const k = localStorage.getItem('venue_gemini_key'); if(k) document.getElementById('api-key').value = k; }
-        window.showMsg = (t) => { const b = document.getElementById('msg-box'); b.textContent = t; b.classList.remove('hidden'); setTimeout(() => b.classList.add('hidden'), 3000); };
-        window.closeRecipeModal = () => document.getElementById('recipe-modal').classList.add('hidden');
+        function loadLocalApiKey() { const k = localStorage.getItem('venue_gemini_key'); if(k) { const el = document.getElementById('api-key'); if(el) el.value = k; } }
+        window.exportCloudBackup = () => { const blob = new Blob([JSON.stringify({ inventory: window.inventory, recipes: window.recipes, compliance: window.compliance, assets: window.assets, config: window.config }, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Hobart_OS_Backup.json`; a.click(); };
+        window.factoryReset = async () => { if (!confirm("☢️ Wipe Cloud Node?")) return; await setDoc(refs.inv(), { items: [] }); await setDoc(refs.rec(), { items: [] }); await setDoc(refs.com(), { logs: [] }); await setDoc(refs.as(), { items: [] }); window.showMsg("Node Purged"); location.reload(); };
+        window.showMsg = (t) => { const b = document.getElementById('msg-box'); if(b) { b.textContent = t; b.classList.remove('hidden'); setTimeout(() => b.classList.add('hidden'), 3000); } };
         window.toggleSettings = () => document.getElementById('settings-modal').classList.toggle('hidden');
-        window.toggleDarkMode = () => document.body.classList.toggle('dark');
         window.saveBranding = async () => { await setDoc(refs.cfg(), { name: document.getElementById('set-name').value }, { merge: true }); };
+        window.imgToBase64 = (f) => new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result.split(',')[1]); rd.readAsDataURL(f); });
+        window.pdfToImage = async (f) => { const pdf = await pdfjsLib.getDocument({ data: await f.arrayBuffer() }).promise; const page = await pdf.getPage(1); const viewport = page.getViewport({ scale: 2.0 }); const canvas = document.getElementById('pdf-render-canvas'); const ctx = canvas.getContext('2d'); canvas.height = viewport.height; canvas.width = viewport.width; await page.render({ canvasContext: ctx, viewport }).promise; return canvas.toDataURL('image/png').split(',')[1]; };
         window.onload = () => { window.setView('control'); };
     </script>
 </body>
