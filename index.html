@@ -52,7 +52,7 @@
             <div class="w-24 h-24 bg-blue-600 text-white rounded-3xl mx-auto mb-6 flex items-center justify-center text-4xl border-3 border-black font-black italic">H</div>
             <h2 class="text-3xl font-black mb-2 uppercase italic tracking-tighter">Executive OS</h2>
             <div class="space-y-4">
-                <button onclick="window.signInQuick()" class="w-full bg-blue-600 text-white font-black py-5 rounded-xl uppercase text-xs border-3 border-black shadow-lg">Quick Access</button>
+                <button onclick="window.signInQuick()" id="quick-access-btn" class="w-full bg-blue-600 text-white font-black py-5 rounded-xl uppercase text-xs border-3 border-black shadow-lg">Quick Access</button>
                 <div class="py-2 flex items-center gap-3"><div class="flex-grow h-0.5 bg-slate-100"></div><span class="text-[10px] font-black text-slate-300">OR</span><div class="flex-grow h-0.5 bg-slate-100"></div></div>
                 <input type="email" id="auth-email" class="heavy-input" placeholder="Email">
                 <input type="password" id="auth-pass" class="heavy-input" placeholder="Password">
@@ -81,15 +81,15 @@
                 <button id="nav-production" onclick="window.setView('production')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white border-3 border-black">Production</button>
                 <button id="nav-safety" onclick="window.setView('safety')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white border-3 border-black">Compliance</button>
                 <button id="nav-intel" onclick="window.setView('intel')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white border-3 border-black">Intelligence</button>
-                <button onclick="window.toggleSettings()" class="px-8 py-4 rounded-2xl font-black text-[11px] uppercase bg-slate-300 ml-auto border-3 border-black">⚙️ Admin Hub</button>
+                <button onclick="window.toggleSettings()" class="px-8 py-4 rounded-2xl font-black text-[11px] uppercase bg-slate-300 ml-auto border-3 border-black shadow-lg">⚙️ Admin Hub</button>
             </nav>
 
-            <!-- CONTROL -->
+            <!-- VIEW: CONTROL -->
             <div id="view-control" class="view-section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2 space-y-8">
                         <div class="stats-card border-4 border-black">
-                            <h3 class="font-black uppercase text-[10px] mb-8 italic text-slate-500 tracking-[0.3em]">Hobart Intel Briefing</h3>
+                            <h3 class="font-black uppercase text-[10px] mb-8 italic text-slate-500 tracking-[0.3em]">Shift Briefing (Hobart)</h3>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center border-b-2 border-slate-100 pb-10">
                                 <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase">Temp</div><div id="d-temp" class="text-4xl font-black text-blue-600">--°</div></div>
                                 <div><div class="text-[9px] font-black text-slate-400 mb-2 uppercase">Wind</div><div id="d-wind" class="text-4xl font-black text-amber-500">--</div></div>
@@ -111,7 +111,7 @@
                             </div>
                             <div class="stats-card bg-emerald-50 border-emerald-500 border-4 shadow-xl text-center">
                                 <h3 class="font-black uppercase text-xs mb-6 text-emerald-700 tracking-widest italic">AI Invoice Scanner</h3>
-                                <button onclick="document.getElementById('invoice-upload').click()" class="w-full bg-emerald-600 text-white font-black py-8 rounded-2xl text-[11px] uppercase shadow-lg border-3 border-black hover:bg-emerald-700 transition">Scan PDF Invoices</button>
+                                <button onclick="document.getElementById('invoice-upload').click()" class="w-full bg-emerald-600 text-white font-black py-8 rounded-2xl text-[11px] uppercase shadow-lg border-3 border-black transition hover:bg-emerald-700">Scan PDF Invoices</button>
                                 <input type="file" id="invoice-upload" class="hidden" accept="image/*,.pdf" multiple onchange="window.handleInvoiceUpload(event)">
                             </div>
                         </div>
@@ -127,7 +127,7 @@
                 </div>
             </div>
 
-            <!-- PRODUCTION -->
+            <!-- VIEW: PRODUCTION -->
             <div id="view-production" class="view-section hidden">
                 <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
                     <h1 class="text-5xl font-black tracking-tighter italic uppercase text-slate-900">Recipe <span class="text-purple-600">Vault</span></h1>
@@ -142,7 +142,7 @@
                 <div id="recipe-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"></div>
             </div>
 
-            <!-- INTELLIGENCE -->
+            <!-- VIEW: INTELLIGENCE -->
             <div id="view-intel" class="view-section hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                     <div class="lg:col-span-1 space-y-8">
@@ -156,7 +156,7 @@
                             </div>
                         </div>
                         <div class="stats-card bg-emerald-50 border-4 border-black shadow-xl text-center">
-                            <h3 class="font-black uppercase text-xs mb-6 text-emerald-700 tracking-widest">Live Prime Cost</h3>
+                            <h3 class="font-black uppercase text-xs mb-6 text-emerald-700">Theoretical Prime Cost</h3>
                             <div id="prime-cost-display" class="text-7xl font-black text-emerald-900 py-4 italic">-- %</div>
                         </div>
                     </div>
@@ -165,17 +165,17 @@
                             <div class="flex justify-between items-center mb-8 border-b-4 border-black pb-8">
                                 <div>
                                     <h3 class="font-black uppercase text-3xl italic tracking-tighter">Equipment Lifecycle Log</h3>
-                                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mt-2">Repairs & Purchase History</p>
+                                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mt-2">Track Repairs & Purchase Dates</p>
                                 </div>
-                                <button onclick="window.addAssetPrompt()" class="bg-black text-white px-8 py-5 rounded-2xl font-black text-[11px] border-3 border-black shadow-xl">+ Add Item</button>
+                                <button onclick="window.addAssetPrompt()" class="bg-black text-white px-8 py-5 rounded-2xl font-black text-[11px] border-3 border-black shadow-xl hover:scale-105 transition">+ Add Item</button>
                             </div>
-                            <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 overflow-y-auto no-scrollbar pr-1 px-1"></div>
+                            <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 overflow-y-auto pr-2 no-scrollbar px-1"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- STOCK -->
+            <!-- VIEW: STOCK -->
             <div id="view-stock" class="view-section hidden">
                 <div class="flex flex-col lg:flex-row gap-12">
                     <div class="lg:w-1/3">
@@ -183,7 +183,7 @@
                             <h2 class="text-3xl font-black uppercase mb-10 italic tracking-tighter">Product Entry</h2>
                             <form id="item-form" class="space-y-6" onsubmit="window.saveItem(event)">
                                 <input type="hidden" id="edit-id">
-                                <div><label class="form-label">Product Name</label><input type="text" id="p-name" class="heavy-input" required></div>
+                                <div><label class="form-label">Full Name</label><input type="text" id="p-name" class="heavy-input" required></div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div><label class="form-label">SKU / Code</label><input type="text" id="p-sku" class="heavy-input" required></div>
                                     <div><label class="form-label">Pack Size (Btls/Ctn)</label><input type="number" id="p-pack" value="1" class="heavy-input"></div>
@@ -196,12 +196,12 @@
                                     <div><label class="form-label">Par Level</label><input type="number" id="p-par" value="5" class="heavy-input"></div>
                                     <div><label class="form-label">OnHand (Units)</label><input type="number" id="p-qty" step="any" class="heavy-input"></div>
                                 </div>
-                                <button type="submit" class="w-full bg-blue-600 text-white font-black py-6 rounded-2xl border-3 border-black uppercase text-xs">Update Cloud State</button>
+                                <button type="submit" class="w-full bg-blue-600 text-white font-black py-6 rounded-2xl shadow-xl border-3 border-black uppercase text-xs">Update Cloud State</button>
                             </form>
                         </div>
                     </div>
                     <div class="lg:w-2/3">
-                        <input type="text" id="inventory-search" oninput="window.renderInventory()" placeholder="Search item library..." class="p-8 bg-white rounded-[2.5rem] border-4 border-black font-bold outline-none shadow-xl w-full mb-10 text-2xl">
+                        <input type="text" id="inventory-search" oninput="window.renderInventory()" placeholder="Find item..." class="p-8 bg-white rounded-[2.5rem] border-4 border-black font-bold outline-none shadow-xl w-full mb-10 text-2xl placeholder:opacity-30">
                         <ul id="inventory-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></ul>
                     </div>
                 </div>
@@ -220,7 +220,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -229,10 +228,10 @@
         <div class="bg-white rounded-[4rem] p-16 max-w-4xl w-full shadow-2xl max-h-[94vh] overflow-hidden flex flex-col border-8 border-black">
             <div class="flex justify-between items-start mb-10">
                 <h3 id="m-recipe-title" class="text-6xl font-black uppercase italic leading-tight">Recipe</h3>
-                <button onclick="window.closeRecipeModal()" class="text-slate-400 p-2 font-black text-5xl">✕</button>
+                <button onclick="window.closeRecipeModal()" class="text-slate-400 p-2 font-black text-5xl hover:text-red-500 transition">✕</button>
             </div>
-            <div class="bg-slate-100 p-10 rounded-[2.5rem] mb-12 border-4 border-black flex items-center justify-between">
-                <div class="text-[14px] font-black uppercase text-slate-500 tracking-[0.4em]">Scale Factor</div>
+            <div class="bg-slate-100 p-10 rounded-[2.5rem] mb-12 border-4 border-black flex items-center justify-between shadow-2xl">
+                <div class="text-[14px] font-black uppercase text-slate-500 tracking-[0.4em]">Batch Scale</div>
                 <input type="number" id="yield-input" value="1" step="0.5" class="w-40 text-center font-black heavy-input !p-5 !text-6xl border-4 border-black" oninput="window.updateRecipeScaling()">
             </div>
             <div id="m-recipe-ing" class="flex-grow overflow-y-auto space-y-10 no-scrollbar px-2 text-xl font-bold list-disc pl-12"></div>
@@ -241,25 +240,30 @@
 
     <div id="settings-modal" class="hidden fixed inset-0 z-[150] flex items-center justify-center modal-bg p-4">
         <div class="bg-white rounded-[3.5rem] p-12 max-w-xl w-full shadow-2xl border-4 border-black overflow-y-auto max-h-[90vh]">
-            <h3 class="text-3xl font-black uppercase mb-12 italic text-center">Node Management</h3>
+            <h3 class="text-3xl font-black uppercase mb-12 italic text-center">Node Config</h3>
             <div class="space-y-6 mb-12">
                 <div><label class="form-label">Venue Identifier</label><input type="text" id="set-name" class="heavy-input" onchange="window.saveBranding()"></div>
-                <div class="bg-indigo-50 p-8 rounded-[2rem] border-4 border-indigo-600">
+                <div class="bg-indigo-50 p-8 rounded-[2rem] border-4 border-indigo-600 shadow-inner text-center">
                     <label class="form-label text-indigo-700">Gemini Master Key</label>
-                    <input type="password" id="api-key" onchange="window.saveApiKey()" class="heavy-input border-2 border-indigo-600 shadow-none">
-                    <p class="text-[9px] font-black text-indigo-500 mt-2 text-center uppercase tracking-widest italic">Required for AI Extraction</p>
+                    <input type="password" id="api-key" onchange="window.saveApiKey()" class="heavy-input border-2 border-indigo-600 shadow-none" placeholder="Master key for AI scans...">
                 </div>
             </div>
             <div class="flex flex-col gap-4">
-                <button onclick="window.exportCloudBackup()" class="py-5 bg-emerald-600 text-white rounded-2xl font-black border-3 border-black">Download Backup</button>
-                <button onclick="window.factoryReset()" class="py-6 bg-red-600 text-white rounded-2xl font-black border-3 border-black hover:bg-red-700">☢️ Wipe Hobart Hub</button>
-                <button onclick="window.toggleSettings()" class="py-6 bg-black text-white rounded-2xl font-black border-3 border-black">Close</button>
+                <button onclick="window.exportCloudBackup()" class="py-5 bg-emerald-600 text-white rounded-2xl font-black border-3 border-black shadow-lg">Download Backup</button>
+                <button onclick="window.factoryReset()" class="py-6 bg-red-600 text-white rounded-2xl font-black border-3 border-black shadow-lg hover:bg-red-700 transition">☢️ Wipe Hobart Node</button>
+                <button onclick="window.toggleSettings()" class="py-6 bg-black text-white rounded-2xl font-black border-3 border-black mt-4 shadow-xl">Confirm & Sync</button>
             </div>
         </div>
     </div>
 
+    <div id="ai-processing" class="hidden fixed inset-0 z-[1000] bg-black/90 backdrop-blur-2xl flex flex-col items-center justify-center text-white text-center">
+        <div class="w-24 h-24 border-8 border-t-emerald-500 border-emerald-900 rounded-full animate-spin mb-10"></div>
+        <h2 class="text-5xl font-black italic tracking-widest uppercase mb-4">AI Extraction</h2>
+        <p class="text-emerald-500 font-black uppercase text-xs tracking-[0.5em] mt-4">Establishing Hobart Cloud Sync...</p>
+    </div>
+
     <canvas id="pdf-render-canvas" class="hidden"></canvas>
-    <div id="msg-box" class="hidden fixed top-10 right-10 z-[700] p-10 rounded-[3rem] shadow-2xl text-[16px] font-black uppercase text-white bg-emerald-600 border-8 border-black"></div>
+    <div id="msg-box" class="hidden fixed top-10 right-10 z-[700] p-10 rounded-[3rem] shadow-2xl text-[16px] font-black uppercase text-white bg-emerald-600 border-8 border-black animate-bounce"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -270,7 +274,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = "hobart-master-node";
+        const appId = "hobart-master-node-v3";
 
         const refs = { 
             inv: () => doc(db, 'artifacts', appId, 'public', 'data', 'inventory', 'main'), 
@@ -285,21 +289,49 @@
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
         // --- AUTH ---
-        window.signInQuick = async () => { try { await signInAnonymously(auth); } catch (e) { window.showMsg("Connection Error", "error"); } };
-        window.handleAuth = async () => { try { await signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pass').value); } catch (e) { window.showMsg("Denied", "error"); } };
+        window.signInQuick = async () => { try { await signInAnonymously(auth); } catch (e) { window.showMsg("Node Fault", "error"); } };
+        window.handleAuth = async () => { try { await signInWithEmailAndPassword(auth, document.getElementById('auth-email').value, document.getElementById('auth-pass').value); } catch (e) { window.showMsg("Access Refused", "error"); } };
         window.logout = () => signOut(auth);
 
-        onAuthStateChanged(auth, (u) => {
-            if (u) { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-content').classList.remove('hidden'); setupListeners(); fetchWeather(); loadLocalApiKey(); }
-            else { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-content').classList.add('hidden'); }
+        onAuthStateChanged(auth, async (u) => {
+            if (u) { 
+                document.getElementById('login-screen').classList.add('hidden'); 
+                document.getElementById('app-content').classList.remove('hidden'); 
+                setupListeners(); 
+                fetchWeather(); 
+                loadLocalApiKey();
+            } else {
+                document.getElementById('login-screen').classList.remove('hidden');
+                document.getElementById('app-content').classList.add('hidden');
+            }
         });
 
         const setupListeners = () => {
-            onSnapshot(refs.inv(), (s) => { if (s.exists()) { window.inventory = s.data().items || []; window.renderInventory(); window.updateStats(); } });
-            onSnapshot(refs.rec(), (s) => { if (s.exists()) { window.recipes = s.data().items || []; window.renderRecipes(); window.renderRecipeCategoryTabs(); } });
+            onSnapshot(refs.inv(), (s) => { 
+                if (s.exists()) { 
+                    window.inventory = s.data().items || []; 
+                    window.renderInventory(); 
+                    window.updateStats(); 
+                } 
+            });
+            onSnapshot(refs.rec(), (s) => { 
+                if (s.exists()) { 
+                    window.recipes = s.data().items || []; 
+                    window.renderRecipes(); 
+                    window.renderRecipeCategoryTabs(); 
+                } 
+            });
             onSnapshot(refs.as(), (s) => { if (s.exists()) { window.assets = s.data().items || []; window.renderAssets(); } });
-            onSnapshot(refs.com(), (s) => { if (s.exists()) { window.compliance = s.data().logs || []; window.renderRedBook(); window.renderComplianceHistory(); } });
-            onSnapshot(refs.cfg(), (s) => { if (s.exists()) { window.config = s.data(); if(window.config.name) { const el = document.getElementById('venue-display-name'); if(el) el.innerHTML = `${window.config.name} <span class="text-blue-600">OS</span>`; } }});
+            onSnapshot(refs.com(), (s) => { if (s.exists()) { window.compliance = s.data().logs || []; renderRedBook(); renderComplianceHistory(); } });
+            onSnapshot(refs.cfg(), (s) => { if (s.exists()) { 
+                window.config = s.data();
+                const nodeStatus = document.getElementById('cloud-status');
+                if(nodeStatus) nodeStatus.innerText = "● Hobart Node Synchronized";
+                if(window.config.name) {
+                    const el = document.getElementById('venue-display-name');
+                    if(el) el.innerHTML = `${window.config.name} <span class="text-blue-600">OS</span>`;
+                }
+            }});
         };
 
         window.setView = (v) => {
@@ -311,42 +343,58 @@
             if (activeNav) activeNav.classList.add('nav-active');
         };
 
-        // --- ASSET LOG ---
+        // --- ASSET LOGGING (REPAIRS/HISTORY) ---
         window.addAssetPrompt = async () => {
-            const asset = { id: Date.now(), name: prompt("Equipment?"), purch: prompt("Purchase Date?"), agent: prompt("Rep/Service Agent?"), repairs: prompt("Repair History?") };
+            const asset = { id: Date.now(), name: prompt("Equipment Name?"), purch: prompt("Purchase Date?"), repairs: prompt("Repair history?"), agent: prompt("Rep Agent name/number?") };
             if(!asset.name) return;
             window.assets.push(asset); await setDoc(refs.as(), { items: window.assets });
             window.showMsg("Asset Logged");
         };
+
         window.renderAssets = () => {
-            const grid = document.getElementById('asset-grid');
-            if(!grid) return;
-            grid.innerHTML = window.assets.map(a => `<div class="stats-card border-4 border-black bg-slate-50"><div><div class="font-black uppercase text-lg italic mb-3">${a.name}</div><div class="text-[10px] font-black uppercase text-slate-400 space-y-1"><div>Purchased: <span class="text-black">${a.purch||'N/A'}</span></div><div>Rep: <span class="text-blue-600">${a.agent||'N/A'}</span></div><div class="mt-4 pt-2 border-t text-slate-800 normal-case italic font-bold">History: ${a.repairs||'None'}</div></div></div></div>`).join('') || `<div class="col-span-full py-32 text-center opacity-30 font-black uppercase text-sm tracking-widest italic uppercase">Establish asset node...</div>`;
+            const container = document.getElementById('asset-grid');
+            if(!container) return;
+            container.innerHTML = window.assets.map(a => `
+                <div class="stats-card border-4 border-black bg-slate-50 flex flex-col justify-between">
+                    <div>
+                        <div class="font-black uppercase text-lg italic mb-3 tracking-tighter">${a.name}</div>
+                        <div class="text-[10px] font-black uppercase text-slate-400 space-y-1">
+                            <div>Purchase: <span class="text-black">${a.purch||'N/A'}</span></div>
+                            <div>History: <span class="text-blue-600">${a.repairs||'None'}</span></div>
+                            <div>Rep: <span class="text-slate-900">${a.agent||'N/A'}</span></div>
+                        </div>
+                    </div>
+                </div>`).join('') || `<div class="col-span-full py-32 text-center opacity-30 font-black uppercase text-sm tracking-widest italic uppercase">Establish asset node...</div>`;
         };
 
-        // --- INVOICES ---
+        // --- INVOICE SCANNING ---
         window.handleInvoiceUpload = async (event) => {
             const files = event.target.files; if (!files.length) return;
             const key = localStorage.getItem('venue_gemini_key');
-            if (!key) { window.showMsg("No API Key in Settings", "error"); return; }
-            window.showMsg("AI Processing Node...");
+            if (!key) { window.showMsg("Establish API Key in Settings", "error"); return; }
+            document.getElementById('ai-processing').classList.remove('hidden');
             try {
                 for (let file of files) {
                     const base64 = file.type === "application/pdf" ? await window.pdfToImage(file) : await window.imgToBase64(file);
-                    const prompt = "JSON array only: [{name, sku, quantity, unitCost}]";
+                    const prompt = "Extract inventory items JSON array: [{name, sku, quantity, unitCost}]. Raw JSON array only.";
                     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`, {
                         method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: prompt }, { inlineData: { mimeType: "image/png", data: base64 } }] }], generationConfig: { responseMimeType: "application/json" } })
                     });
                     const data = await res.json();
                     const items = JSON.parse(data.candidates[0].content.parts[0].text);
-                    items.forEach(item => window.inventory.push({ id: Date.now() + Math.random(), ...item, parLevel: 5, packSize: 1, weeklyUse: 0 }));
+                    items.forEach(item => {
+                        const ex = window.inventory.find(i => i.sku === item.sku);
+                        if (ex) { ex.quantity = (parseFloat(ex.quantity) || 0) + (parseFloat(item.quantity) || 0); ex.unitCost = parseFloat(item.unitCost) || ex.unitCost; }
+                        else window.inventory.push({ id: Date.now() + Math.random(), ...item, parLevel: 5, packSize: 1, weeklyUse: 0 });
+                    });
                 }
-                await setDoc(refs.inv(), { items: window.inventory }); window.showMsg("Sync Complete");
+                await setDoc(refs.inv(), { items: window.inventory }); window.showMsg("Node Synchronized");
             } catch (err) { window.showMsg("AI Link Fault", "error"); }
+            finally { document.getElementById('ai-processing').classList.add('hidden'); event.target.value = ''; }
         };
 
-        // --- RECIPES ---
-        window.filterRecipeCategory = (cat) => { window.activeRecipeCategory = cat; window.renderRecipeCategoryTabs(); window.renderRecipes(); };
+        // --- RECIPE LOGIC ---
+        window.filterRecipeCategory = (cat) => { window.activeRecipeCategory = cat; renderRecipeCategoryTabs(); renderRecipes(); };
         window.renderRecipeCategoryTabs = () => {
             const container = document.getElementById('recipe-category-tabs');
             if(!container) return;
@@ -358,17 +406,25 @@
             if(!grid) return;
             const search = document.getElementById('recipe-search').value.toLowerCase();
             const filtered = window.recipes.filter(r => (r.name.toLowerCase().includes(search) || r.ingredients.some(i => i.toLowerCase().includes(search))) && (window.activeRecipeCategory === "All" || r.category === window.activeRecipeCategory));
-            grid.innerHTML = filtered.map(r => `<div onclick="window.openRecipe('${r.id}')" class="stats-card hover:border-purple-600 transition cursor-pointer group border-3"><div class="text-[9px] font-black text-purple-600 uppercase mb-4 opacity-50 tracking-widest">${r.category || 'Vault'}</div><div class="font-black text-xl uppercase group-hover:text-purple-600 truncate italic">${r.name}</div></div>`).join('') || `<div class="col-span-full py-32 text-center opacity-30 font-black uppercase text-sm">No results</div>`;
+            grid.innerHTML = filtered.map(r => `
+                <div onclick="window.openRecipe('${r.id}')" class="stats-card hover:border-purple-600 transition cursor-pointer group border-3">
+                    <div class="text-[9px] font-black text-purple-600 uppercase mb-4 opacity-50 tracking-[0.2em]">${r.category || 'Vault Node'}</div>
+                    <div class="font-black text-xl uppercase group-hover:text-purple-600 truncate italic tracking-tighter">${r.name}</div>
+                    <div class="mt-10 text-[10px] font-bold text-slate-400 flex justify-between border-t-2 pt-4 border-slate-100"><span>SCALE UNIT</span><span>➔</span></div>
+                </div>`).join('') || `<div class="col-span-full py-32 text-center opacity-30 font-black uppercase text-sm">No matching recipes found.</div>`;
         };
+
         window.importRecipesHandler = async (event) => {
             const file = event.target.files[0]; if (!file) return;
+            document.getElementById('recipe-loading').classList.remove('hidden');
             const reader = new FileReader();
             reader.onload = async (e) => {
                 const doc = new DOMParser().parseFromString(e.target.result, 'text/html');
                 const blocks = Array.from(doc.querySelectorAll('.recipe-details'));
                 const found = blocks.map((b, idx) => ({ id: Date.now() + idx, name: b.querySelector('h2')?.innerText?.trim() || 'Untitled', ingredients: Array.from(b.querySelectorAll('[itemprop="recipeIngredients"] p, li')).map(el => el.innerText.trim()), method: Array.from(b.querySelectorAll('[itemprop="recipeDirections"] p, li')).map(el => el.innerText.trim()).join('\n'), category: (b.querySelector('.recipe-category') || b.querySelector('[itemprop="recipeCategory"]'))?.innerText?.trim() || 'Imported' })).filter(r => r.ingredients.length > 0);
                 await updateDoc(refs.rec(), { items: arrayUnion(...found) }).catch(() => setDoc(refs.rec(), { items: found })); 
-                window.showMsg("Import Node Verified");
+                window.showMsg("Vault Synchronized");
+                document.getElementById('recipe-loading').classList.add('hidden');
             };
             reader.readAsText(file);
         };
@@ -376,54 +432,60 @@
         window.updateRecipeScaling = () => { const mult = parseFloat(document.getElementById('yield-input').value) || 1; document.getElementById('m-recipe-ing').innerHTML = window.currentRecipe.ingredients.map(ing => `<li>${ing.replace(/([\d\.]+)/, (m) => (parseFloat(m) * mult).toFixed(1).replace(/\.0$/, ''))}</li>`).join(''); };
         window.closeRecipeModal = () => document.getElementById('recipe-modal').classList.add('hidden');
 
-        // --- INVENTORY ---
+        // --- INVENTORY (CTN LOGIC/USAGE) ---
         window.renderInventory = () => {
             const list = document.getElementById('inventory-list');
             if(!list) return;
             const s = document.getElementById('inventory-search').value.toLowerCase();
             list.innerHTML = window.inventory.filter(i => i.name.toLowerCase().includes(s)).map(i => `
                 <li class="p-6 bg-white border-4 border-black rounded-[2rem] flex justify-between items-center shadow-xl ${parseFloat(i.quantity) <= (i.parLevel || 5) ? 'low-stock-border' : ''}">
-                    <div><div class="font-black uppercase text-xl italic tracking-tighter">${i.name}</div><div class="text-[9px] text-slate-400 font-bold uppercase mt-2">$${(parseFloat(i.unitCost)||0).toFixed(2)} / Ctn • Unit: $${((parseFloat(i.unitCost)||0)/(parseFloat(i.packSize)||1)).toFixed(2)} • Wkly: ${i.weeklyUse||0}</div></div>
+                    <div>
+                        <div class="font-black uppercase text-xl italic tracking-tighter">${i.name}</div>
+                        <div class="text-[9px] text-slate-400 font-bold uppercase mt-2">
+                            $${(parseFloat(i.unitCost)||0).toFixed(2)} / Ctn • Unit: $${((parseFloat(i.unitCost)||0)/(parseFloat(i.packSize)||1)).toFixed(2)} • Used: ${i.weeklyUse||0}
+                        </div>
+                    </div>
                     <div class="text-right"><div class="font-black text-4xl text-blue-600">${parseFloat(i.quantity||0).toFixed(1)}</div></div>
                 </li>`).join('');
         };
         window.saveItem = async (e) => {
             e.preventDefault();
-            window.inventory.push({ id: Date.now(), name: document.getElementById('p-name').value, sku: document.getElementById('p-sku').value, unitCost: document.getElementById('p-cost').value, quantity: document.getElementById('p-qty').value, parLevel: document.getElementById('p-par').value, weeklyUse: document.getElementById('p-use').value, packSize: document.getElementById('p-pack').value });
-            await setDoc(refs.inv(), { items: window.inventory }); e.target.reset(); window.showMsg("Node Updated");
+            const newItem = { id: Date.now(), name: document.getElementById('p-name').value, sku: document.getElementById('p-sku').value, unitCost: document.getElementById('p-cost').value, quantity: document.getElementById('p-qty').value, parLevel: document.getElementById('p-par').value, weeklyUse: document.getElementById('p-use').value, packSize: document.getElementById('p-pack').value };
+            window.inventory.push(newItem); await setDoc(refs.inv(), { items: window.inventory }); e.target.reset(); window.showMsg("Node Updated");
         };
 
-        // --- SYSTEM ---
+        // --- COMPLIANCE ---
+        window.logCheck = async (title) => { const log = { type: 'Checklist', item: title, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString(), staff: auth.currentUser.email || "Node_Access" }; await updateDoc(refs.com(), { logs: arrayUnion(log) }); window.showMsg(`${title} Saved`); };
+        window.logIncident = async () => { const val = document.getElementById('log-input').value; if(!val) return; const log = { type: 'Incident', value: val, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString(), staff: auth.currentUser.email || "Node_Access" }; await updateDoc(refs.com(), { logs: arrayUnion(log) }); document.getElementById('log-input').value = ''; window.showMsg("Entry Establishing Record"); };
+        window.renderRedBook = () => { const container = document.getElementById('redbook-feed'); if(container) container.innerHTML = window.compliance.filter(l => l.type === 'Incident').reverse().map(l => `<div class="p-6 bg-white border-3 border-black border-l-[12px] border-l-red-500 rounded-3xl mb-4 shadow-md text-sm font-bold italic">"${l.value}" <br><small class="text-[8px] opacity-40 uppercase italic">${l.date} ${l.time}</small></div>`).join(''); };
+        window.renderComplianceHistory = () => { const container = document.getElementById('safety-history'); if(container) container.innerHTML = window.compliance.filter(l => l.type === 'Checklist').reverse().map(l => `<div class="p-4 bg-white border-3 border-black rounded-[2rem] flex justify-between items-center mb-3 shadow-lg"><div><div class="font-black text-blue-600 uppercase text-[11px] tracking-widest">${l.item}</div><div class="text-[10px] font-bold text-slate-400 uppercase">${l.date} • ${l.time}</div></div><span class="text-[11px] font-black uppercase bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full border-2 border-emerald-500 shadow-sm">Verified</span></div>`).join(''); };
+
+        // --- STATS/WEATHER ---
         async function fetchWeather() { 
             try {
                 const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-42.8821&longitude=147.3272&current_weather=true&daily=sunrise,sunset&timezone=auto"); 
                 const d = await res.json(); 
-                const t = document.getElementById('d-temp'); if(t) t.textContent = `${Math.round(d.current_weather.temperature)}°`;
-                const w = document.getElementById('d-wind'); if(w) w.textContent = `${d.current_weather.windspeed} km/h`;
-                const sr = document.getElementById('d-sunrise'); if(sr) sr.textContent = d.daily.sunrise[0].split('T')[1];
-                const ss = document.getElementById('d-sunset'); if(ss) ss.textContent = d.daily.sunset[0].split('T')[1];
-                if(d.current_weather.windspeed > 25) { const b = document.getElementById('wind-badge'); if(b) b.classList.remove('hidden'); }
+                const tEl = document.getElementById('d-temp'); if(tEl) tEl.textContent = `${Math.round(d.current_weather.temperature)}°`;
+                const wEl = document.getElementById('d-wind'); if(wEl) wEl.textContent = `${d.current_weather.windspeed} km/h`;
+                const srEl = document.getElementById('d-sunrise'); if(srEl) srEl.textContent = d.daily.sunrise[0].split('T')[1];
+                const ssEl = document.getElementById('d-sunset'); if(ssEl) ssEl.textContent = d.daily.sunset[0].split('T')[1];
+                if(d.current_weather.windspeed > 25) { const badge = document.getElementById('wind-badge'); if(badge) badge.classList.remove('hidden'); }
             } catch(e) {}
         }
         window.updateStats = () => { 
-            const ds = document.getElementById('d-stock'); 
-            const al = document.getElementById('stock-alerts');
+            const ds = document.getElementById('d-stock'); if(!ds) return;
             const v = window.inventory.reduce((acc, i) => acc + (parseFloat(i.quantity || 0) * (parseFloat(i.unitCost || 0)/(parseFloat(i.packSize)||1))), 0); 
-            if(ds) ds.textContent = `$${v.toLocaleString(undefined, {minimumFractionDigits: 2})}`; 
+            ds.textContent = `$${v.toLocaleString(undefined, {minimumFractionDigits: 2})}`; 
             const low = window.inventory.filter(i => parseFloat(i.quantity) <= (i.parLevel || 5));
-            if(al) al.innerHTML = low.length > 0 ? low.map(i => `<div class="p-4 bg-red-50 text-red-600 rounded-2xl text-[11px] font-black uppercase flex justify-between border-2 border-red-500 shadow-md"><span>${i.name}</span><span>QTY: ${i.quantity}</span></div>`).join('') : '<div class="text-center py-10 opacity-30 font-black text-[10px] uppercase">✅ NODE STABLE</div>';
+            const alerts = document.getElementById('stock-alerts');
+            if(alerts) alerts.innerHTML = low.length > 0 ? low.map(i => `<div class="p-4 bg-red-50 text-red-600 rounded-2xl text-[11px] font-black uppercase flex justify-between border-2 border-red-500 shadow-md"><span>${i.name}</span><span>QTY: ${i.quantity}</span></div>`).join('') : '<div class="text-center py-10 opacity-30 font-black text-[10px] uppercase">✅ NODE STABLE</div>';
             const prime = document.getElementById('prime-cost-display'); if(prime) prime.innerText = window.inventory.length > 0 ? "28.4 %" : "-- %";
         };
 
-        window.logCheck = async (title) => { const log = { type: 'Checklist', item: title, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString() }; await updateDoc(refs.com(), { logs: arrayUnion(log) }); window.showMsg(`${title} Saved`); };
-        window.logIncident = async () => { const val = document.getElementById('log-input').value; if(!val) return; const log = { type: 'Incident', value: val, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString() }; await updateDoc(refs.com(), { logs: arrayUnion(log) }); document.getElementById('log-input').value = ''; window.showMsg("Saved"); };
-        window.renderRedBook = () => { const el = document.getElementById('redbook-feed'); if(el) el.innerHTML = window.compliance.filter(l => l.type === 'Incident').reverse().map(l => `<div class="p-6 bg-white border-3 border-black border-l-red-500 rounded-3xl mb-4 shadow-md text-sm font-bold italic">"${l.value}"</div>`).join(''); };
-        window.renderComplianceHistory = () => { const el = document.getElementById('safety-history'); if(el) el.innerHTML = window.compliance.filter(l => l.type === 'Checklist').reverse().map(l => `<div class="p-4 bg-slate-50 border-3 border-black rounded-[2rem] flex justify-between items-center mb-3"><div><div class="font-black text-blue-600 uppercase text-[11px]">${l.item}</div><div class="text-[10px] font-bold text-slate-400 uppercase">${l.date}</div></div><span class="text-[11px] font-black uppercase text-emerald-600">Verified</span></div>`).join(''); };
-
         window.saveApiKey = () => localStorage.setItem('venue_gemini_key', document.getElementById('api-key').value);
-        function loadLocalApiKey() { const k = localStorage.getItem('venue_gemini_key'); if(k) { const el = document.getElementById('api-key'); if(el) el.value = k; } }
+        function loadLocalApiKey() { const k = localStorage.getItem('venue_gemini_key'); const el = document.getElementById('api-key'); if(k && el) el.value = k; }
         window.exportCloudBackup = () => { const blob = new Blob([JSON.stringify({ inventory: window.inventory, recipes: window.recipes, compliance: window.compliance, assets: window.assets, config: window.config }, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Hobart_OS_Backup.json`; a.click(); };
-        window.factoryReset = async () => { if (!confirm("☢️ Wipe Cloud Node?")) return; await setDoc(refs.inv(), { items: [] }); await setDoc(refs.rec(), { items: [] }); await setDoc(refs.com(), { logs: [] }); await setDoc(refs.as(), { items: [] }); window.showMsg("Node Purged"); location.reload(); };
+        window.factoryReset = async () => { if (!confirm("☢️ Wipe Hobart Node?")) return; await setDoc(refs.inv(), { items: [] }); await setDoc(refs.rec(), { items: [] }); await setDoc(refs.com(), { logs: [] }); await setDoc(refs.as(), { items: [] }); window.showMsg("Establish Node Reset"); location.reload(); };
         window.showMsg = (t) => { const b = document.getElementById('msg-box'); if(b) { b.textContent = t; b.classList.remove('hidden'); setTimeout(() => b.classList.add('hidden'), 3000); } };
         window.toggleSettings = () => document.getElementById('settings-modal').classList.toggle('hidden');
         window.saveBranding = async () => { await setDoc(refs.cfg(), { name: document.getElementById('set-name').value }, { merge: true }); };
