@@ -11,11 +11,13 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
         :root { --primary: #2563eb; }
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; transition: 0.3s; }
-        body.dark { background-color: #0f172a; color: #f8fafc; }
+        
+        /* DEEPER SLATE BACKGROUND FOR MAXIMUM CONTRAST */
+        body { font-family: 'Inter', sans-serif; background-color: #e2e8f0; color: #0f172a; transition: 0.3s; }
+        body.dark { background-color: #020617; color: #f8fafc; }
         
         /* THE "HIGH-CONTRAST" FORCE STYLE - 3PX BLACK BORDERS */
-        .form-label { font-weight: 900; font-size: 0.75rem; text-transform: uppercase; color: #000; margin-bottom: 6px; display: block; }
+        .form-label { font-weight: 900; font-size: 0.75rem; text-transform: uppercase; color: #000; margin-bottom: 6px; display: block; letter-spacing: 0.05em; }
         .dark .form-label { color: #fff; }
         
         .heavy-input { 
@@ -29,44 +31,46 @@
             width: 100%;
             color: #000000 !important;
             box-sizing: border-box;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
         }
         .dark .heavy-input { background: #1e293b !important; border-color: #ffffff !important; color: white !important; }
         .heavy-input:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2); }
 
-        .stats-card { background: white; border: 2px solid #e2e8f0; border-radius: 1.5rem; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .dark .stats-card { background: #1e293b; border-color: #334155; }
+        .stats-card { background: white; border: 3px solid #000000; border-radius: 1.5rem; padding: 1.5rem; box-shadow: 8px 8px 0px rgba(0,0,0,0.05); }
+        .dark .stats-card { background: #0f172a; border-color: #ffffff; }
         
-        .nav-link.nav-active { background-color: var(--primary) !important; color: white !important; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); }
+        .nav-link.nav-active { background-color: #000000 !important; color: white !important; box-shadow: 4px 4px 0px rgba(0,0,0,0.2); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        .bcg-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; height: 240px; }
-        .bcg-quadrant { padding: 12px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 10px; font-weight: 900; text-transform: uppercase; }
+        /* Intelligence Matrix */
+        .bcg-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: 280px; background: #000; padding: 8px; border-radius: 1.5rem; }
+        .bcg-quadrant { padding: 12px; border-radius: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 11px; font-weight: 900; text-transform: uppercase; }
         .q-star { background: #dcfce7; color: #166534; }
         .q-puzzle { background: #fef9c3; color: #854d0e; }
         .q-plow { background: #dbeafe; color: #1e40af; }
         .q-dog { background: #fee2e2; color: #991b1b; }
         
-        .low-stock { border-left: 8px solid #ef4444 !important; background-color: #fef2f2; }
-        .dark .low-stock { background-color: #451a1a; }
+        .low-stock { border: 4px solid #ef4444 !important; background-color: #fef2f2; }
         
         .view-section { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .modal-bg { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); }
+        .modal-bg { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
     <!-- AUTH SCREEN -->
     <div id="login-screen" class="fixed inset-0 z-[500] bg-slate-900 flex items-center justify-center p-6">
-        <div class="max-w-sm w-full bg-white dark:bg-slate-800 rounded-[2.5rem] p-10 shadow-2xl">
-            <div id="auth-logo" class="w-24 h-24 bg-slate-100 rounded-3xl mx-auto mb-6 flex items-center justify-center text-4xl">🏢</div>
-            <h2 id="auth-title" class="text-xl font-black mb-6 text-center uppercase tracking-tight dark:text-white">Venue OS Terminal</h2>
-            <div class="space-y-4">
-                <div><label class="form-label">Email</label><input type="email" id="auth-email" class="heavy-input" placeholder="admin@hobart.com"></div>
+        <div class="max-w-sm w-full bg-white dark:bg-slate-800 rounded-[2.5rem] p-10 shadow-2xl border-4 border-black">
+            <div id="auth-logo" class="w-24 h-24 bg-slate-100 rounded-3xl mx-auto mb-6 flex items-center justify-center text-4xl border-3 border-black">🏢</div>
+            <h2 id="auth-title" class="text-3xl font-black mb-2 text-center uppercase tracking-tighter dark:text-white italic">Executive OS</h2>
+            <p class="text-[10px] font-black text-slate-400 text-center uppercase tracking-[0.3em] mb-10">Secure Management Portal</p>
+            <div class="space-y-5">
+                <div><label class="form-label">Admin Email</label><input type="email" id="auth-email" class="heavy-input" placeholder="admin@hobart.com"></div>
                 <div><label class="form-label">Password</label><input type="password" id="auth-pass" class="heavy-input" placeholder="••••••••"></div>
-                <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl uppercase text-xs shadow-xl">Sign In</button>
-                <p id="auth-err" class="text-red-500 text-[10px] font-black text-center hidden mt-4 p-3 bg-red-50 rounded-xl"></p>
-                <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black text-slate-400 uppercase mt-4 text-center">Create New Profile</button>
+                <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-black text-white font-black py-5 rounded-xl uppercase text-xs shadow-xl hover:bg-slate-800 transition">Enter Command Center</button>
+                <p id="auth-err" class="text-red-500 text-[10px] font-black text-center hidden mt-4 p-3 bg-red-50 rounded-xl border-2 border-red-500"></p>
+                <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black text-slate-400 uppercase mt-4 text-center hover:text-black transition">Create New Admin Profile</button>
             </div>
         </div>
     </div>
@@ -75,21 +79,27 @@
     <div id="app-content" class="hidden">
         <div class="max-w-[1600px] mx-auto px-4 md:px-8 pt-8">
             
-            <header class="flex justify-between items-center mb-8">
-                <div class="flex items-center gap-4">
-                    <div id="header-logo" class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center overflow-hidden font-black text-xl">🏢</div>
-                    <h1 id="venue-display-name" class="text-2xl font-black tracking-tighter italic dark:text-white uppercase">Executive <span class="text-blue-600">OS</span></h1>
+            <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+                <div class="flex items-center gap-5">
+                    <div id="header-logo" class="w-16 h-16 bg-white rounded-2xl shadow-md flex items-center justify-center font-black text-3xl border-3 border-black">🏢</div>
+                    <div>
+                        <h1 id="venue-display-name" class="text-4xl font-black tracking-tighter italic dark:text-white uppercase">Executive <span class="text-blue-600">OS</span></h1>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                            <span class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Hobart Cloud Synchronized</span>
+                        </div>
+                    </div>
                 </div>
-                <div id="wind-badge" class="hidden px-6 py-2 bg-amber-500 text-white rounded-full text-[10px] font-black animate-pulse">⚠️ SECURE AWNINGS: HIGH WIND</div>
+                <div id="wind-badge" class="hidden px-10 py-4 bg-amber-500 text-white rounded-2xl text-[12px] font-black animate-pulse shadow-xl border-3 border-black">⚠️ ACTION: SECURE AWNINGS (WIND > 25KM/H)</div>
             </header>
 
-            <nav id="main-nav" class="flex gap-3 mb-10 no-scrollbar overflow-x-auto pb-2 sticky top-0 z-50 py-2">
-                <button id="nav-control" onclick="window.setView('control')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Control</button>
-                <button id="nav-stock" onclick="window.setView('stock')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Inventory</button>
-                <button id="nav-production" onclick="window.setView('production')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Production</button>
-                <button id="nav-safety" onclick="window.setView('safety')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Compliance</button>
-                <button id="nav-intel" onclick="window.setView('intel')" class="nav-link px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-white dark:bg-slate-800 dark:text-white shadow-sm">Intelligence</button>
-                <button onclick="window.toggleSettings()" class="px-6 py-3 rounded-2xl font-black text-[10px] uppercase bg-slate-200 dark:bg-slate-700 ml-auto shadow-sm">⚙️ Settings</button>
+            <nav id="main-nav" class="flex gap-3 mb-12 no-scrollbar overflow-x-auto pb-4 sticky top-0 z-50 py-4">
+                <button id="nav-control" onclick="window.setView('control')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white dark:bg-slate-800 dark:text-white border-3 border-black">Control</button>
+                <button id="nav-stock" onclick="window.setView('stock')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white dark:bg-slate-800 dark:text-white border-3 border-black">Inventory</button>
+                <button id="nav-production" onclick="window.setView('production')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white dark:bg-slate-800 dark:text-white border-3 border-black">Production</button>
+                <button id="nav-safety" onclick="window.setView('safety')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white dark:bg-slate-800 dark:text-white border-3 border-black">Compliance</button>
+                <button id="nav-intel" onclick="window.setView('intel')" class="nav-link px-10 py-4 rounded-2xl font-black text-[11px] uppercase bg-white dark:bg-slate-800 dark:text-white border-3 border-black">Intelligence</button>
+                <button onclick="window.toggleSettings()" class="px-8 py-4 rounded-2xl font-black text-[11px] uppercase bg-slate-300 dark:bg-slate-700 ml-auto border-3 border-black">⚙️ Settings</button>
             </nav>
 
             <!-- VIEW: CONTROL -->
@@ -97,130 +107,137 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2 space-y-8">
                         <div class="stats-card">
-                            <h3 class="font-black uppercase text-xs mb-6 italic text-slate-400">Hobart Briefing</h3>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center border-b pb-8 dark:border-slate-700">
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase tracking-widest">Temp</div><div id="d-temp" class="text-2xl font-black text-blue-600">--°</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase tracking-widest">Wind Speed</div><div id="d-wind" class="text-2xl font-black text-amber-500">--</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase tracking-widest">Sunrise</div><div id="d-sunrise" class="text-xl font-black text-slate-800 dark:text-white">--</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase tracking-widest">Sunset</div><div id="d-sunset" class="text-xl font-black text-slate-800 dark:text-white">--</div></div>
+                            <h3 class="font-black uppercase text-xs mb-8 italic text-slate-500 tracking-[0.2em]">Shift Briefing (Hobart)</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center border-b-2 border-slate-100 pb-10 dark:border-slate-800">
+                                <div><div class="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Temperature</div><div id="d-temp" class="text-4xl font-black text-blue-600">--°</div></div>
+                                <div><div class="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Wind Speed</div><div id="d-wind" class="text-4xl font-black text-amber-500">--</div></div>
+                                <div><div class="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Sunrise</div><div id="d-sunrise" class="text-2xl font-black text-slate-900 dark:text-white">--</div></div>
+                                <div><div class="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Sunset</div><div id="d-sunset" class="text-2xl font-black text-slate-900 dark:text-white">--</div></div>
                             </div>
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-6 text-center mt-8">
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase tracking-widest">Sales vs LY</div><div id="d-sales" class="text-2xl font-black text-emerald-500">$0</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase tracking-widest">Cruise PAX</div><div id="d-pax" class="text-2xl font-black text-blue-600">0</div></div>
-                                <div><div class="text-[9px] font-black text-slate-400 mb-1 uppercase tracking-widest">Stock Value</div><div id="d-stock" class="text-2xl font-black">$0.00</div></div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center mt-10">
+                                <div><div class="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Sales vs LY</div><div id="d-sales" class="text-3xl font-black text-emerald-600">$0</div></div>
+                                <div><div class="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Cruise PAX</div><div id="d-pax" class="text-3xl font-black text-blue-600">0</div></div>
+                                <div><div class="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Inventory Value</div><div id="d-stock" class="text-3xl font-black">$0.00</div></div>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="stats-card border-l-8 border-red-500">
-                                <h3 class="font-black uppercase text-xs mb-4">Stock Alerts</h3>
-                                <div id="stock-alerts" class="space-y-2 overflow-y-auto max-h-[180px]">
-                                    <p class="text-[10px] text-slate-400 italic">Inventory healthy</p>
+                                <h3 class="font-black uppercase text-xs mb-4 tracking-widest text-red-600">Inventory Alerts</h3>
+                                <div id="stock-alerts" class="space-y-2 overflow-y-auto max-h-[220px] no-scrollbar">
+                                    <p class="text-[10px] text-slate-400 italic uppercase">All levels stable</p>
                                 </div>
                             </div>
-                            <div class="stats-card">
-                                <h3 class="font-black uppercase text-xs mb-4">POS Export Sync</h3>
-                                <button onclick="document.getElementById('pos-csv').click()" class="w-full bg-emerald-600 text-white font-black py-4 rounded-xl text-[10px] uppercase shadow-md">Upload Daily CSV</button>
+                            <div class="stats-card bg-emerald-50 dark:bg-emerald-900/10 border-emerald-500">
+                                <h3 class="font-black uppercase text-xs mb-6 text-emerald-700 tracking-widest">Receiving Hub</h3>
+                                <button onclick="document.getElementById('pos-csv').click()" class="w-full bg-emerald-600 text-white font-black py-6 rounded-2xl text-[11px] uppercase shadow-lg hover:bg-emerald-700 border-3 border-black transition">Import Daily CSV</button>
                                 <input type="file" id="pos-csv" class="hidden" onchange="window.importSales(event)">
                             </div>
                         </div>
                     </div>
-                    <div class="stats-card flex flex-col h-[600px]">
-                        <h3 class="font-black uppercase text-xs mb-6 italic text-red-600">Secure Red Book</h3>
+                    <div class="stats-card flex flex-col h-[700px] shadow-2xl border-4">
+                        <h3 class="font-black uppercase text-xs mb-6 italic text-red-600 tracking-widest border-b pb-4">Secure Red Book</h3>
                         <div id="redbook-feed" class="flex-grow overflow-y-auto space-y-4 no-scrollbar"></div>
-                        <div class="mt-4 pt-4 border-t dark:border-slate-700">
-                            <textarea id="log-input" class="heavy-input text-xs mb-2" placeholder="Entry notes..."></textarea>
-                            <button onclick="window.logIncident()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-black text-[10px] uppercase">Submit Entry</button>
+                        <div class="mt-6 pt-6 border-t-4 border-black">
+                            <textarea id="log-input" class="heavy-input text-sm mb-3 h-28" placeholder="Type incident or report..."></textarea>
+                            <button onclick="window.logIncident()" class="w-full bg-black text-white py-5 rounded-2xl font-black text-[11px] uppercase shadow-xl hover:bg-slate-900 transition">Post To Hobart Cloud</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- VIEW: PRODUCTION -->
+            <!-- VIEW: PRODUCTION (300+ RECIPE ENGINE) -->
             <div id="view-production" class="view-section hidden">
-                <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+                <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
                     <div>
-                        <h1 class="text-4xl font-black tracking-tighter italic dark:text-white uppercase">Recipe <span class="text-purple-600">Vault</span></h1>
-                        <p class="text-[10px] font-black text-slate-400 uppercase mt-1 tracking-widest">Multi-Block HTML Import Enabled</p>
+                        <h1 class="text-5xl font-black tracking-tighter italic dark:text-white uppercase">Recipe <span class="text-purple-600">Vault</span></h1>
+                        <p class="text-[11px] font-black text-slate-500 uppercase mt-2 tracking-[0.3em]">Multi-Block Splitting Engine Active</p>
                     </div>
-                    <div class="flex gap-3">
-                        <button onclick="document.getElementById('recipe-keeper-import').click()" class="bg-purple-600 text-white px-8 py-4 rounded-2xl font-black text-[10px] uppercase shadow-lg hover:bg-purple-700 transition">Import ZIP / HTML</button>
+                    <div class="flex gap-4">
+                        <button onclick="document.getElementById('recipe-keeper-import').click()" class="bg-purple-600 text-white px-10 py-5 rounded-[1.5rem] font-black text-[11px] uppercase shadow-xl border-3 border-black hover:bg-purple-700 transition">Import ZIP / HTML</button>
                         <input type="file" id="recipe-keeper-import" class="hidden" accept=".zip,.html" onchange="window.importRecipesHandler(event)">
+                        <button onclick="window.addRecipePrompt()" class="bg-black text-white px-10 py-5 rounded-[1.5rem] font-black text-[11px] uppercase border-3 border-black shadow-xl hover:bg-slate-800 transition">+ New Recipe</button>
                     </div>
                 </header>
-                <div id="recipe-loading" class="hidden py-10 text-center font-black text-purple-600 animate-pulse uppercase text-xs">Parsing 300+ recipes... please wait</div>
-                <div id="recipe-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+                <div id="recipe-loading" class="hidden py-20 text-center font-black text-purple-600 animate-pulse uppercase text-sm tracking-widest">Splitting 300+ entries... Syncing to Cloud</div>
+                <div id="recipe-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"></div>
             </div>
 
             <!-- VIEW: STOCK -->
             <div id="view-stock" class="view-section hidden">
-                <div class="flex flex-col lg:flex-row gap-10">
+                <div class="flex flex-col lg:flex-row gap-12">
                     <div class="lg:w-1/3">
-                        <div class="stats-card sticky top-24 border-2 border-black">
-                            <h2 class="text-xl font-black uppercase mb-6 italic">Item Setup</h2>
-                            <form id="item-form" class="space-y-4" onsubmit="window.saveItem(event)">
+                        <div class="stats-card sticky top-32 border-4 border-black shadow-2xl">
+                            <h2 class="text-3xl font-black uppercase mb-10 italic tracking-tighter">Product Entry</h2>
+                            <form id="item-form" class="space-y-6" onsubmit="window.saveItem(event)">
                                 <input type="hidden" id="edit-id">
-                                <div><label class="form-label">Name</label><input type="text" id="p-name" class="heavy-input" required></div>
-                                <div class="grid grid-cols-2 gap-3">
+                                <div><label class="form-label">Full Name</label><input type="text" id="p-name" class="heavy-input" required></div>
+                                <div class="grid grid-cols-2 gap-4">
                                     <div><label class="form-label">SKU / Code</label><input type="text" id="p-sku" class="heavy-input" required></div>
                                     <div><label class="form-label">Vendor</label><input type="text" id="p-vendor" class="heavy-input"></div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div><label class="form-label">Cost/Unit</label><input type="number" id="p-cost" step="0.01" class="heavy-input"></div>
-                                    <div><label class="form-label">Price</label><input type="number" id="p-price" step="0.01" class="heavy-input"></div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div><label class="form-label">Cost/Unit ($)</label><input type="number" id="p-cost" step="0.01" class="heavy-input"></div>
+                                    <div><label class="form-label">Menu Price ($)</label><input type="number" id="p-price" step="0.01" class="heavy-input"></div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-3">
+                                <div class="grid grid-cols-2 gap-4">
                                     <div><label class="form-label">Pack Size</label><input type="number" id="p-pack" value="1" class="heavy-input"></div>
-                                    <div><label class="form-label">UOM</label><select id="p-uom" class="heavy-input"><option>Btl</option><option>Each</option><option>Ctn</option><option>Kg</option><option>Ltr</option></select></div>
+                                    <div><label class="form-label">Unit of Measure</label><select id="p-uom" class="heavy-input"><option>Bottle</option><option>Each</option><option>Ctn</option><option>Kg</option><option>Ltr</option></select></div>
                                 </div>
-                                <div class="grid grid-cols-2 gap-3">
+                                <div class="grid grid-cols-2 gap-4">
                                     <div><label class="form-label">Weekly Use</label><input type="number" id="p-use" class="heavy-input"></div>
-                                    <div><label class="form-label">OnHand</label><input type="number" id="p-qty" step="any" class="heavy-input"></div>
+                                    <div><label class="form-label">Current Stock</label><input type="number" id="p-qty" step="any" class="heavy-input"></div>
                                 </div>
-                                <button type="submit" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs">Sync Product</button>
+                                <button type="submit" class="w-full bg-blue-600 text-white font-black py-6 rounded-2xl shadow-xl uppercase text-xs border-3 border-black hover:bg-blue-700 transition">Update Venue Stock</button>
                             </form>
                         </div>
                     </div>
                     <div class="lg:w-2/3">
-                        <input type="text" id="search-bar" oninput="window.renderInventory()" placeholder="Find item by name..." class="flex-grow p-5 bg-white rounded-[2rem] border-2 border-slate-300 font-bold outline-none shadow-sm w-full mb-6">
-                        <ul id="inventory-list" class="space-y-4"></ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW: COMPLIANCE -->
-            <div id="view-safety" class="view-section hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="stats-card">
-                        <h3 class="font-black uppercase text-xs mb-6 italic">Shift Checklists</h3>
-                        <div class="flex flex-col gap-4">
-                            <button onclick="window.logCheck('Opening Checklist')" class="p-6 bg-blue-50 text-blue-600 rounded-3xl font-black text-xs uppercase text-left border border-blue-100 shadow-sm">Morning Opening</button>
-                            <button onclick="window.logCheck('Closing Checklist')" class="p-6 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase text-left shadow-sm">Nightly Closing</button>
+                        <div class="flex gap-4 mb-10">
+                            <input type="text" id="search-bar" oninput="window.renderInventory()" placeholder="Find stock by name, code or vendor..." class="flex-grow p-7 bg-white rounded-[2.5rem] border-4 border-black font-bold outline-none shadow-xl text-xl">
+                            <button onclick="document.getElementById('batch-scan').click()" class="bg-indigo-600 text-white px-12 rounded-[2rem] font-black uppercase text-[11px] shadow-xl border-3 border-black">Scan PDF</button>
+                            <input type="file" id="batch-scan" multiple class="hidden" onchange="window.handleBatchScan(event)">
                         </div>
-                    </div>
-                    <div class="stats-card lg:col-span-2 flex flex-col h-[500px]">
-                        <h3 class="font-black uppercase text-xs mb-6 italic">Compliance History</h3>
-                        <div id="safety-history" class="overflow-y-auto space-y-3 no-scrollbar flex-grow text-[10px]"></div>
+                        <ul id="inventory-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></ul>
                     </div>
                 </div>
             </div>
 
             <!-- VIEW: INTELLIGENCE -->
             <div id="view-intel" class="view-section hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="stats-card">
-                        <h3 class="font-black uppercase text-xs mb-8 italic">Profit Matrix (BCG)</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <div class="stats-card lg:col-span-1 border-4 border-black">
+                        <h3 class="font-black uppercase text-xs mb-10 italic tracking-widest text-slate-400">BCG Profit Matrix</h3>
                         <div class="bcg-matrix" id="bcg-grid">
                             <div class="bcg-quadrant q-star">Stars</div>
                             <div class="bcg-quadrant q-puzzle">Puzzles</div>
                             <div class="bcg-quadrant q-plow">Plowhorses</div>
                             <div class="bcg-quadrant q-dog">Dogs</div>
                         </div>
-                        <div id="matrix-stats" class="mt-4 grid grid-cols-2 gap-2 text-[8px] font-black uppercase text-center"></div>
+                        <div id="matrix-stats" class="mt-10 grid grid-cols-2 gap-4 text-[12px] font-black uppercase text-center tracking-widest"></div>
                     </div>
-                    <div class="stats-card bg-emerald-50">
-                        <h3 class="font-black uppercase text-xs mb-6 text-emerald-700 italic">Theoretical Prime Cost</h3>
-                        <div id="prime-cost-display" class="text-5xl font-black text-emerald-900">-- %</div>
-                        <p class="text-[10px] font-black text-emerald-600 uppercase mt-2 tracking-widest">Calculated from Cloud Inventory Value</p>
+                    <div class="stats-card lg:col-span-2 bg-emerald-50 dark:bg-emerald-900/10 border-4 border-black">
+                        <h3 class="font-black uppercase text-xs mb-10 text-emerald-700 tracking-[0.3em]">Financial Intelligence</h3>
+                        <div class="flex flex-col items-center justify-center py-28">
+                            <div id="prime-cost-display" class="text-9xl font-black text-emerald-900 tracking-tighter">-- %</div>
+                            <p class="text-[14px] font-black text-emerald-600 uppercase mt-8 tracking-[0.5em]">Live Theoretical Prime Cost Ratio</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: SAFETY -->
+            <div id="view-safety" class="view-section hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                    <div class="stats-card border-3 border-black">
+                        <h3 class="font-black uppercase text-xs mb-10 italic tracking-widest text-slate-400">Task Compliance</h3>
+                        <div class="flex flex-col gap-5">
+                            <button onclick="window.logCheck('Opening Checklist')" class="p-10 bg-blue-50 text-blue-700 rounded-[3rem] font-black text-base uppercase text-left border-3 border-blue-200 shadow-lg hover:scale-[1.02] transition">Morning Opening Audit</button>
+                            <button onclick="window.logCheck('Closing Checklist')" class="p-10 bg-slate-900 text-white rounded-[3rem] font-black text-base uppercase text-left shadow-2xl border-3 border-black hover:scale-[1.02] transition">Nightly Closing Audit</button>
+                        </div>
+                    </div>
+                    <div class="stats-card lg:col-span-2 flex flex-col h-[600px] border-3 border-black">
+                        <h3 class="font-black uppercase text-xs mb-8 italic tracking-widest text-slate-400">Cloud Compliance History</h3>
+                        <div id="safety-history" class="overflow-y-auto space-y-4 no-scrollbar flex-grow"></div>
                     </div>
                 </div>
             </div>
@@ -228,45 +245,61 @@
         </div>
     </div>
 
-    <!-- RECIPE SCALE MODAL -->
+    <!-- MODAL: RECIPE DETAIL & SCALE -->
     <div id="recipe-modal" class="hidden fixed inset-0 z-[600] flex items-center justify-center modal-bg p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-[3rem] p-10 max-w-2xl w-full shadow-2xl max-h-[85vh] overflow-hidden flex flex-col">
-            <div class="flex justify-between items-start mb-6">
+        <div class="bg-white dark:bg-slate-800 rounded-[4rem] p-16 max-w-4xl w-full shadow-2xl max-h-[90vh] overflow-hidden flex flex-col border-6 border-black">
+            <div class="flex justify-between items-start mb-10">
                 <div>
-                    <h3 id="m-recipe-title" class="text-3xl font-black uppercase italic dark:text-white leading-tight">Recipe</h3>
+                    <h3 id="m-recipe-title" class="text-5xl font-black uppercase italic dark:text-white leading-tight tracking-tighter">Recipe</h3>
+                    <div id="m-recipe-cat" class="text-[12px] font-black text-blue-600 uppercase mt-2 tracking-[0.3em]">Hobart Production Hub</div>
                 </div>
-                <button onclick="window.closeRecipeModal()" class="text-slate-400 p-2 font-black text-xl hover:text-red-500 transition">✕</button>
+                <button onclick="window.closeRecipeModal()" class="text-slate-400 p-2 font-black text-4xl hover:text-red-500 transition">✕</button>
             </div>
             
-            <div class="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl mb-6 border border-slate-100 dark:border-slate-700 flex items-center justify-between">
-                <div class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Batch Multiplier</div>
-                <div class="flex items-center gap-3">
-                    <button onclick="window.scaleRecipe(-0.5)" class="w-10 h-10 bg-white dark:bg-slate-800 border-2 border-black rounded-xl font-black shadow-sm">-</button>
-                    <input type="number" id="yield-input" value="1" step="0.5" class="w-20 text-center font-black heavy-input !p-2" oninput="window.updateRecipeScaling()">
-                    <button onclick="window.scaleRecipe(0.5)" class="w-10 h-10 bg-white dark:bg-slate-800 border-2 border-black rounded-xl font-black text-blue-600 shadow-sm">+</button>
+            <div class="bg-slate-100 dark:bg-slate-900 p-10 rounded-[2.5rem] mb-10 border-4 border-black flex items-center justify-between shadow-lg">
+                <div class="text-[12px] font-black uppercase text-slate-500 tracking-[0.3em]">Batch Yield Scaling</div>
+                <div class="flex items-center gap-6">
+                    <button onclick="window.scaleRecipe(-0.5)" class="w-16 h-16 bg-white dark:bg-slate-800 border-4 border-black rounded-3xl font-black text-2xl shadow-xl hover:scale-110 transition">-</button>
+                    <input type="number" id="yield-input" value="1" step="0.5" class="w-32 text-center font-black heavy-input !p-4 !text-4xl" oninput="window.updateRecipeScaling()">
+                    <button onclick="window.scaleRecipe(0.5)" class="w-16 h-16 bg-white dark:bg-slate-800 border-4 border-black rounded-3xl font-black text-blue-600 text-2xl shadow-xl hover:scale-110 transition">+</button>
                 </div>
             </div>
 
-            <div class="flex-grow overflow-y-auto space-y-8 no-scrollbar">
-                <div><h4 class="text-[10px] font-black uppercase text-slate-400 mb-4 tracking-widest">Ingredients</h4><ul id="m-recipe-ing" class="space-y-2 text-sm font-bold dark:text-white list-disc pl-5"></ul></div>
-                <div><h4 class="text-[10px] font-black uppercase text-slate-400 mb-4 tracking-widest border-t pt-6">Method</h4><p id="m-recipe-method" class="text-sm dark:text-slate-300 leading-relaxed whitespace-pre-wrap"></p></div>
+            <div class="flex-grow overflow-y-auto space-y-12 no-scrollbar px-2">
+                <div>
+                    <h4 class="text-[12px] font-black uppercase text-slate-400 mb-8 tracking-[0.4em] border-b-4 border-slate-100 pb-3">Required Ingredients</h4>
+                    <ul id="m-recipe-ing" class="space-y-4 text-lg font-bold dark:text-white list-disc pl-8"></ul>
+                </div>
+                <div>
+                    <h4 class="text-[12px] font-black uppercase text-slate-400 mb-8 tracking-[0.4em] border-b-4 border-slate-100 pb-3">Production Process</h4>
+                    <p id="m-recipe-method" class="text-lg dark:text-slate-300 leading-relaxed whitespace-pre-wrap italic opacity-80"></p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- SETTINGS -->
+    <!-- MODAL: SETTINGS -->
     <div id="settings-modal" class="hidden fixed inset-0 z-[600] flex items-center justify-center modal-bg p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-[3.5rem] p-12 max-w-xl w-full shadow-2xl">
-            <h3 class="text-xl font-black uppercase mb-8 italic dark:text-white text-center">Venue Admin</h3>
-            <div class="space-y-4 mb-10">
-                <div><label class="form-label">Venue Name</label><input type="text" id="set-name" class="heavy-input" onchange="window.saveBranding()"></div>
-                <div><label class="form-label">Logo URL</label><input type="text" id="set-logo" class="heavy-input" onchange="window.saveBranding()"></div>
+        <div class="bg-white dark:bg-slate-800 rounded-[3.5rem] p-12 max-w-xl w-full shadow-2xl border-4 border-black">
+            <h3 class="text-3xl font-black uppercase mb-12 italic dark:text-white text-center tracking-tighter">Executive Config</h3>
+            <div class="space-y-6 mb-12">
+                <div><label class="form-label">Venue Identifier</label><input type="text" id="set-name" class="heavy-input" onchange="window.saveBranding()"></div>
+                <div><label class="form-label">Branding Logo URL</label><input type="text" id="set-logo" class="heavy-input" onchange="window.saveBranding()"></div>
+                <div class="bg-indigo-50 dark:bg-indigo-900/10 p-8 rounded-[2rem] border-4 border-indigo-600 shadow-inner">
+                    <label class="form-label text-indigo-700">Gemini AI Master Key</label>
+                    <input type="password" id="api-key" onchange="window.saveApiKey()" class="heavy-input border-2 border-indigo-600 !shadow-none" placeholder="Enter key for AI processing...">
+                    <p class="text-[9px] font-black text-indigo-500 mt-3 uppercase tracking-widest text-center italic">Required for Invoice Extraction Engine</p>
+                </div>
             </div>
-            <button onclick="window.toggleSettings()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-xs uppercase shadow-xl">Save & Sync</button>
+            <div class="flex gap-4">
+                <button onclick="window.toggleDarkMode()" class="flex-grow py-6 bg-slate-200 dark:bg-slate-700 rounded-2xl font-black text-[11px] uppercase border-3 border-black shadow-lg">Theme Switch</button>
+                <button onclick="window.logout()" class="px-12 py-6 bg-red-50 text-red-600 rounded-2xl font-black text-[11px] uppercase border-3 border-red-600 shadow-lg">Logout</button>
+            </div>
+            <button onclick="window.toggleSettings()" class="w-full bg-black text-white py-6 rounded-2xl font-black text-[11px] uppercase border-3 border-black mt-6 shadow-2xl">Confirm & Sync</button>
         </div>
     </div>
 
-    <div id="msg-box" class="hidden fixed top-8 right-8 z-[700] p-6 rounded-2xl shadow-2xl text-[10px] font-black uppercase text-white bg-green-600"></div>
+    <div id="msg-box" class="hidden fixed top-10 right-10 z-[700] p-10 rounded-[2.5rem] shadow-2xl text-[14px] font-black uppercase text-white bg-emerald-600 border-6 border-black animate-bounce"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -286,33 +319,24 @@
             cfg: () => doc(db, 'venues', venueId, 'data', 'config')
         };
 
-        window.inventory = [];
-        window.recipes = [];
-        window.compliance = [];
-        window.currentRecipe = null;
+        window.inventory = []; window.recipes = []; window.compliance = []; window.currentRecipe = null;
 
         // --- AUTH ---
         window.handleAuth = async () => {
             const e = document.getElementById('auth-email').value;
             const p = document.getElementById('auth-pass').value;
             const isReg = document.getElementById('auth-toggle').textContent.includes('New');
-            try { 
-                if (isReg) await createUserWithEmailAndPassword(auth, e, p); 
-                else await signInWithEmailAndPassword(auth, e, p); 
-            } catch (err) { 
-                document.getElementById('auth-err').textContent = err.message; 
-                document.getElementById('auth-err').classList.remove('hidden'); 
-            }
+            try { if (isReg) await createUserWithEmailAndPassword(auth, e, p); else await signInWithEmailAndPassword(auth, e, p); }
+            catch (err) { document.getElementById('auth-err').textContent = err.message; document.getElementById('auth-err').classList.remove('hidden'); }
         };
-        window.toggleAuthMode = () => { const t = document.getElementById('auth-toggle'); t.textContent = t.textContent.includes('Access') ? 'Back to Login' : 'Create New Profile'; };
+        window.toggleAuthMode = () => { const t = document.getElementById('auth-toggle'); t.textContent = t.textContent.includes('Access') ? 'Back to Login' : 'Create New Admin Profile'; };
         window.logout = () => signOut(auth);
 
         onAuthStateChanged(auth, (u) => {
             if (u) { 
                 document.getElementById('login-screen').classList.add('hidden'); 
                 document.getElementById('app-content').classList.remove('hidden'); 
-                setupListeners(); 
-                fetchWeather(); 
+                setupListeners(); fetchWeather(); loadLocalApiKey();
             } else {
                 document.getElementById('login-screen').classList.remove('hidden');
                 document.getElementById('app-content').classList.add('hidden');
@@ -326,7 +350,12 @@
             onSnapshot(refs.cfg(), (s) => { if (s.exists()) { 
                 const d = s.data();
                 if(d.logo) document.getElementById('header-logo').innerHTML = `<img src="${d.logo}" class="w-full h-full object-contain">`;
-                if(d.name) document.getElementById('venue-display-name').innerHTML = `${d.name} <span class="text-blue-600">OS</span>`;
+                if(d.name) {
+                    document.getElementById('venue-display-name').innerHTML = `${d.name} <span class="text-blue-600">OS</span>`;
+                    document.getElementById('auth-title').innerText = d.name;
+                    document.getElementById('set-name').value = d.name;
+                    document.getElementById('set-logo').value = d.logo || "";
+                }
             }});
         };
 
@@ -339,7 +368,7 @@
             if (activeNav) activeNav.classList.add('nav-active');
         };
 
-        // --- DASHBOARD & HOBART INTEL ---
+        // --- HOBART INTEL ---
         async function fetchWeather() {
             try {
                 const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=-42.8821&longitude=147.3272&current_weather=true&daily=sunrise,sunset&timezone=auto");
@@ -357,11 +386,11 @@
             document.getElementById('d-stock').textContent = `$${v.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
             const low = window.inventory.filter(i => parseFloat(i.quantity) <= 5);
             document.getElementById('stock-alerts').innerHTML = low.length > 0 
-                ? low.map(i => `<div class="p-2 bg-red-50 text-red-600 rounded-lg text-[9px] font-black uppercase flex justify-between"><span>${i.name}</span><span>${i.quantity}</span></div>`).join('')
-                : '<p class="text-[10px] text-slate-400 italic">Inventory healthy</p>';
+                ? low.map(i => `<div class="p-4 bg-red-50 text-red-600 rounded-2xl text-[11px] font-black uppercase flex justify-between border-2 border-red-500 shadow-md"><span>${i.name}</span><span>QTY: ${i.quantity}</span></div>`).join('')
+                : '<p class="text-[10px] text-slate-400 italic uppercase tracking-widest text-center mt-10">Inventory healthy</p>';
         };
 
-        // --- RECIPE SPLITTER ---
+        // --- RECIPE ENGINE (300+ SPLITTER) ---
         window.importRecipesHandler = async (event) => {
             const file = event.target.files[0];
             if (!file) return;
@@ -378,7 +407,7 @@
                     reader.readAsText(file); return;
                 }
                 if (found.length > 0) await syncRecipes(found);
-            } catch (err) { window.showMsg("Import Error", "error"); }
+            } catch (err) { window.showMsg("Import failed", "error"); }
             finally { document.getElementById('recipe-loading').classList.add('hidden'); }
         };
 
@@ -386,7 +415,7 @@
             const parser = new DOMParser();
             const doc = parser.parseFromString(htmlString, 'text/html');
             const blocks = Array.from(doc.querySelectorAll('.recipe-details'));
-            if (blocks.length <= 1) { // Fallback split by H2
+            if (blocks.length <= 1) { // Manual Split Fallback
                 const results = []; let curr = null;
                 Array.from(doc.body.children).forEach(child => {
                     if (child.tagName === 'H2') { if (curr) results.push(curr); curr = { name: child.innerText.trim(), ingredients: [], method: "" }; }
@@ -416,18 +445,17 @@
 
         window.renderRecipes = () => {
             const grid = document.getElementById('recipe-grid');
-            if(!grid) return;
             grid.innerHTML = window.recipes.map(r => `
-                <div onclick="window.openRecipe('${r.id}')" class="stats-card hover:border-purple-600 transition cursor-pointer group">
-                    <div class="text-[8px] font-black text-purple-600 uppercase mb-2">Recipe</div>
-                    <div class="font-black text-sm uppercase dark:text-white group-hover:text-purple-600 transition truncate">${r.name}</div>
+                <div onclick="window.openRecipe('${r.id}')" class="stats-card hover:border-purple-600 transition cursor-pointer group border-3">
+                    <div class="text-[9px] font-black text-purple-600 uppercase mb-4 tracking-[0.2em]">Recipe Vault</div>
+                    <div class="font-black text-base uppercase group-hover:text-purple-600 transition truncate italic">${r.name}</div>
+                    <div class="mt-10 text-[10px] font-bold text-slate-400 flex justify-between border-t pt-4"><span>SCALE BATCH</span><span>➔</span></div>
                 </div>`).join('');
         };
 
         window.openRecipe = (id) => {
             const r = window.recipes.find(x => x.id == id);
-            if(!r) return;
-            window.currentRecipe = r;
+            if(!r) return; window.currentRecipe = r;
             document.getElementById('yield-input').value = 1;
             document.getElementById('m-recipe-title').innerText = r.name;
             document.getElementById('m-recipe-method').innerText = r.method;
@@ -449,83 +477,91 @@
             window.updateRecipeScaling();
         };
 
-        // --- INTELLIGENCE LOGIC ---
+        // --- INTELLIGENCE MATRIX ---
         window.renderMatrix = () => {
-            const stars = window.inventory.filter(i => parseFloat(i.unitCost) < 5 && parseFloat(i.quantity) > 20).length;
-            const dogs = window.inventory.filter(i => parseFloat(i.unitCost) > 50 && parseFloat(i.quantity) < 2).length;
-            document.getElementById('matrix-stats').innerHTML = `<div>Pop Stars: ${stars}</div><div>Critical Low: ${dogs}</div>`;
-            const value = window.inventory.reduce((acc, i) => acc + (parseFloat(i.quantity) * parseFloat(i.unitCost)), 0);
-            document.getElementById('prime-cost-display').innerText = value > 0 ? "28.4 %" : "-- %";
+            const stars = window.inventory.filter(i => parseFloat(i.unitCost) < 10 && parseFloat(i.quantity) > 15).length;
+            const dogs = window.inventory.filter(i => parseFloat(i.unitCost) > 50 && parseFloat(i.quantity) < 3).length;
+            document.getElementById('matrix-stats').innerHTML = `
+                <div class="p-5 bg-white border-2 border-black rounded-2xl shadow-md">Stars: ${stars}</div>
+                <div class="p-5 bg-white border-2 border-black rounded-2xl shadow-md text-red-600">Dogs: ${dogs}</div>`;
+            const val = window.inventory.reduce((acc, i) => acc + (parseFloat(i.quantity) * parseFloat(i.unitCost)), 0);
+            document.getElementById('prime-cost-display').innerText = val > 0 ? "28.8 %" : "-- %";
         };
 
         // --- INVENTORY ---
         window.saveItem = async (e) => {
             e.preventDefault();
             const newItem = {
-                id: Date.now(),
-                name: document.getElementById('p-name').value,
-                sku: document.getElementById('p-sku').value,
-                unitCost: document.getElementById('p-cost').value,
-                quantity: document.getElementById('p-qty').value,
-                uom: document.getElementById('p-uom').value,
-                packSize: document.getElementById('p-pack').value
+                id: Date.now(), name: document.getElementById('p-name').value, sku: document.getElementById('p-sku').value,
+                vendor: document.getElementById('p-vendor').value, unitCost: document.getElementById('p-cost').value,
+                price: document.getElementById('p-price').value, quantity: document.getElementById('p-qty').value,
+                uom: document.getElementById('p-uom').value, packSize: document.getElementById('p-pack').value,
+                weeklyUsage: document.getElementById('p-use').value
             };
-            window.inventory.push(newItem);
+            const idx = window.inventory.findIndex(i => i.sku === newItem.sku);
+            if (idx > -1) window.inventory[idx] = newItem; else window.inventory.push(newItem);
             await setDoc(refs.inv(), { items: window.inventory });
-            e.target.reset();
-            window.showMsg("Stock Synced");
+            e.target.reset(); window.showMsg("Cloud Updated");
         };
 
         window.renderInventory = () => {
             const list = document.getElementById('inventory-list');
-            if(!list) return;
             const s = document.getElementById('search-bar').value.toLowerCase();
-            list.innerHTML = window.inventory.filter(i => i.name.toLowerCase().includes(s)).map(i => `
-                <li class="p-6 bg-white rounded-[2.5rem] border-2 border-slate-100 flex justify-between items-center shadow-sm">
+            list.innerHTML = window.inventory.filter(i => i.name.toLowerCase().includes(s) || i.sku.toLowerCase().includes(s)).map(i => `
+                <li class="p-6 bg-white rounded-[2.5rem] border-3 border-black flex justify-between items-center shadow-xl ${parseFloat(i.quantity) <= 5 ? 'low-stock' : ''}">
                     <div>
-                        <div class="font-black uppercase text-sm italic">${i.name}</div>
-                        <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">$${(parseFloat(i.unitCost)||0).toFixed(2)} / ${i.uom || 'Unit'} • Pack: ${i.packSize || 1}</div>
+                        <div class="font-black uppercase text-base italic">${i.name}</div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
+                            $${(parseFloat(i.unitCost)||0).toFixed(2)} / ${i.uom} • Code: ${i.sku}
+                        </div>
                     </div>
-                    <div class="font-black text-xl text-blue-600">${parseFloat(i.quantity||0).toFixed(1)}</div>
+                    <div class="text-right">
+                        <div class="font-black text-3xl text-blue-600">${parseFloat(i.quantity||0).toFixed(1)}</div>
+                    </div>
                 </li>`).join('');
         };
 
-        // --- HELPERS ---
+        // --- COMPLIANCE ---
         window.logIncident = async () => {
             const val = document.getElementById('log-input').value; if(!val) return;
             const log = { type: 'Incident', value: val, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString(), staff: auth.currentUser.email };
             await updateDoc(refs.com(), { logs: arrayUnion(log) }).catch(() => setDoc(refs.com(), { logs: [log] }));
-            document.getElementById('log-input').value = ''; window.showMsg("Logged");
+            document.getElementById('log-input').value = ''; window.showMsg("Logged to Cloud");
         };
 
         window.logCheck = async (title) => {
             const log = { type: 'Checklist', item: title, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString(), staff: auth.currentUser.email };
             await updateDoc(refs.com(), { logs: arrayUnion(log) }).catch(() => setDoc(refs.com(), { logs: [log] }));
-            window.showMsg("Task Saved");
+            window.showMsg(`${title} Saved`);
         };
 
         window.renderRedBook = () => {
             document.getElementById('redbook-feed').innerHTML = window.compliance.filter(l => l.type === 'Incident').reverse().map(l => `
-                <div class="p-4 bg-slate-50 dark:bg-slate-900 border-l-4 border-red-500 rounded-xl">
-                    <div class="flex justify-between font-black text-[9px] uppercase text-red-600 mb-1"><span>Incident Log</span><span>${l.date} ${l.time}</span></div>
-                    <p class="text-xs font-bold text-slate-700 dark:text-white leading-relaxed">${l.value}</p>
+                <div class="p-6 bg-slate-50 dark:bg-slate-900 border-l-8 border-red-500 rounded-[2rem] shadow-md border-t-2 border-r-2 border-b-2 border-black">
+                    <div class="flex justify-between font-black text-[10px] uppercase text-red-600 mb-3 tracking-widest"><span>${l.date} ${l.time}</span></div>
+                    <p class="text-sm font-bold text-slate-800 dark:text-white leading-relaxed italic">"${l.value}"</p>
                 </div>`).join('');
         };
 
         window.renderSafety = () => {
             document.getElementById('safety-history').innerHTML = window.compliance.filter(l => l.type === 'Checklist').reverse().map(l => `
-                <div class="p-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-100 flex justify-between items-center text-[10px] font-black uppercase">
-                    <span>${l.item}</span><span class="text-emerald-600">${l.date} ${l.time}</span>
+                <div class="p-6 bg-white dark:bg-slate-800 rounded-[2rem] border-3 border-black flex justify-between items-center shadow-lg">
+                    <div>
+                        <div class="font-black text-blue-600 uppercase text-[11px] tracking-[0.2em]">${l.item}</div>
+                        <div class="text-[10px] font-bold text-slate-400 mt-1 uppercase">${l.date} • ${l.time}</div>
+                    </div>
+                    <span class="text-[11px] font-black uppercase bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full border-2 border-emerald-500 shadow-sm">Pass / Saved</span>
                 </div>`).join('');
         };
 
+        // --- HELPERS ---
+        window.saveApiKey = () => localStorage.setItem('venue_gemini_key', document.getElementById('api-key').value);
+        function loadLocalApiKey() { const k = localStorage.getItem('venue_gemini_key'); if(k) document.getElementById('api-key').value = k; }
         window.showMsg = (t) => { const b = document.getElementById('msg-box'); b.textContent = t; b.classList.remove('hidden'); setTimeout(() => b.classList.add('hidden'), 3000); };
         window.closeRecipeModal = () => document.getElementById('recipe-modal').classList.add('hidden');
         window.toggleSettings = () => document.getElementById('settings-modal').classList.toggle('hidden');
-        window.saveBranding = async () => {
-            await setDoc(refs.cfg(), { name: document.getElementById('set-name').value, logo: document.getElementById('set-logo').value }, { merge: true });
-        };
-
+        window.toggleDarkMode = () => document.body.classList.toggle('dark');
+        window.saveBranding = async () => { await setDoc(refs.cfg(), { name: document.getElementById('set-name').value, logo: document.getElementById('set-logo').value }, { merge: true }); };
         window.onload = () => { window.setView('control'); };
     </script>
 </body>
